@@ -1,0 +1,129 @@
+<script type="text/javascript">
+var getMergedClusters = function(e) {
+	var mrgClstrs = new Object();
+	for (var kk in merged_clusters) {
+		mrgClstrs[kk] = [];
+		for (var hhx = 0; hhx < merged_clusters[kk].length; hhx++) {
+			hh = merged_clusters[kk][hhx];
+			mrgClstrs[kk].push(hh);
+		}
+	}
+	return mrgClstrs;
+}
+
+var mergedClusters = getMergedClusters();
+</script>
+
+<style>
+.btn_clust_mrg {
+//	font-style: italic;
+	color: black;
+	border-radius: 1px;
+	border-color: #BEB771;
+	background-color: white;//#F5EC91;
+}
+.btn_clust_mrg.active {
+	background-color: #BEB771;
+	color: black;
+}
+.btn_clust_res {
+	font-style: italic;
+	border-radius: 0px;
+}
+.btn_clust_res.active {
+	background-color: #728C00;
+	color: white;
+}
+.btn_clust.active {
+	background-color: gray;
+	color: white;
+}
+.btn-primary {
+	margin-right: 10px;
+	margin-left: 10px;
+}
+</style>
+<script type="text/javascript">
+$(function () {
+	$('[data-toggle="popover"]').popover()
+});
+</script>
+<div class="container" style="width: 90%;">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>Local-merging of Data Values</h3>
+		</div>
+		<div class="panel-body">
+<!--			<div class="panel">	
+				<table id="startover_table" class="table" style="width: 100%;">
+					<tr><td>
+							<a class="btn btn-danger pull-right btn-xs" href="/simple_clustering/upload_file">Start Over!</a>
+					</td></tr>
+				</table>
+			</div>-->
+			<p></p>
+			<!--			<div class="well"><h4>Scan through the clusters and merge clusters referring to the same entity by first clicking on them and then clicking "Merge Selected Clusters". <p></p>When you're done with the local merging process, click "Done Locally Merging".</h4><p></p></div>-->
+			<div class="well"><h4>
+					<p>To do local-merging, scan the values in the list below from top to bottom. While scanning, if you see multiple values that match, you can select them and click "Merge Selected Values" to merge them. Then continue scanning. When you have reached the end of the list, click "Done Local-merging".</p>
+					<p>Try your best to merge as many matching values as you can while scanning the list from top to bottom. But if you miss a few matching values, do not worry. They will be taken care of in the global-merging step. The more values you can merge now, the less time the global-merging step will take.</p>
+<!--					<p>To normalize the given values, you will do two steps: (a) local merging, followed by (b) global merging.</p>
+					<p>For the first step, you can see the clusters of data values as a list below. Initially each cluster contains a single data value. You can see the values in each cluster by hovering over the corresponding button in the list below.</p>
+					<p>To do local merging, scan the clusters in the list below from top to bottom. If you see multiple clusters that match, you can select them, then click "Merged Selected Clusters" to merge them. Then continue scanning top-down.</p>
+					<p>When you reach the end of the list, click "Done Locally Merging".</p>-->
+			</h4><p></p></div>
+
+			<div id="selectsyn_box_top">
+				<!--				<label for="mrgbtntop" class="col-sm-8 control-label">Select all the clusters which should be merged with "{{ cur_cluster_label }}".</label>-->
+				<!--				<button class="btn btn-primary" id="mrgbtntop" type="button" onclick="mergeClusters()">Merge Selected Clusters</button>-->
+				<!--				<button class="btn btn-primary pull-right" id="donebtntop" type="button" onclick="norm_app.start_global_merging(JSON.stringify(mergedClusters))">Done Locally Merging</button>-->
+			</div><p></p>
+			<div id="cluster-panel" class="panel panel-primary">
+				<!--				<div class="panel-heading"><h4>Merge clusters by selecting clusters referring to the same entity and clicking "Merge Selected Clusters". <p></p>If no subset of the clusters refer to the same entity, click "Done Merging".</h4></div>-->
+				<div class="panel-body"id="clusters_labels_panel">
+					<table style="width: 100%;">
+						<thead><tr><td id="clust-cnt-cell" style="width: 90%;"><b>
+										<!--Pure Clusters:-->
+								</b><p></p></td>
+								<td style="width: 30%;"><!--<b>Merged Clusters:</b>--><p></p></td>
+								</tr>
+						</thead>
+					<tbody>
+					<tr><td id="pure_cell">
+							<script type="text/javascript">
+								loadPureClustersInColumns();
+							</script>
+						</td>
+						<td id="results_cell">
+							<!--<script type="text/javascript">
+								//loadMergedClustersInColumns();
+							</script>-->
+						</td>
+					</tr>
+					</tbody>
+					</table>
+				</div>
+			</div>
+			<!--			<div id="result_cluster-panel" class="panel panel-primary">-->
+			<!--				<div class="panel-body"id="results_clusters_labels_panel">-->
+			<!--				</div>-->
+			<!--			</div>-->
+
+			<div id="selectsyn_box"><table><tr><td><h4>When you are done scanning the list and merging values, then click the "Done Local-merging" button to proceed to the global-merging step.</h4></td><td>
+				<!--				<label for="mrgbtnbtm" class="col-sm-8 control-label">Select all the clusters which should be merged with "{{ cur_cluster_label }}".</label>-->
+				<!--				<button class="btn btn-primary" id="mrgbtnbtm" type="button" onclick="mergeClusters()">Merge Selected Clusters</button>-->
+				<button class="btn btn-primary pull-right" id="donebtnbtm" type="button" onclick="norm_app.start_global_merging(JSON.stringify(mergedClusters))">Done Local-merging</button></td></tr></table>
+			</div>
+			<p></p>
+		</div>
+	</div>
+<!--	<div class="panel panel-warning">
+		<div class="panel-body">
+			{% if request.session.log_level|stringformat:"s" == "user_actions" %}
+				Logging user actions.
+			{% else %}
+				No logging.
+			{% endif %}
+		</div>
+	</div>-->
+</div>
+<!--{% endautoescape %}-->
