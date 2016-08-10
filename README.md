@@ -3,11 +3,11 @@
 To install this package:
 
 1. First install PyQt4, e.g. using one of the following methods:
-  1. Install on Anaconda using the following command:
+  1. If you have Anaconda installed on your machine, then use the following command:
 
      ```$ conda install pyqt```
 
-  2. Follow the instructions at http://pyqt.sourceforge.net/Docs/PyQt4/installation.html
+  2. Otherwise follow the instructions at http://pyqt.sourceforge.net/Docs/PyQt4/installation.html
 
 2. Then install the package using one of the following methods:
   1. Run the following command:
