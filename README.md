@@ -11,11 +11,11 @@ To install this package:
 
 2. Then clone the package source code using the following command:
 
-   ```$git clone https://github.com/adelaneh/py_manual_vn```
+   ```$ git clone https://github.com/adelaneh/py_manual_vn```
 
 3. Now enter the source code root folder (```py_manual_vn```) and install the package using the following command:
 
-   ```$python setup.py install```
+   ```$ python setup.py install```
 
    You can use ```--prefix``` to change the destination folder for installing the package (see the help using ```$ python setup.py --help```).
 
