@@ -96,11 +96,6 @@ class NormalizationApp(QObject):
 		for val in vals:
 			self.merged_clusters[val]	= [val,]
 
-		print(__file__)
-		print(os.path.join(os.path.dirname(__file__), '..'))
-		print(os.path.dirname(os.path.realpath(__file__)))
-		print(os.path.abspath(os.path.dirname(__file__)))
-
 		self.meta		= open(self.curpath + meta_file).read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
 		self.app		= QApplication(sys.argv)
@@ -208,7 +203,6 @@ class NormalizationApp(QObject):
 	def reload_global_merging(self, clusters, results):
 		result_clusters	= ast.literal_eval(results.__str__())
 		self.result_clusters.update(result_clusters)
-		pprint(self.result_clusters)
 		
 		self.start_global_merging(clusters) 
 
@@ -252,5 +246,4 @@ if __name__ == "__main__":
 		vals		= Utils.read_from_file(sys.argv[1])
 		
 	results		= normalize_values(vals)
-	pprint(results)
 
