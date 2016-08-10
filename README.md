@@ -42,4 +42,4 @@ To use this package:
   
   This will open the value normalization application which gives you instructions on how to normalize the input values.
 
-4. Finally when you finish the normalization process and close the avoce application, the normalization results are returned in the variable ```res```: it is a dictionary where each key is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster.
+4. Finally when you finish the normalization process and close the above application, the normalization results are returned in the variable ```res```: it is a dictionary where each key is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster.
