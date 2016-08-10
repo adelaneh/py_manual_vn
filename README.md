@@ -10,7 +10,7 @@ To use this package:
 
   ```>>> vals = manvn.read_from_file('PATH-TO-TEXT-FILE')```
   
-  where the file at PATH-TO-TEXT-FILE contains the values to be normalized, one data value per line.
+  where the file at ```PATH-TO-TEXT-FILE``` contains the values to be normalized, one data value per line.
 
 3. Now run the command:
 
