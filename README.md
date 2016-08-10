@@ -34,7 +34,7 @@ To use this package:
 
   ```>>> vals = manvn.read_from_file('PATH-TO-TEXT-FILE')```
   
-  where the file at ```PATH-TO-TEXT-FILE``` contains the values to be normalized, one data value per line.
+  where the file at ```PATH-TO-TEXT-FILE``` contains the values to be normalized, one data value per line. You can download one of our sample datasets from https://github.com/adelaneh/py_manual_vn/tree/master/py_manual_vn/data.
 
 3. Now run the command:
 
