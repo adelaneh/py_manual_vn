@@ -8,11 +8,6 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtWebKit import *
 
-#QWebSettings.globalSettings().setAttribute(QWebSettings.LocalStorageEnabled, True)
-#QWebSettings.globalSettings().setLocalStoragePath(os.getcwd())
-#QWebSettings.globalSettings().setOfflineStoragePath(os.getcwd())
-#QWebSettings.globalSettings().setAttribute(QWebSettings.LocalContentCanAccessFileUrls, True)
-
 class WebPage(QWebPage):
 	"""
 	Makes it possible to use a Python logger to print javascript console messages
@@ -28,35 +23,11 @@ class Window(QWidget):
 		super(Window, self).__init__()
 		self.resize(1100, 1500)
 		self.view = QWebView(self)
-#		self.view.setPage(WebPage())
-
-#		self.setupInspector()
-#
-#		self.splitter = QSplitter(self)
-#		self.splitter.setOrientation(Qt.Vertical)
 
 		layout = QVBoxLayout(self)
 		layout.setMargin(0)
-#		layout.addWidget(self.splitter)
 		layout.addWidget(self.view)
 		QWebSettings.globalSettings().setAttribute(QWebSettings.DeveloperExtrasEnabled, True)
-
-#		self.splitter.addWidget(self.view)
-#		self.splitter.addWidget(self.webInspector)
-#
-#	def setupInspector(self):
-#		page = self.view.page()
-#		page.settings().setAttribute(QWebSettings.DeveloperExtrasEnabled, True)
-#		self.webInspector = QWebInspector(self)
-#		self.webInspector.setPage(page)
-#
-#		shortcut = QShortcut(self)
-#		shortcut.setKey(Qt.Key_F12)
-#		shortcut.activated.connect(self.toggleInspector)
-#		self.webInspector.setVisible(True)
-#
-#	def toggleInspector(self):
-#		self.webInspector.setVisible(not self.webInspector.isVisible())
 
 class ConsolePrinter(QObject):
 	def __init__(self, parent=None):
@@ -85,16 +56,14 @@ class Utils:
 		return sorted([str(val) for val in vals], key=lambda s: s.lower())
 
 class NormalizationApp(QObject):
-	def __init__(self, vals, meta_file='html/meta.html', parent=None):
+	def __init__(self, clusters, meta_file='html/meta.html', parent=None):
 		super(NormalizationApp, self).__init__(parent)
 
 		self.curpath			= os.path.abspath(os.path.dirname(__file__)) + "/"
-		self.vals				= vals
-		self.merged_clusters	= {}
+		self.merged_clusters	= clusters
+		self.vals				= list(self.merged_clusters.keys())
 		self.gmic				= 0
 		self.result_clusters	= {}
-		for val in vals:
-			self.merged_clusters[val]	= [val,]
 
 		self.meta		= open(self.curpath + meta_file).read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
@@ -136,10 +105,6 @@ class NormalizationApp(QObject):
 
 	@pyqtSlot()
 	def index_loaded(self):
-#		print("index loaded")
-#		self.window.webInspector.setPage(self.window.view.page())
-
-		# Set callback functions
 		self.mainframe.addToJavaScriptWindowObject('norm_app', self)
 		btn				= self.mainframe.documentElement().findFirst('button[id="start-local-merge-top"]')
 		btn.evaluateJavaScript('this.onclick=norm_app.start_local_merging')
@@ -171,8 +136,6 @@ class NormalizationApp(QObject):
 
 	@pyqtSlot()
 	def local_merge_loaded(self):
-#		print("local merge loaded")
-#		self.window.webInspector.setPage(self.window.view.page())
 		self.mainframe.evaluateJavaScript("window.scrollTo(0, %d);"%(self.pgoffset, ))
 		return
 
@@ -208,8 +171,6 @@ class NormalizationApp(QObject):
 
 	@pyqtSlot()
 	def global_merge_loaded(self):
-#		print("global merge loaded")
-#		self.window.webInspector.setPage(self.window.view.page())
 		self.mainframe.evaluateJavaScript("window.scrollTo(0, 0);")
 		return
 
@@ -237,7 +198,13 @@ class NormalizationApp(QObject):
 		return
 
 def normalize_values(vals):
-	norm_app	= NormalizationApp(vals)
+	clusters	= {}
+	for val in vals:
+		clusters[val]	= [val,]
+	return normalize_clusters(clusters)
+
+def normalize_clusters(clusters):
+	norm_app	= NormalizationApp(clusters)
 	norm_app.run()
 	return norm_app.result_clusters
 

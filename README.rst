@@ -1,21 +1,21 @@
-py_manual_vn
+py_valuenormalization
 --------------------------------
 
 To use this package:
 
     1 - First import the package by running:
 
-        >>> import py_manual_vn as manvn
+        >>> import py_valuenormalization as vn
 
     2 - Then load your data values into a list using the following command:
 
-        >>> vals = manvn.read_from_file('PATH-TO-TEXT-FILE')
+        >>> vals = vn.read_from_file('PATH-TO-TEXT-FILE')
 
         where the file at PATH-TO-TEXT-FILE contains the values to be normalized, one data value per line.
 
     3 - Now run the command:
 
-        >>> res = manvn.normalize_values(vals)
+        >>> res = vn.normalize_values(vals)
 
         This will open the value normalization application which gives you instructions on how to normalize the input values.
 

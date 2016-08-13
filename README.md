@@ -1,4 +1,4 @@
-#py_manual_vn
+#py_valuenormalization
 
 To install this package:
 
@@ -12,13 +12,13 @@ To install this package:
 2. Then install the package using one of the following methods:
   1. Run the following command:
 
-     ```pip install git+https://github.com/adelaneh/py_manual_vn.git```
+     ```pip install git+https://github.com/adelaneh/py_valuenormalization.git```
 	 
   2. First clone the package source code using the following command:
 
-     ```$ git clone https://github.com/adelaneh/py_manual_vn```
+     ```$ git clone https://github.com/adelaneh/py_valuenormalization```
 
-     Then enter the source code root folder (```py_manual_vn```) and install the package using the following command:
+     Then enter the source code root folder (```py_valuenormalization```) and install the package using the following command:
 
      ```$ python setup.py install```
 
@@ -28,17 +28,17 @@ To use this package:
 
 1. First import the package by running:
 
-  ```>>> import py_manual_vn as manvn```
+  ```>>> import py_valuenormalization as vn```
 
 2. Then load your data values into a list using the following command:
 
-  ```>>> vals = manvn.read_from_file('PATH-TO-TEXT-FILE')```
+  ```>>> vals = vn.read_from_file('PATH-TO-TEXT-FILE')```
   
-  where the file at ```PATH-TO-TEXT-FILE``` contains the values to be normalized, one data value per line. You can download one of our sample datasets from https://github.com/adelaneh/py_manual_vn/tree/master/py_manual_vn/data.
+  where the file at ```PATH-TO-TEXT-FILE``` contains the values to be normalized, one data value per line. You can download one of our sample datasets from https://github.com/adelaneh/py_manual_vn/tree/master/py_valuenormalization/data.
 
 3. Now run the command:
 
-  ```>>> res = manvn.normalize_values(vals)```
+  ```>>> res = vn.normalize_values(vals)```
   
   This will open the value normalization application which gives you instructions on how to normalize the input values.
 
