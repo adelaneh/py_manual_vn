@@ -1,0 +1,82 @@
+<style>
+.btn_clust.active {
+	background-color: gray;
+	color: white;
+}
+.btn-primary {
+	margin-right: 10px;
+	margin-left: 10px;
+}
+</style>
+<script type="text/javascript">
+var getCurrentClusters = function(e) {
+	var curClstrs = new Object();
+	for (var kk in tosplit_clusters) {
+		curClstrs[kk] = [];
+		for (var hhx = 0; hhx < tosplit_clusters[kk].length; hhx++) {
+			hh = tosplit_clusters[kk][hhx];
+			curClstrs[kk].push(hh);
+		}
+	}
+	return curClstrs;
+}
+
+var getSplitClusters = function(e) {
+	var splClstrs = new Object();
+	for (var kk in split_clusters) {
+		splClstrs[kk] = [];
+		for (var hhx = 0; hhx < split_clusters[kk].length; hhx++) {
+			hh = split_clusters[kk][hhx];
+			splClstrs[kk].push(hh);
+		}
+	}
+	return splClstrs;
+}
+
+var allClusts = getCurrentClusters();
+var splitClusters = getSplitClusters();
+</script>
+
+<div class="container" style="width: 90%;">
+	<div id="split_panel" class="panel panel-default">
+		<div class="panel-heading">
+			<h3>Splitting the clusters (<script>document.write(Object.keys(allClusts).length);</script> more clusters to split)</h3>
+		</div>
+		<div class="panel-body">
+			<div id="ispure_box_top">
+				<label for="answersgrp" class="col-sm-6 control-label">Is this cluster pure?</label>
+				<div id="answersgrp_top" class="btn-group" role="group" aria-label="answers">
+					<button class="btn btn-primary" id="pure_no_top" type="button" style="width: 200px; margin-right: 200px;" onclick="pureNo()">No</button>
+					<button class="btn btn-primary pull-right" id="pure_yes_top" type="button" onclick="pureYes()">Yes</button>
+				</div>
+			</div>
+
+			<div id="selectdom_box_top" style="display:none">
+				<label for="pocbtn_top" class="col-sm-8 control-label">Click all the values referring to the dominant entity and then press the "Split Cluster" button.</label>
+				<button class="btn btn-primary" id="pocbtn_top" type="button" onclick="pullOutCluster()">Split Cluster</button>
+			</div>
+			<p></p>
+			<div id="cluster-panel" class="panel panel-primary">	
+				<div class="panel-body" id="clusters_panel">
+					<script type="text/javascript">
+						loadClustersInColumns();
+					</script>
+				</div>
+			</div>
+
+			<div id="ispure_box">
+				<label for="answersgrp" class="col-sm-6 control-label">Is this cluster pure?</label>
+				<div id="answersgrp" class="btn-group" role="group" aria-label="answers">
+					<button class="btn btn-primary" id="pure_no" type="button" style="width: 200px; margin-right: 200px;" onclick="pureNo()">No</button>
+					<button class="btn btn-primary pull-right" id="pure_yes" type="button" onclick="pureYes()">Yes</button>
+				</div>
+			</div>
+
+			<div id="selectdom_box" style="display:none">
+				<label for="pocbtn" class="col-sm-8 control-label">Click all the values referring to the dominant entity and then press the "Split Cluster" button.</label>
+				<button class="btn btn-primary" id="pocbtn" type="button" onclick="pullOutCluster()">Split Cluster</button>
+			</div>
+			<p></p>
+		</div>
+	</div>
+</div>
