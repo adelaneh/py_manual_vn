@@ -2,64 +2,7 @@ var compStrCaseInsensitive = function (a, b) {
 	return a.toLowerCase().localeCompare(b.toLowerCase());
 }
 
-var start_manual_normalization_ff = function() {
-	console.log(document.getElementById("values_to_norm").rows.length);
-	console.log(vals);
-}
-
-var clusterValues= function(e){
-	var myInput = new Object();
-	var tbl = document.getElementById("values_to_norm");
-	var numRows = tbl.rows.length;
-
-	myInput['input_values'] = new Object();
-	for (var i = 1; i < numRows; i++) {
-		var ID = tbl.rows[i].id;
-		var cells = tbl.rows[i].children;
-		myInput['input_values'][cells[1].innerHTML] = cells[0].innerHTML;
-	}
-
-
-	$("#pleaseWaitDialog").modal('show');
-	$.ajax({
-		type: 'POST',
-		url: '/simple_clustering/cluster_values',
-		timeout: 0,
-		data: JSON.stringify(myInput),
-	}).done(function(data) {
-		$("#pleaseWaitDialog").modal('hide');
-		window.location = "/simple_clustering/clustering_summary";
-	}).fail(function(j,s,t) {
-		console.log('Something happened!');
-		console.log(j.responseText);
-		console.log(s);
-		console.log(t);
-	});
-
-	return false;
-
-}
-
-var uploadAndShowValues = function(e){
-	var fd = new FormData($('#fileinfo'));
-	fd.append("label", "WEBUPLOAD");
-	alert(fd);
-	$.ajax({
-		url: "/simple_clustering/upload_file",
-		type: "POST",
-		data: fd,
-		enctype: 'multipart/form-data',
-		processData: false,  // tell jQuery not to process the data
-		contentType: false   // tell jQuery not to set contentType
-	}).done(function( data ) {
-		console.log("File uploaded!");
-		console.log( data );
-	});
-	return false;
-}
-
 var pureYes = function(e){
-	logPureYesButtonClick();
 	var curClstr = allClusts[curClusterLabel];
 	var poclust = []
 		for (var ii = curClstr.length; ii >= 0; ii--) {
@@ -77,7 +20,6 @@ var pureYes = function(e){
 }
 
 var pureNo = function(e){
-	logPureNoButtonClick();
 	document.getElementById('ispure_box_top').style.display = 'none';
 	document.getElementById('ispure_box').style.display = 'none';
 	document.getElementById('selectdom_box_top').style.display = 'block';
@@ -130,11 +72,6 @@ var valueButtonClick = function(event, eid) {
 	logValueButtonClick(eid);
 }
 
-var startSplitting = function(e) {
-	window.location = "/simple_clustering/next_cluster";
-	return;
-}
-
 var showClusteringSummary = function(e) {
 	var txt = "";
 	txt = txt + "<tr><td><b>Number of Clusters</b></td><td>" + (Object.keys(mergedClusters).length) + "</td></tr>";
@@ -172,9 +109,9 @@ var pullOutCluster = function(e){
 	}
 	if (poclust.length < 1) { return; }
 	splitClusters[poclust[0]] = poclust;
-	if ((allClusts[curClusterLabel].length != 0) || (document.getElementById('ispure_box_top').style.display == 'none')) {
-		logPOCButtonClick(allClusts[curClusterLabel].length + poclust.length);
-	}
+//	if ((allClusts[curClusterLabel].length != 0) || (document.getElementById('ispure_box_top').style.display == 'none')) {
+//		logPOCButtonClick(allClusts[curClusterLabel].length + poclust.length);
+//	}
 
 	document.getElementById('selectdom_box_top').style.display = 'none';
 	document.getElementById('selectdom_box').style.display = 'none';
@@ -182,34 +119,8 @@ var pullOutCluster = function(e){
 	document.getElementById('ispure_box').style.display = 'block';
 
 	if (allClusts[curClusterLabel].length <= 1) {
-		if (Object.keys(allClusts).length == 1 && allClusts[curClusterLabel].length == 1) {logSplitDone();}
-		if (allClusts[curClusterLabel].length == 0) {delete allClusts[curClusterLabel];}
-		var myInput = new Object();
-		myInput['orig_clusters'] = allClusts;
-		myInput['cur_cluster_label'] = curClusterLabel;
-		myInput['split_clusters'] = splitClusters;
-		myInput['value_file_name'] = value_file_name;
-		myInput['cluster_file_name'] = cluster_file_name;
-		$.ajax({
-			type: 'POST',
-			timeout: 0,
-			data: JSON.stringify(myInput),
-			url: "/simple_clustering/next_cluster",
-		}).done(function( data ) {
-			if (Object.keys(allClusts).length == 0) {
-				window.location = "/simple_clustering/merge_clusters";
-				logSplitDone();
-			}
-			else {
-				document.open();
-				document.write(data);
-				document.close();
-			}
-		}).fail(function(j,s,t) {
-			alert(j.responseText);
-			alert(s);
-			alert(t);
-		});
+//		if (allClusts[curClusterLabel].length == 0) {delete allClusts[curClusterLabel];}
+		norm_app.reload_split_clusters(JSON.stringify(splitClusters));
 	}
 	return;
 }

@@ -2,9 +2,9 @@ import unittest
 
 from nose.tools import *
 
-from py_manual_vn import MyPriorityQueue
-from py_manual_vn import HierarchicalClustering
-from py_manual_vn import SimMeasureNotSupportedException
+from py_valuenormalization import MyPriorityQueue
+from py_valuenormalization import HierarchicalClustering
+from py_valuenormalization import SimMeasureNotSupportedException
 
 class HierarchicalClusteringTestCases(unittest.TestCase):
 	def setUp(self):

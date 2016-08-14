@@ -1,6 +1,6 @@
 from setuptools import setup
 
-setup(name='py_valuenormazliation',
+setup(name='py_valuenormalization',
 	version='0.1',
 	description='Attribute value normalization tool',
 	long_description='This package provides the neccessary workflow and interface to normalize a set of (attribute) values of type character string.',
@@ -15,7 +15,7 @@ setup(name='py_valuenormazliation',
 	author='Adel Ardalan',
 	author_email='adel@cs.wisc.edu',
 	license='MIT',
-	packages=['py_valuenormazliation'],
+	packages=['py_valuenormalization'],
 #	install_requires=[
 #		'PyQt4',
 #		],
