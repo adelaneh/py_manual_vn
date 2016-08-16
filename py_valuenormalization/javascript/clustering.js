@@ -4,26 +4,29 @@ var compStrCaseInsensitive = function (a, b) {
 
 var pureYes = function(e){
 	var curClstr = allClusts[curClusterLabel];
-	var poclust = []
-		for (var ii = curClstr.length; ii >= 0; ii--) {
-			var kk = curClstr[ii];
-			var curEl = document.getElementById(kk);
-			if (curEl != null) {
-				var parentEl = document.getElementById(kk).parentElement;
-				if (parentEl.className.indexOf("active") < 0) {
-					parentEl.className = parentEl.className.concat(" active");
-				}
+	for (var ii = curClstr.length; ii >= 0; ii--) {
+		var kk = curClstr[ii];
+		var curEl = document.getElementById(kk);
+		if (curEl != null) {
+			var parentEl = document.getElementById(kk).parentElement;
+			if (parentEl.className.indexOf("active") < 0) {
+				parentEl.className = parentEl.className.concat(" active");
 			}
 		}
+	}
 	pullOutCluster(e);
 	return;
 }
 
 var pureNo = function(e){
-	document.getElementById('ispure_box_top').style.display = 'none';
+	document.getElementById('ispure_desc_box').style.display = 'none';
 	document.getElementById('ispure_box').style.display = 'none';
-	document.getElementById('selectdom_box_top').style.display = 'block';
-	document.getElementById('selectdom_box').style.display = 'block';
+	document.getElementById('findoment_desc_box').style.display = 'block';
+	document.getElementById('findoment_box').style.display = 'block';
+	document.getElementById('selectdom_desc_box').style.display = 'none';
+	document.getElementById('selectdom_box').style.display = 'none';
+	document.getElementById('selectnondom_desc_box').style.display = 'none';
+	document.getElementById('selectnondom_box').style.display = 'none';
 	return;
 }
 
@@ -37,7 +40,7 @@ var removeElementById = function(id) {
 
 var loadClustersInColumns = function(e) {
 	var txt = "<table style=\"width:70%\"><tr>";
-	var colCnt = 3;
+	var colCnt = 1;
 	var curCluster = allClusts[curClusterLabel].sort();
 	var maxColSize = Math.floor(curCluster.length / colCnt);
 	if ((curCluster.length / colCnt) != maxColSize) { maxColSize = maxColSize + 1; }
@@ -60,8 +63,35 @@ var loadClustersInColumns = function(e) {
 	return;
 }
 
+var purityLt01 = function() {
+}
+
+var purityLt05GE01 = function() {
+	document.getElementById('ispure_desc_box').style.display = 'none';
+	document.getElementById('ispure_box').style.display = 'none';
+	document.getElementById('findoment_desc_box').style.display = 'none';
+	document.getElementById('findoment_box').style.display = 'none';
+	document.getElementById('selectdom_desc_box').style.display = 'block';
+	document.getElementById('selectdom_box').style.display = 'block';
+	document.getElementById('selectnondom_desc_box').style.display = 'none';
+	document.getElementById('selectnondom_box').style.display = 'none';
+	return;
+}
+
+var purityGE05 = function() {
+	document.getElementById('ispure_desc_box').style.display = 'none';
+	document.getElementById('ispure_box').style.display = 'none';
+	document.getElementById('findoment_desc_box').style.display = 'none';
+	document.getElementById('findoment_box').style.display = 'none';
+	document.getElementById('selectdom_desc_box').style.display = 'none';
+	document.getElementById('selectdom_box').style.display = 'none';
+	document.getElementById('selectnondom_desc_box').style.display = 'block';
+	document.getElementById('selectnondom_box').style.display = 'block';
+	return;
+}
+
 var valueButtonClick = function(event, eid) {
-	if (document.getElementById('ispure_box_top').style.display != 'none') {
+	if (document.getElementById('ispure_box').style.display != 'none' || document.getElementById('findoment_box').style.display != 'none') {
 		if (document.getElementById(eid).parentElement.className.indexOf("active") > -1) {
 			$("[id='"+eid+"'").parent().removeClass("active");
 		}
@@ -94,7 +124,7 @@ var showClusteringSummary = function(e) {
 
 var pullOutCluster = function(e){
 	var curClstr = allClusts[curClusterLabel];
-	var poclust = []
+	var poclust = [];
 	for (var ii = curClstr.length - 1; ii >= 0; ii--) {
 		var kk = curClstr[ii];
 		var curEl = document.getElementById(kk);
@@ -113,13 +143,53 @@ var pullOutCluster = function(e){
 //		logPOCButtonClick(allClusts[curClusterLabel].length + poclust.length);
 //	}
 
-	document.getElementById('selectdom_box_top').style.display = 'none';
-	document.getElementById('selectdom_box').style.display = 'none';
-	document.getElementById('ispure_box_top').style.display = 'block';
+	document.getElementById('ispure_desc_box').style.display = 'block';
 	document.getElementById('ispure_box').style.display = 'block';
+	document.getElementById('findoment_desc_box').style.display = 'none';
+	document.getElementById('findoment_box').style.display = 'none';
+	document.getElementById('selectdom_desc_box').style.display = 'none';
+	document.getElementById('selectdom_box').style.display = 'none';
+	document.getElementById('selectnondom_desc_box').style.display = 'none';
+	document.getElementById('selectnondom_box').style.display = 'none';
 
 	if (allClusts[curClusterLabel].length <= 1) {
 //		if (allClusts[curClusterLabel].length == 0) {delete allClusts[curClusterLabel];}
+		norm_app.reload_split_clusters(JSON.stringify(splitClusters));
+	}
+	return;
+}
+
+var pullOutReminder = function(e){
+	var curClstr = allClusts[curClusterLabel];
+	var poclust = [];
+	for (var ii = curClstr.length - 1; ii >= 0; ii--) {
+		var kk = curClstr[ii];
+		var curEl = document.getElementById(kk);
+		if (curEl != null) {
+			var parentEl = document.getElementById(kk).parentElement;
+			if (parentEl.className.indexOf("active") == -1) {
+				poclust.push(kk);
+				removeElementById(kk);
+				allClusts[curClusterLabel].splice(allClusts[curClusterLabel].indexOf(kk), 1);
+			}
+			else {
+				parentEl.className = parentEl.className.replace(/(?:^|\s)active(?!\S)/g, '');
+			}
+		}
+	}
+	if (poclust.length == curClstr.length) { return; }
+	splitClusters[poclust[0]] = poclust;
+
+	document.getElementById('ispure_desc_box').style.display = 'block';
+	document.getElementById('ispure_box').style.display = 'block';
+	document.getElementById('findoment_desc_box').style.display = 'none';
+	document.getElementById('findoment_box').style.display = 'none';
+	document.getElementById('selectdom_desc_box').style.display = 'none';
+	document.getElementById('selectdom_box').style.display = 'none';
+	document.getElementById('selectnondom_desc_box').style.display = 'none';
+	document.getElementById('selectnondom_box').style.display = 'none';
+
+	if (allClusts[curClusterLabel].length <= 1) {
 		norm_app.reload_split_clusters(JSON.stringify(splitClusters));
 	}
 	return;

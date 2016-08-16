@@ -75,8 +75,12 @@ class ClusteringBasesValueNormalizationApp(QObject):
 		for kk in todelkks:
 			del self.tosplit_clusters[kk]
 
-		self.load_split_clusters()
-
+		if len(self.tosplit_clusters) == 0:
+			self.merged_clusters		= self.split_clusters
+			self.start_local_merging()
+		else:
+			self.load_split_clusters() 
+		
 	def load_split_clusters(self):
 		self.html		= self.meta
 		self.html		+= """<script type="text/javascript">var tosplit_clusters = %s</script>"""%(str(self.tosplit_clusters), )

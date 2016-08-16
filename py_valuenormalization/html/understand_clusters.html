@@ -16,9 +16,9 @@ var mergedClusters = getMergedClusters();
 
 <style>
 
-body {
-	font: 10px sans-serif;
-}
+//body {
+//	font: 10px sans-serif;
+//}
 
 .hist-bar rect {
 	fill: steelblue;
@@ -88,7 +88,7 @@ body {
 			</div>
 
 			<div id="size_histogram">
-				<h4>Cluster Size Histogram:</h4>
+				<h4>Input Cluster Size Histogram:</h4>
 				<script>
 					generateClusterSizeHistogram();
 				</script>
@@ -97,7 +97,7 @@ body {
 	</div>
 	<div id="clustering_results_panel" class="panel panel-default">
 		<div class="panel-heading">
-			<h4>Final Clustering</h4>
+			<h4>Input Clustering</h4>
 		</div>
 		<div class="panel-body">
 			<div id="d3cluster">
@@ -108,10 +108,19 @@ body {
 		</div>
 	</div>
 	<div id="start_clean_up" class="panel panel-default">
-		<div class="panel-body">
-			<div class="col-sm">
-				<button class="btn btn-primary pull-right" id="start-cleanup-btn" type="button">Start Cleaning Up</button>
-			</div>
+		<div class="panel-body" id="start_cleanup_panel" style="width: 100%;">
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 80%;">
+						<h4> Click the "Start Cleaning Up" button to proceed.</h4>
+					</td>
+					<td style="width: 20%;" align="right">
+						<div class="col-sm">
+							<button class="btn btn-primary pull-right" id="start-cleanup-btn" type="button">Start Cleaning Up</button>
+						</div>
+					</td>
+				</tr>
+			</table>
 		</div>
 	</div>
 </div>

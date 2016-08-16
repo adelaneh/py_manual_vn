@@ -43,18 +43,37 @@ var splitClusters = getSplitClusters();
 			<h3>Splitting the clusters (<script>document.write(Object.keys(allClusts).length);</script> more clusters to split)</h3>
 		</div>
 		<div class="panel-body">
-			<div id="ispure_box_top">
-				<label for="answersgrp" class="col-sm-6 control-label">Is this cluster pure?</label>
-				<div id="answersgrp_top" class="btn-group" role="group" aria-label="answers">
-					<button class="btn btn-primary" id="pure_no_top" type="button" style="width: 200px; margin-right: 200px;" onclick="pureNo()">No</button>
-					<button class="btn btn-primary pull-right" id="pure_yes_top" type="button" onclick="pureYes()">Yes</button>
-				</div>
+			<div id="ispure_desc_box" class="well">
+				<h4><p>Determine whether the following cluster is pure or not; i.e. whether all of the values in this cluster refer to the same real-world entity. If it is pure, then click the "Yes" button below to move to the next cluster/next step. Otherwise click the "No" button to split this cluster into a set of pure clusters.</p></h4>
+				<p></p>
 			</div>
 
-			<div id="selectdom_box_top" style="display:none">
-				<label for="pocbtn_top" class="col-sm-8 control-label">Click all the values referring to the dominant entity and then press the "Split Cluster" button.</label>
-				<button class="btn btn-primary" id="pocbtn_top" type="button" onclick="pullOutCluster()">Split Cluster</button>
+			<div id="findoment_desc_box" class="well" style="display:none">
+				<h4><p>Now calculate the purity of this cluster; i.e. the ratio of the number of values in this cluster over the size of the cluster. Based on the range the purity falls in, you will use different strategies to efficiently split the cluster into smaller, pure clusters.</p>
+				<p>After you've calculated the purity of this cluster, then push one of three buttons at the bottom of the screen according to the range in which the purity falls.</p></h4>
+				<p></p>
 			</div>
+
+			<div id="selectdom_desc_box" class="well" style="display:none">
+				<h4><p>In this step you split the current cluster as follows:
+					<ul>
+						<li>First click all the values in this cluster referring to the dominant entity of the cluster.</li>
+						<li>Now click the "Split Cluster" button at the bottom of the screen.</li>
+					</ul>
+					This split the current cluster into two: one cluster containing the dominating entity values (selected) and another cluster containing the rest of the values in the current cluster (not selected). Then you repeat splitting the remainder cluster.</p></h4>
+				<p></p>
+			</div>
+
+			<div id="selectnondom_desc_box" class="well" style="display:none">
+				<h4><p>In this step you split the current cluster as follows:
+					<ul>
+						<li>First click all the values in this cluster NOT referring to the dominant entity of the cluster.</li>
+						<li>Now click the "Split Cluster" button at the bottom of the screen.</li>
+					</ul>
+					This split the current cluster into two: one cluster containing the dominating entity values (not selected) and another cluster containing the rest of the values in the current cluster (selected). Then you repeat splitting the remainder cluster.</p></h4>
+				<p></p>
+			</div>
+
 			<p></p>
 			<div id="cluster-panel" class="panel panel-primary">	
 				<div class="panel-body" id="clusters_panel">
@@ -65,17 +84,64 @@ var splitClusters = getSplitClusters();
 			</div>
 
 			<div id="ispure_box">
-				<label for="answersgrp" class="col-sm-6 control-label">Is this cluster pure?</label>
-				<div id="answersgrp" class="btn-group" role="group" aria-label="answers">
-					<button class="btn btn-primary" id="pure_no" type="button" style="width: 200px; margin-right: 200px;" onclick="pureNo()">No</button>
-					<button class="btn btn-primary pull-right" id="pure_yes" type="button" onclick="pureYes()">Yes</button>
-				</div>
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 50%;">
+							<label for="answersgrp" class="container-fluid control-label">Is this cluster pure?</label>
+						</td>
+						<td style="width: 50%;" align="right">
+							<div id="answersgrp" class="btn-group" role="group" aria-label="answers">
+								<button class="btn btn-primary" id="pure_no" type="button" style="width: 200px; margin-right: 200px;" onclick="pureNo()">No</button>
+								<button class="btn btn-primary pull-right" id="pure_yes" type="button" onclick="pureYes()">Yes</button>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+
+			<div id="findoment_box" style="display:none">
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 50%;">
+							<label for="answersgrp" class="container-fluid control-label">What range the purity of this cluster fall in?</label>
+						</td>
+						<td style="width: 50%;" align="right">
+							<div id="puritygrp" class="btn-group" role="group" aria-label="answers">
+								<button class="btn btn-primary" id="purity_lt_01" type="button" style="margin-right: 20px;" onclick="purityLt01()">Purity &le; 0.1</button>
+								<button class="btn btn-primary" id="purity_lt_05_ge_01" type="button" style="margin-right: 40px; margin-left: 20px;" onclick="purityLt05GE01()">0.1 &le; Purity &lt; 0.5</button>
+								<button class="btn btn-primary pull-right" id="purity_ge_05" type="button" onclick="purityGE05()">Purity &ge; 0.5</button>
+							</div>
+						</td>
+					</tr>
+				</table>
 			</div>
 
 			<div id="selectdom_box" style="display:none">
-				<label for="pocbtn" class="col-sm-8 control-label">Click all the values referring to the dominant entity and then press the "Split Cluster" button.</label>
-				<button class="btn btn-primary" id="pocbtn" type="button" onclick="pullOutCluster()">Split Cluster</button>
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 80%;">
+							<label for="pocbtn" class="container-fluid control-label">Click all the values referring to the dominant entity and then press the "Split Cluster" button.</label>
+						</td>
+						<td style="width: 20%;" align="right">
+							<button class="btn btn-primary" id="pocbtn" type="button" onclick="pullOutCluster()">Split Cluster</button>
+						</td>
+					</tr>
+				</table>
 			</div>
+
+			<div id="selectnondom_box" style="display:none">
+				<table style="width: 100%;">
+					<tr>
+						<td style="width: 80%;">
+							<label for="pocbtn" class="container-fluid control-label">Click all the values NOT referring to the dominant entity and then press the "Split Cluster" button.</label>
+						</td>
+						<td style="width: 20%;" align="right">
+							<button class="btn btn-primary" id="pocbtn" type="button" onclick="pullOutReminder()">Split Cluster</button>
+						</td>
+					</tr>
+				</table>
+			</div>
+
 			<p></p>
 		</div>
 	</div>
