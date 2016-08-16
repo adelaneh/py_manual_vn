@@ -25,6 +25,10 @@ class ClusteringBasesValueNormalizationApp(QObject):
 		self.app.setWindowIcon(QIcon(self.curpath + 'icons/uw3.png'))
 		self.window		= Window()
 		self.window.setWindowTitle("Clustering-based Value Normalization")
+		# this will remove minimized status and restore window with keeping maximized/normal state
+		self.window.setWindowState(self.window.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
+		# this will activate the window
+		self.window.activateWindow()
 		self.window.show()
 		
 		self.load_understand_clusters()
