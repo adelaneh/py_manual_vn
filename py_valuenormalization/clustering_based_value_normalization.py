@@ -30,6 +30,7 @@ class ClusteringBasesValueNormalizationApp(QObject):
 		# this will activate the window
 		self.window.activateWindow()
 		self.window.show()
+		self.window.raise_()
 		
 		self.load_understand_clusters()
 
