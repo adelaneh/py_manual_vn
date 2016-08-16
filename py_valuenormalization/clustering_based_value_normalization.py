@@ -3,6 +3,9 @@ from pprint import pprint
 from time import sleep
 import ast
 
+import signal
+signal.signal(signal.SIGINT, signal.SIG_DFL)
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtWebKit import *
@@ -21,19 +24,6 @@ class ClusteringBasesValueNormalizationApp(QObject):
 
 		self.meta		= open(self.curpath + meta_file).read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
-		self.app		= QApplication(sys.argv)
-		self.app.setWindowIcon(QIcon(self.curpath + 'icons/uw3.png'))
-		self.window		= Window()
-		self.window.setWindowTitle("Clustering-based Value Normalization")
-		# this will remove minimized status and restore window with keeping maximized/normal state
-		self.window.setWindowState(self.window.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
-		# this will activate the window
-		self.window.activateWindow()
-		self.window.show()
-		self.window.raise_()
-		
-		self.load_understand_clusters()
-
 	def get_html_table(self):
 		inp_val_table	= ""
 		cnt				= 1
@@ -43,6 +33,25 @@ class ClusteringBasesValueNormalizationApp(QObject):
 		return inp_val_table
 
 	def run(self):
+		self.app		= QApplication(sys.argv)
+		self.app.setWindowIcon(QIcon(self.curpath + 'icons/uw3.png'))
+		self.window		= Window()
+		self.window.setWindowTitle("Clustering-based Value Normalization")
+		# this will remove minimized status and restore window with keeping maximized/normal state
+		self.window.setWindowState(self.window.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
+		# this will activate the window
+		self.window.activateWindow()
+
+#		grview = QGraphicsView()
+#		scene = QGraphicsScene(grview)
+#		grview.setScene(scene)
+#		grview.show()
+
+		self.window.show()
+		self.window.raise_()
+
+		self.load_understand_clusters()
+
 		self.app.exec_()
 
 	#########################################

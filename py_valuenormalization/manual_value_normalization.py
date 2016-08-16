@@ -3,6 +3,9 @@ from pprint import pprint
 from time import sleep
 import ast
 
+import signal
+signal.signal(signal.SIGINT, signal.SIG_DFL)
+
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtWebKit import *
@@ -25,7 +28,12 @@ class ManualValueNormalizationApp(QObject):
 		self.app.setWindowIcon(QIcon(self.curpath + 'icons/uw3.png'))
 		self.window		= Window()
 		self.window.setWindowTitle("Manual Value Normalization")
+		# this will remove minimized status and restore window with keeping maximized/normal state
+		self.window.setWindowState(self.window.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
+		# this will activate the window
+		self.window.activateWindow()
 		self.window.show()
+		self.window.raise_()
 		
 		self.load_understand_values()
 
