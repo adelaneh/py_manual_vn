@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import sys, os
 from pprint import pprint
 from time import sleep
