@@ -24,6 +24,15 @@ class ManualValueNormalizationApp(QObject):
 
 		self.meta		= open(self.curpath + meta_file).read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
+	def get_html_table(self):
+		inp_val_table	= ""
+		cnt				= 1
+		for val in self.vals:
+			inp_val_table	+= '<tr><th class="col-xs-2">%d</th><td class="col-xs-8">%s</td></tr>\n'%(cnt, val)
+			cnt				+= 1
+		return inp_val_table
+
+	def run(self):
 		self.app		= QApplication(sys.argv)
 		self.app.setWindowIcon(QIcon(self.curpath + 'icons/uw3.png'))
 		self.window		= Window()
@@ -37,15 +46,6 @@ class ManualValueNormalizationApp(QObject):
 		
 		self.load_understand_values()
 
-	def get_html_table(self):
-		inp_val_table	= ""
-		cnt				= 1
-		for val in self.vals:
-			inp_val_table	+= '<tr><th class="col-xs-2">%d</th><td class="col-xs-8">%s</td></tr>\n'%(cnt, val)
-			cnt				+= 1
-		return inp_val_table
-
-	def run(self):
 		self.app.exec_()
 
 	def load_understand_values(self):

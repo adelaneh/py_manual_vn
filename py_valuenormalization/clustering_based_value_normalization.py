@@ -42,11 +42,6 @@ class ClusteringBasesValueNormalizationApp(QObject):
 		# this will activate the window
 		self.window.activateWindow()
 
-#		grview = QGraphicsView()
-#		scene = QGraphicsScene(grview)
-#		grview.setScene(scene)
-#		grview.show()
-
 		self.window.show()
 		self.window.raise_()
 
