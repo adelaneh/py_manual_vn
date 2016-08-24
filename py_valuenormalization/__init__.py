@@ -11,6 +11,7 @@ from cost_model_calibration import *
 
 from priority_queue import *
 from hierarchical_clustering import *
+from smart_clustering import *
 
 def read_from_file(path):
 	return Utils.read_from_file(path)

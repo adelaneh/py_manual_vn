@@ -6,7 +6,7 @@ from py_stringmatching.similarity_measure.levenshtein import Levenshtein
 from py_stringmatching.similarity_measure.jaccard import Jaccard
 from py_stringmatching.tokenizer.qgram_tokenizer import QgramTokenizer
 
-class HierarchicalClustering(object):
+class HybridClustering():
 	def __init__(self, vals):
 		self.vals					= sorted(vals, reverse=True)
 		# whether to show debugging info or not	
@@ -23,8 +23,6 @@ class HierarchicalClustering(object):
 			'Levenshtein':		Levenshtein().get_sim_score, 
 			'3gram Jaccard':	Jaccard3Gram
 		}
-
-		self.linkages				= ['single', 'average', 'complete']
 
 	def init_clustering(self):
 		# value -> cluster id
