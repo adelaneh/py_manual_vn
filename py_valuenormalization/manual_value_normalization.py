@@ -33,9 +33,13 @@ class ManualValueNormalizationApp(QObject):
 		return inp_val_table
 
 	def run(self):
-		self.app		= QApplication(sys.argv)
-		self.app.setWindowIcon(QIcon(self.curpath + 'icons/uw3.png'))
-		self.window		= Window()
+		global app
+		app		= QApplication.instance()
+		if app is None:
+			app		= QApplication(sys.argv)
+		app.setWindowIcon(QIcon(self.curpath + 'icons/uw3.png'))
+		#self.window		= Window()
+		self.window		= QWebView()
 		self.window.setWindowTitle("Manual Value Normalization")
 		# this will remove minimized status and restore window with keeping maximized/normal state
 		self.window.setWindowState(self.window.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
@@ -46,8 +50,11 @@ class ManualValueNormalizationApp(QObject):
 		
 		self.load_understand_values()
 
-		self.app.exec_()
+		app.exec_()
 
+	#########################################
+	########### Understand values ###########
+	#########################################
 	def load_understand_values(self):
 		self.html		= self.meta 
 		self.html		+= open(self.curpath + "html/understand_values.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)

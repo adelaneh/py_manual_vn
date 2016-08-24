@@ -64,37 +64,42 @@ var splitClusters = getSplitClusters();
 <div class="container" style="width: 90%;">
 	<div id="split_panel" class="panel panel-default">
 		<div class="panel-heading">
-			<h3>Splitting the clusters (<script>document.write(Object.keys(allClusts).length);</script> more clusters to split)</h3>
+			<h3>Split Phase (<script>document.write(Object.keys(allClusts).length);</script> More Clusters to Split)</h3>
+			<p></p>
+			<h5>In the split phase, you split clusters which contain values referring to more than one entity into <i>pure</i> clusters; i.e. all the values in the resulting clusters will refer to a single entity. </h5>
+			<p></p>
 		</div>
 		<div class="panel-body">
 			<div id="ispure_desc_box" class="well">
-				<h4><p>Determine whether the following cluster is pure or not; i.e. whether all of the values in this cluster refer to the same real-world entity. If it is pure, then click the "Yes" button below to move to the next cluster/next step. Otherwise click the "No" button to split this cluster into a set of pure clusters.</p></h4>
+				<h4><p>Determine whether the following cluster is pure or not; i.e. whether all of the values in this cluster refer to the same real-world entity or not. If it is pure, then click the "Yes" button below to proceed to the next step. Otherwise click the "No" button to split this cluster into a set of pure clusters.</p></h4>
 				<p></p>
 			</div>
 
 			<div id="findoment_desc_box" class="well" style="display:none">
-				<h4><p>Now calculate the purity of this cluster; i.e. the ratio of the number of values in this cluster over the size of the cluster. Based on the range the purity falls in, you will use different strategies to efficiently split the cluster into smaller, pure clusters.</p>
-				<p>After you've calculated the purity of this cluster, then push one of three buttons at the bottom of the screen according to the range in which the purity falls.</p></h4>
+				<h4><p>In order to follow the best strategy to split this cluster, first find the <i>dominating entity</i> of the current cluster; i.e. the entity which has the highest number of values in the current cluster referring to it (break the ties arbitratily).
+				</p>
+				<p>Now calculate the purity of this cluster; i.e. the ratio of the number of values in this cluster referring to its dominating entity over the size of the cluster. Based on the range the purity falls in, you will use different strategies to efficiently split the cluster into smaller, pure clusters.</p>
+				<p>After you've calculated the purity of this cluster, then push one of the three buttons at the bottom of the screen according to the range in which the purity falls.</p></h4>
 				<p></p>
 			</div>
 
 			<div id="selectdom_desc_box" class="well" style="display:none">
 				<h4><p>In this step you split the current cluster as follows:
 					<ul>
-						<li>First click all the values in this cluster referring to the dominant entity of the cluster.</li>
+						<li>First click all the values in this cluster referring to the dominating entity of the cluster.</li>
 						<li>Now click the "Split Cluster" button at the bottom of the screen.</li>
 					</ul>
-					This split the current cluster into two: one cluster containing the dominating entity values (selected) and another cluster containing the rest of the values in the current cluster (not selected). Then you repeat splitting the remainder cluster.</p></h4>
+					This split the current cluster into two: one cluster containing the dominating entity values (selected) and another cluster containing the rest of the values in the current cluster (not selected). Then you repeat splitting the latter cluster.</p></h4>
 				<p></p>
 			</div>
 
 			<div id="selectnondom_desc_box" class="well" style="display:none">
 				<h4><p>In this step you split the current cluster as follows:
 					<ul>
-						<li>First click all the values in this cluster NOT referring to the dominant entity of the cluster.</li>
+						<li>First click all the values in this cluster NOT referring to the dominating entity of the cluster.</li>
 						<li>Now click the "Split Cluster" button at the bottom of the screen.</li>
 					</ul>
-					This split the current cluster into two: one cluster containing the dominating entity values (not selected) and another cluster containing the rest of the values in the current cluster (selected). Then you repeat splitting the remainder cluster.</p></h4>
+					This split the current cluster into two: one cluster containing the dominating entity values (not selected) and another cluster containing the rest of the values in the current cluster (selected). Then you repeat splitting the latter cluster.</p></h4>
 				<p></p>
 			</div>
 
@@ -109,9 +114,9 @@ var splitClusters = getSplitClusters();
 				<h4>
 					<p>Global-merging proceeds in iterations. In each iteration, you
 					<ul>
-						<li>memorize the three target data values shown at the top of the three columns (see below).</li>
-						<li>scan the values in the list below from top to bottom. If a value matches one of the target values, then check the appropriate box.</li>
-						<li>click the "Merge Selected Values" button to merge the selected values and start a new iteration when reached the end of the list.</li>
+						<li>Memorize the three target data values shown at the top of the three columns (see below).</li>
+						<li>Scan the values in the list below from top to bottom. If a value matches one of the target values, then check the appropriate box.</li>
+						<li>Click the "Merge Selected Values" button to merge the selected values and start a new iteration when reached the end of the list.</li>
 					</ul>
 					</p>
 					<p>When there is no more iterations to work on, click the "Done Global-merging" button to finish splitting the current cluster.</p>
@@ -166,7 +171,7 @@ var splitClusters = getSplitClusters();
 				<table style="width: 100%;">
 					<tr>
 						<td style="width: 80%;">
-							<label for="pocbtn" class="container-fluid control-label">Click all the values referring to the dominant entity and then press the "Split Cluster" button.</label>
+							<label for="pocbtn" class="container-fluid control-label">Click all the values referring to the dominating entity and then press the "Split Cluster" button.</label>
 						</td>
 						<td style="width: 20%;" align="right">
 							<button class="btn btn-primary" id="pocbtn" type="button" onclick="pullOutCluster()">Split Cluster</button>
@@ -179,7 +184,7 @@ var splitClusters = getSplitClusters();
 				<table style="width: 100%;">
 					<tr>
 						<td style="width: 80%;">
-							<label for="pocbtn" class="container-fluid control-label">Click all the values NOT referring to the dominant entity and then press the "Split Cluster" button.</label>
+							<label for="pocbtn" class="container-fluid control-label">Click all the values NOT referring to the dominating entity and then press the "Split Cluster" button.</label>
 						</td>
 						<td style="width: 20%;" align="right">
 							<button class="btn btn-primary" id="pocbtn" type="button" onclick="pullOutRemainder()">Split Cluster</button>

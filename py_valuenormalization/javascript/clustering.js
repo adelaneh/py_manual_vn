@@ -148,6 +148,8 @@ var showClusteringSummary = function(e) {
 
 var pullOutCluster = function(e){
 	var curClstr = allClusts[curClusterLabel];
+	delete allClusts[curClusterLabel];
+
 	var poclust = [];
 	for (var ii = curClstr.length - 1; ii >= 0; ii--) {
 		var kk = curClstr[ii];
@@ -157,17 +159,22 @@ var pullOutCluster = function(e){
 			if (parentEl.className.indexOf("active") > -1) {
 				poclust.push(kk);
 				removeElementById(kk);
-				allClusts[curClusterLabel].splice(allClusts[curClusterLabel].indexOf(kk), 1);
+				curClstr.splice(curClstr.indexOf(kk), 1);
 			}
 		}
 	}
-	if (poclust.length < 1) { return; }
-	splitClusters[poclust[0]] = poclust;
-//	if ((allClusts[curClusterLabel].length != 0) || (document.getElementById('ispure_box_top').style.display == 'none')) {
-//		logPOCButtonClick(allClusts[curClusterLabel].length + poclust.length);
-//	}
 
-	curClusterLabel = rehash(allClusts, curClusterLabel);
+	if (poclust.length < 1) { return; }
+
+	curClstr = curClstr.sort(compStrCaseInsensitive);
+	curClstrLbl = curClstr[0];
+	poclust = poclust.sort(compStrCaseInsensitive);
+	poclustlbl = poclust[0];
+
+	allClusts[curClstrLbl] = curClstr;
+	splitClusters[poclustlbl] = poclust;
+
+	curClusterLabel = curClstrLbl;
 
 	document.getElementById('ispure_desc_box').style.display = 'block';
 	document.getElementById('ispure_box').style.display = 'block';
@@ -193,6 +200,7 @@ var pullOutCluster = function(e){
 
 var pullOutRemainder = function(e){
 	var curClstr = allClusts[curClusterLabel];
+	delete allClusts[curClusterLabel];
 
 	var nselClustCnt = 0;
 	for (var ii = curClstr.length - 1; ii >= 0; ii--) {
@@ -219,7 +227,7 @@ var pullOutRemainder = function(e){
 			if (parentEl.className.indexOf("active") == -1) {
 				poclust.push(kk);
 				removeElementById(kk);
-				allClusts[curClusterLabel].splice(allClusts[curClusterLabel].indexOf(kk), 1);
+				curClstr.splice(curClstr.indexOf(kk), 1);
 			}
 			else {
 				parentEl.className = parentEl.className.replace(/(?:^|\s)active(?!\S)/g, '');
@@ -228,17 +236,16 @@ var pullOutRemainder = function(e){
 
 		}
 	}
-	console.log(allClusts);
-	console.log(splitClusters);
-	console.log(poclust);
-	console.log(curClstr);
 
-	splitClusters[poclust[0]] = poclust;
-	
-	console.log(allClusts);
-	console.log(splitClusters);
+	curClstr = curClstr.sort(compStrCaseInsensitive);
+	curClstrLbl = curClstr[0];
+	poclust = poclust.sort(compStrCaseInsensitive);
+	poclustlbl = poclust[0];
 
-	curClusterLabel = rehash(allClusts, curClusterLabel);
+	allClusts[curClstrLbl] = curClstr;
+	splitClusters[poclustlbl] = poclust;
+
+	curClusterLabel = curClstrLbl;
 
 	document.getElementById('ispure_desc_box').style.display = 'block';
 	document.getElementById('ispure_box').style.display = 'block';
@@ -673,7 +680,7 @@ var mergeClustersGloballyMod = function(e) {
 }
 
 var doneGlobalMergingMod = function() {
-	for (var inpkk in inputtClusters) {
+	for (var inpkk in inputClusters) {
 		splitClusters[inpkk] = inputClusters[inpkk];
 	}
 
@@ -843,7 +850,7 @@ var generateClusterSizeHistogram = function(e) {
 var plotClusters = function(e) {
 	var numVals = 0;
 	flare = new Object();
-	flare['name'] = 'All values';
+//	flare['name'] = 'All values';
 	flare['children'] = [];
 	console.log(mergedClusters);
 	for (var tt in mergedClusters) {
@@ -858,6 +865,7 @@ var plotClusters = function(e) {
 		}
 		flare['children'].push(curChild);
 	}
+	flare['name'] = 'All values (' + numVals + ')';
 
 	var margin = {top: 20, right: 120, bottom: 20, left: 120},
 	width = $("#clustering_summary_panel").width() - margin.right - margin.left,

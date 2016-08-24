@@ -191,7 +191,7 @@ class HierarchicalClustering():
 			if self.val_to_clustid_map[kk] not in clustid_to_val_map:
 				clustid_to_val_map[self.val_to_clustid_map[kk]]	= []
 			clustid_to_val_map[self.val_to_clustid_map[kk]].append(kk)
-		clstlst					= sorted([sorted(vv) for vv in list(clustid_to_val_map.values())], key=lambda x: x[0])
+		clstlst					= sorted([sorted(vv) for vv in list(clustid_to_val_map.values())], key=lambda x: x[0].lower())
 		res						= {}
 		for clst in clstlst:
 			res[clst[0]]			= clst
