@@ -40,3 +40,14 @@ class MyPriorityQueue:
 				return False
 		return True
 
+	def copy_q(self):
+		'Copy the content of the priority queue'
+		newq		= MyPriorityQueue()
+		for entry in self.pq:
+			newent		= [entry[0], entry[1], entry[2]]
+			newq.pq.append(newent)
+			if entry[-1] != REMOVED:
+				newq.entry_finder[entry[0][1]]	= newent
+		return newq
+
+
