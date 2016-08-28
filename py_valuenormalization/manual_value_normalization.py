@@ -14,7 +14,8 @@ from value_normalization_misc import *
 
 class ManualValueNormalizationApp(QObject):
 	def __init__(self, clusters, meta_file='html/meta.html', parent=None):
-		super(ManualValueNormalizationApp, self).__init__(parent)
+#		super(ManualValueNormalizationApp, self).__init__(parent)
+		QObject.__init__(self)
 
 		self.curpath			= os.path.abspath(os.path.dirname(__file__)) + "/"
 		self.merged_clusters	= clusters
@@ -38,16 +39,13 @@ class ManualValueNormalizationApp(QObject):
 		if app is None:
 			app		= QApplication(sys.argv)
 		app.setWindowIcon(QIcon(self.curpath + 'icons/uw3.png'))
-		#self.window		= Window()
-		self.window		= QWebView()
-		self.window.setWindowTitle("Manual Value Normalization")
-		# this will remove minimized status and restore window with keeping maximized/normal state
-		self.window.setWindowState(self.window.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
-		# this will activate the window
-		self.window.activateWindow()
-		self.window.show()
-		self.window.raise_()
-		
+		self._window		= Window()
+		self._window.setWindowTitle("Manual Value Normalization")
+		self._window.setWindowState(Qt.WindowMaximized)
+
+		self._window.show()
+		self._window.raise_()
+
 		self.load_understand_values()
 
 		app.exec_()
@@ -60,13 +58,14 @@ class ManualValueNormalizationApp(QObject):
 		self.html		+= open(self.curpath + "html/understand_values.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 		self.html		= self.html.replace("@@INPUT_VALUES@@", self.get_html_table())
 
-		self.window.view.loadFinished.connect(self.understand_values_loaded)
-		self.window.view.setHtml(self.html)
+		self._window._view.setHtml(self.html)
 
 		self.printer	= ConsolePrinter()
-		self.mainframe	= self.window.view.page().mainFrame()
+		self.mainframe	= self._window._view.page().mainFrame()
 		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
 		self.mainframe.evaluateJavaScript("var vals=%s;"%(str([str(val) for val in self.vals]), ))
+
+		self._window._view.loadFinished.connect(self.understand_values_loaded)
 
 	@pyqtSlot()
 	def understand_values_loaded(self):
@@ -87,10 +86,10 @@ class ManualValueNormalizationApp(QObject):
 		self.html		+= """<script type="text/javascript">var merged_clusters = %s</script>"""%(str(self.merged_clusters), )
 		self.html		+= open(self.curpath + "html/local_merge.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
-		self.window.view.loadFinished.connect(self.local_merge_loaded)
-		self.window.view.setHtml(self.html)
+		self._window._view.loadFinished.connect(self.local_merge_loaded)
+		self._window._view.setHtml(self.html)
 
-		self.mainframe	= self.window.view.page().mainFrame()
+		self.mainframe	= self._window._view.page().mainFrame()
 		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
 
 	@pyqtSlot(str, int)
@@ -121,10 +120,10 @@ class ManualValueNormalizationApp(QObject):
 		self.html		+= """<script type="text/javascript">var gmic = %d</script>"""%(self.gmic, )
 		self.html		+= open(self.curpath + "html/global_merge.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
-		self.window.view.loadFinished.connect(self.global_merge_loaded)
-		self.window.view.setHtml(self.html)
+		self._window._view.loadFinished.connect(self.global_merge_loaded)
+		self._window._view.setHtml(self.html)
 
-		self.mainframe	= self.window.view.page().mainFrame()
+		self.mainframe	= self._window._view.page().mainFrame()
 		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
 
 	@pyqtSlot(str, str)
@@ -151,10 +150,10 @@ class ManualValueNormalizationApp(QObject):
 		self.html		+= """<script type="text/javascript">var merged_clusters = %s</script>"""%(str(self.result_clusters), )
 		self.html		+= open(self.curpath + "html/result_summary.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
-		self.window.view.loadFinished.connect(self.result_summary_loaded)
-		self.window.view.setHtml(self.html)
+		self._window._view.loadFinished.connect(self.result_summary_loaded)
+		self._window._view.setHtml(self.html)
 
-		self.mainframe	= self.window.view.page().mainFrame()
+		self.mainframe	= self._window._view.page().mainFrame()
 		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
 
 	@pyqtSlot(str)
