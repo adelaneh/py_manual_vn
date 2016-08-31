@@ -32,7 +32,7 @@ class CostModelCalibrationApp(QObject):
 		self.ua_ispure_opcnt	= 3
 		self.ua_finddom_opcnt	= 6
 
-		self.meta				= open(self.curpath + meta_file).read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+		self.meta				= open(self.curpath + "/" + meta_file).read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
 	def get_html_table(self):
 		inp_val_table	= ""

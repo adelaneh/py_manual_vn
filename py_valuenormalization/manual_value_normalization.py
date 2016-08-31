@@ -23,7 +23,7 @@ class ManualValueNormalizationApp(QObject):
 		self.gmic				= 0
 		self.result_clusters	= {}
 
-		self.meta		= open(self.curpath + meta_file).read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+		self.meta		= open(self.curpath + "/" + meta_file).read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
 	def get_html_table(self):
 		inp_val_table	= ""
