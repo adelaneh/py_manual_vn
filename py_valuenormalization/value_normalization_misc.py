@@ -126,6 +126,28 @@ class Utils:
 
 		return (out[0],)
 
+	@staticmethod
+	def get_default_cost_model():
+		return {
+			'user': {
+				'rho_f': 500,
+				'rho_s': 500,
+				'rho_m': 2000,
+				'gamma': 250,
+				'gamma_0': 650,
+				'eta_1': 200,
+				'eta_2': 0.3,
+				'rho_r': 1500,
+				'rho_z': 2500
+			},
+			'purity': {
+				'aa': 1.,
+				'bb': -.11
+			}
+		}
+
+
+
 class SimMeasureNotSupportedException(Exception):
 	def __init__(self, value):
 		self.value		= value

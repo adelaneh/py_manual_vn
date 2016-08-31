@@ -1,5 +1,9 @@
+from copy import deepcopy
+
 from priority_queue import MyPriorityQueue
 from value_normalization_misc import SimMeasureNotSupportedException
+from value_normalization_misc import Utils
+from hierarchical_clustering import HierarchicalClustering
 
 from py_stringmatching.similarity_measure.jaro_winkler import JaroWinkler
 from py_stringmatching.similarity_measure.levenshtein import Levenshtein
@@ -17,13 +21,14 @@ class HybridClustering(HierarchicalClustering):
 		if self.max_clust_size == 1:
 			return self.dend
 
+		self.sim_measure		= sim_measure if sim_measure is not None else '3gram Jaccard'
 		self.linkage			= linkage if linkage is not None else 'single'
 		self.thr				= thr if thr is not None else 0.7
 		self.stop_when			= lambda x: x[0] > self.thr
 
 		self.init_clustering()
 
-		self.dists				= precalc_dists if precalc_dists is not None else self.calc_dists(sim_measure)
+		self.dists				= precalc_dists if precalc_dists is not None else self.calc_dists(self.sim_measure)
 		self.clust_dists		= {}
 		self.dend_hist			= {}
 		myq						= MyPriorityQueue()
@@ -115,7 +120,7 @@ class HybridClustering(HierarchicalClustering):
 			self.clusts[mrgd_clust_id]		= new_clust
 			self.clusts.pop(delt_clust_id, None)
 
-			if min_clust_size >= max_clust_size or min_sum_clust_pair > max_clust_size:
+			if min_clust_size >= self.max_clust_size or min_sum_clust_pair > self.max_clust_size:
 				break
 
 		cur_vthr					= max([len(clst) for clst in self.clusts.values()])
@@ -126,39 +131,39 @@ class HybridClustering(HierarchicalClustering):
 
 	##################### MODIFIED UP TO HERE
 	######################### CONTINUE FROM HERE ON!!!!!!!!!!!!!!!
-	def shotgun_lambdahac_dendrogram(V, clusts, dend, stop_when, show = False):
-		(V, clusts)			= init_clustering(V.keys())
+	def shotgun_lambdahac_dendrogram(self, dend):
+		self.init_clustering()
 
 		for jj in range(len(dend)):
 			((c1, c2), dist)		= dend[jj]
-			if stop_when((dist,)):
+			if self.stop_when((dist,)):
 				break
 			cc		= c2
-			if V[c1[0]] < V[c2[0]]:
-				for vv in c2: V[vv]		= V[c1[0]]
+			if self.val_to_clustid_map[c1[0]] < self.val_to_clustid_map[c2[0]]:
+				for vv in c2: self.val_to_clustid_map[vv]		= self.val_to_clustid_map[c1[0]]
 				else:
-					for vv in c1: V[vv]		= V[c2[0]]
+					for vv in c1: self.val_to_clustid_map[vv]		= self.val_to_clustid_map[c2[0]]
 
-		return V
+		return self.val_to_clustid_map
 
-	def shotgun_lambdahac_continue_from_dendrogram(dends, max_clust_size, sim_metric, linkage, stop_when, show = False):
-		dend_hist			= dends[0]
-		clszlim				= max(dend_hist.keys())
-		vals, dists			= dends[1:]
-		(V, clusts)			= init_clustering(vals)
+	def shotgun_lambdahac_continue_from_dendrogram(self, max_clust_size):
+		clszlim				= max(self.dend_hist.keys())
+
+		self.init_clustering()
+
 		if max_clust_size == 1 or max_clust_size >= clszlim:
-			dend				= dend_hist[max_clust_size][1]
+			dend				= self.dend_hist[min(max_clust_size, clszlim)][1]
 		else:
-			dend				= shotgun_complete_dendrogram(dend_hist[max_clust_size], vals, dists, max_clust_size, sim_metric, linkage, stop_when)
-		return shotgun_lambdahac_dendrogram(V, clusts, dend, stop_when, show)
+			dend				= self.shotgun_complete_dendrogram(max_clust_size)
+		return self.shotgun_lambdahac_dendrogram(dend)
 		
-	def shotgun_complete_dendrogram(dend_chkpt, vals, dists, max_clust_size, sim_metric, linkage, stop_when):
-		(clusts, dend, myq)		= dend_chkpt
+	def shotgun_complete_dendrogram(self, max_clust_size):
+		(clusts, dend, myq)		= self.dend_hist[max_clust_size]
 
 		blkdpairs		= {}
 
-		while len(myq[1]) != 0:
-			nextclustpair		= pop_task(myq)
+		while not myq.is_empty():
+			nextclustpair		= myq.pop_task()
 
 			if ( len(clusts[nextclustpair[1][0]]) + len(clusts[nextclustpair[1][1]]) ) > max_clust_size:
 				blkdpairs[nextclustpair[1]]		= nextclustpair[0]
@@ -172,8 +177,8 @@ class HybridClustering(HierarchicalClustering):
 
 			dend.append(((list(mrgd_clust), list(delt_clust)), nextclustpair[0]));
 
-			min_clust_size		= len(vals)
-			min_sum_clust_pair	= len(vals)
+			min_clust_size		= len(self.vals)
+			min_sum_clust_pair	= len(self.vals)
 
 			mrgd_clust.extend(delt_clust)
 			new_clust			= mrgd_clust
@@ -188,27 +193,27 @@ class HybridClustering(HierarchicalClustering):
 
 				(cid1, cid2)		= (other_clust_id, mrgd_clust_id) if other_clust_id < mrgd_clust_id else (mrgd_clust_id, other_clust_id)
 				try:
-					new_dist			= remove_task(myq, (cid1, cid2))
+					new_dist			= myq.remove_task((cid1, cid2))
 				except KeyError:
 					new_dist			= blkdpairs[(cid1, cid2)]
 
 				other_link_inx		= (other_clust_id, delt_clust_id) if other_clust_id < delt_clust_id else (delt_clust_id, other_clust_id)
 				try:
-					other_clust_dist	= remove_task(myq, other_link_inx)
+					other_clust_dist	= myq.remove_task(other_link_inx)
 				except KeyError:
 					other_clust_dist	= blkdpairs[other_link_inx]
 
-				if linkage == 'average':	new_dist		= ( 
+				if self.linkage == 'average':		new_dist		= ( 
 						( len(clusts[cid1]) * len(clusts[cid2]) * new_dist ) + 
 						( len(clusts[other_clust_id]) * len(clusts[delt_clust_id]) * other_clust_dist)
 						) / ( len(clusts[other_clust_id]) * ( len(clusts[delt_clust_id]) + len(clusts[mrgd_clust_id]) ) )
-				elif linkage == 'complete':	new_dist		= max(new_dist, other_clust_dist)
-				else:						new_dist		= min(new_dist, other_clust_dist)
+				elif self.linkage == 'complete':	new_dist		= max(new_dist, other_clust_dist)
+				else:								new_dist		= min(new_dist, other_clust_dist)
 
 				if (cid1, cid2) in blkdpairs:
 					blkdpairs[(cid1, cid2)]		= new_dist
 				else:
-					add_task(myq, (cid1, cid2), new_dist)
+					myq.add_task((cid1, cid2), new_dist)
 
 				if len(clusts[other_clust_id]) < min_clust_size:
 					min_clust_size		= len(clusts[other_clust_id])
@@ -222,5 +227,50 @@ class HybridClustering(HierarchicalClustering):
 				break
 
 		return dend
+
+	def hybrid_cluster(self, sim_measure = None, linkage = None, precalc_dists = None, thr = None, max_clust_size = -1):
+		approx_costs		= {}
+		min_cost_lambda		= None
+		min_cost			= None
+
+		self.shotgun_create_dendrogram(sim_measure, linkage, precalc_dists, thr, max_clust_size)
+
+		for lambda_i in sorted(self.dend_hist.keys()):
+			self.shotgun_lambdahac_continue_from_dendrogram(lambda_i)
+
+			clusts					= self.get_clusters()
+			alpha					= Utils.alpha_lambda_WP(lambda_i, self.cost_model['purity']['aa'], self.cost_model['purity']['bb'])
+
+			from action_cost_approx_functions import approximate_edit_cost
+			stm_capacity			= 7
+			mrg_chunk_topk			= 3
+			default_tau0			= 0.5
+			default_xi				= 0.3
+
+			(approx_cost, 
+					est_spl_cost, 
+					est_mrg_cost, 
+					est_slamg_cost, 
+					est_scamg_cost,
+					rr, fcc)							= approximate_edit_cost(
+							list(clusts.values()), 
+							alpha, 
+							w1=stm_capacity,
+							w2=mrg_chunk_topk,
+							tau=default_tau0, 
+							xi=default_xi,
+							user=self.cost_model['user'], 
+							show=False, 
+							mm=len(self.vals),
+							cur_lambda=lambda_i,
+							f_alpha=None
+						)
+			if min_cost is None or min_cost > approx_cost:
+				min_cost				= approx_cost
+				min_cost_lambda			= lambda_i
+				best_clusts				= clusts
+
+		return (best_clusts, min_cost_lambda)
+
 
 

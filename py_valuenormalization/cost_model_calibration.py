@@ -24,23 +24,7 @@ class CostModelCalibrationApp(QObject):
 		self.curpath			= os.path.abspath(os.path.dirname(__file__)) + "/"
 		self.vals				= vals
 
-		self.cost_model			= {
-			'user': {
-				'rho_f': 500,
-				'rho_s': 500,
-				'rho_m': 2000,
-				'gamma': 250,
-				'gamma_0': 650,
-				'eta_1': 200,
-				'eta_2': 0.3,
-				'rho_r': 1500,
-				'rho_z': 2500
-			},
-			'purity': {
-				'aa': 0.,
-				'bb': 0.
-			}
-		}
+		self.cost_model			= Utils.get_default_cost_model()
 
 		self.training_pairs		= {}
 
