@@ -1,5 +1,6 @@
 include README.rst
 include py_valuenormalization/html/*
+include py_valuenormalization/css/*
 include py_valuenormalization/javascript/*
 include py_valuenormalization/data/*
 include py_valuenormalization/icons/*
