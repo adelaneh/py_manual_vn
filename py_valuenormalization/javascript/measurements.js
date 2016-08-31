@@ -27,6 +27,14 @@ var match = function(e){
 }
 
 var loadValues = function(e) {
+	document.getElementById('match_instructions_box').style.display = 'none';
+	document.getElementById('start_matching_btn_panel').style.display = 'none';
+
+	document.getElementById('match_desc_box').style.display = 'block';
+	document.getElementById('values-panel').style.display = 'block';
+
+	$("#countdown").html( (seq_counter + 1) + " value pairs to go");
+
 	var ci1 = rand_key(allClusts);
 	var cc1 = allClusts[ci1][0];
 	var cc2 = "";
@@ -175,7 +183,7 @@ var calcPurity = function() {
 		calib_app.estimate_purity_function_params(JSON.stringify(cluster_purities), JSON.stringify(cluster_doment_vals));
 		return;
 	}
-	$('#counter-panel').html("<h3>Purity Estimation (" + ( Object.keys(samples_pe_clusts10).length + Object.keys(samples_pe_clusts20).length ) + " Cluster(s) to Go)</h3>");
+	$('#countdown').html(( Object.keys(samples_pe_clusts10).length + Object.keys(samples_pe_clusts20).length ) + " Cluster(s) to Go");
 	loadSampleClustersInColumns();
 
 	return;
@@ -184,6 +192,15 @@ var calcPurity = function() {
 var values = [];
 
 var loadClusterValues = function(e) {
+	document.getElementById('ispure_instructions_box').style.display = 'none';
+	document.getElementById('start_ispure_btn_panel').style.display = 'none';
+
+	document.getElementById('ispure_desc_box').style.display = 'block';
+	document.getElementById('values-panel').style.display = 'block';
+	document.getElementById('ispure_box_bottom').style.display = 'block';
+
+	$("#countdown").html( (seq_counter + 1) + " clusters to go");
+
 	recorded_resps['times'].push(Date.now());
 	values = [];
 	var ci1 = rand_key(allClusts);
@@ -218,6 +235,14 @@ var valueButtonClickCalib = function(e, clust, isFindDom) {
 }
 
 var loadClusterValuesForFindDom = function(e) {
+	document.getElementById('finddom_instructions_box').style.display = 'none';
+	document.getElementById('start_finddom_btn_panel').style.display = 'none';
+
+	document.getElementById('finddom_desc_box').style.display = 'block';
+	document.getElementById('values-panel').style.display = 'block';
+
+	$("#countdown").html( (seq_counter + 1) + " clusters to go");
+
 	recorded_resps['times'].push(Date.now());
 
 	var omega_1 = 7;

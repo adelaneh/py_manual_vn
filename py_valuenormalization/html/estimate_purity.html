@@ -12,7 +12,7 @@
 <div class="container" style="width: 90%;">
 	<div id="purity_est_panel" class="panel panel-default">
 		<div class="panel-heading" id="counter-panel">
-			<h3>Purity Estimation (<script>document.write(Object.keys(samples_pe_clusts10).length + Object.keys(samples_pe_clusts20).length);</script> Cluster(s) to Go)</h3>
+			<h3>Purity Estimation</h3>
 		</div>
 		<div class="panel-body">
 			<div id="purity_est_desc_box" class="well">
@@ -24,7 +24,11 @@
 			</div>
 
 			<div id="cluster-panel" class="panel panel-primary">	
-				<div class="panel-body" id="clusters_panel">
+				<div class="panel-heading" id="countdown">
+					<script>document.write(Object.keys(samples_pe_clusts10).length + Object.keys(samples_pe_clusts20).length);</script> Cluster(s) to Go
+				</div>
+				<p></p>
+ 				<div class="panel-body" id="clusters_panel">
 					<script type="text/javascript">
 						loadSampleClustersInColumns();
 					</script>
