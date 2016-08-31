@@ -21,7 +21,7 @@ class CostModelCalibrationApp(QObject):
 #		super(CostModelCalibrationApp, self).__init__(parent)
 		QObject.__init__(self)
 
-		self.curpath			= os.path.abspath(os.path.dirname(__file__)) + "/"
+		self.curpath			= os.path.abspath(os.path.dirname(__file__))
 		self.vals				= vals
 
 		self.cost_model			= Utils.get_default_cost_model()

@@ -19,7 +19,7 @@ class ClusteringBasesValueNormalizationApp(QObject):
 #		super(ClusteringBasesValueNormalizationApp, self).__init__(parent)
 		QObject.__init__(self)
 
-		self.curpath			= os.path.abspath(os.path.dirname(__file__)) + "/"
+		self.curpath			= os.path.abspath(os.path.dirname(__file__))
 		self.tosplit_clusters	= clusters
 		self.vals				= list(self.tosplit_clusters.keys())
 		self.gmic				= 0

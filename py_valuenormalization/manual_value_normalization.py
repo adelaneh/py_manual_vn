@@ -17,7 +17,7 @@ class ManualValueNormalizationApp(QObject):
 #		super(ManualValueNormalizationApp, self).__init__(parent)
 		QObject.__init__(self)
 
-		self.curpath			= os.path.abspath(os.path.dirname(__file__)) + "/"
+		self.curpath			= os.path.abspath(os.path.dirname(__file__))
 		self.merged_clusters	= clusters
 		self.vals				= list(self.merged_clusters.keys())
 		self.gmic				= 0
