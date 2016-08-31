@@ -178,10 +178,6 @@ class HierarchicalClustering(object):
 		self.dend		= self.create_dendrogram(sim_measure, linkage, precalc_dists, max_clust_size)
 		return self.lambdahac_dendrogram(self.dend, thr)
 		
-	def hac(self, sim_measure = None, linkage = None, thr = None, precalc_dists = None):
-		self.dend		= self.create_dendrogram(sim_measure, linkage, precalc_dists, -1)
-		return self.lambdahac_dendrogram(self.dend, thr)
-	
 	def get_clusters(self):
 		clustid_to_val_map		= {}
 		for kk in self.val_to_clustid_map:
@@ -193,4 +189,9 @@ class HierarchicalClustering(object):
 		for clst in clstlst:
 			res[clst[0]]			= clst
 		return res
+
+	def hac(self, sim_measure = None, linkage = None, thr = None, precalc_dists = None):
+		self.create_dendrogram(sim_measure, linkage, precalc_dists, -1)
+		self.lambdahac_dendrogram(self.dend, thr)
+		return self.get_clusters()
 

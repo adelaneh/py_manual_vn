@@ -14,7 +14,7 @@ from PyQt4.QtWebKit import *
 
 from value_normalization_misc import *
 
-class ClusteringBasesValueNormalizationApp(QObject):
+class ClusteringBasedValueNormalizationApp(QObject):
 	def __init__(self, clusters, meta_file='html/meta.html', parent=None):
 #		super(ClusteringBasesValueNormalizationApp, self).__init__(parent)
 		QObject.__init__(self)
@@ -240,7 +240,7 @@ class ClusteringBasesValueNormalizationApp(QObject):
 		return
 
 def normalize_clusters(clusters):
-	norm_app	= ClusteringBasesValueNormalizationApp(clusters)
+	norm_app	= ClusteringBasedValueNormalizationApp(clusters)
 	norm_app.run()
 	res			= deepcopy(norm_app.result_clusters)
 	del norm_app

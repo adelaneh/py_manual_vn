@@ -66,7 +66,7 @@ var splitClusters = getSplitClusters();
 		<div class="panel-heading">
 			<h3>Split Phase (<script>document.write(Object.keys(allClusts).length);</script> More Clusters to Split)</h3>
 			<p></p>
-			<h5>In the split phase, you split clusters which contain values referring to more than one entity into <i>pure</i> clusters; i.e. all the values in the resulting clusters will refer to a single entity. </h5>
+			<h5>In the split phase, you split clusters which contain values referring to more than one entity into <i>pure</i> clusters; i.e. all the values in each of the resulting clusters will refer to a single entity. </h5>
 			<p></p>
 		</div>
 		<div class="panel-body">
@@ -78,7 +78,7 @@ var splitClusters = getSplitClusters();
 			<div id="findoment_desc_box" class="well" style="display:none">
 				<h4><p>In order to follow the best strategy to split this cluster, first find the <i>dominating entity</i> of the current cluster; i.e. the entity which has the highest number of values in the current cluster referring to it (break the ties arbitratily).
 				</p>
-				<p>Now calculate the purity of this cluster; i.e. the ratio of the number of values in this cluster referring to its dominating entity over the size of the cluster. Based on the range the purity falls in, you will use different strategies to efficiently split the cluster into smaller, pure clusters.</p>
+				<p>Now calculate the purity of this cluster by finding the number of values in this cluster referring to its dominating entity and then deviding this number by the size of the cluster. Based on the range the purity falls in, you will use different strategies to efficiently split the cluster into smaller pure clusters.</p>
 				<p>After you've calculated the purity of this cluster, then push one of the three buttons at the bottom of the screen according to the range in which the purity falls.</p></h4>
 				<p></p>
 			</div>
@@ -104,7 +104,8 @@ var splitClusters = getSplitClusters();
 			</div>
 
 			<div id="local_mrg_desc_box" class="well" style="display:none">
-				<h4><p>To split the current cluster go through two steps; namely <i>local-merging</i> and <i>global-merging</i>. In the first step (local-merging), scan the values in the list below from top to bottom. While scanning, if you see multiple values that match, you can select them and click "Merge Selected Values" to merge them. Then continue scanning. When you have reached the end of the list, click "Done Local-merging".</p>
+				<h4><p>To split the current cluster go through the following two steps; namely <i>local-merging</i> and <i>global-merging</i>.</p>
+					<p>In the first step (local-merging), scan the values in the list below from top to bottom. While scanning, if you see multiple values that match, you can select them and click "Merge Selected Values" to merge them. Then continue scanning. When you have reached the end of the list, click "Done Local-merging" to proceed to the global-merging step.</p>
 				<p>Try your best to merge as many matching values as you can while scanning the list from top to bottom. But if you miss a few matching values, do not worry. They will be taken care of in the global-merging step. The more values you can merge now, the less time the global-merging step will take.</p>
 				</h4>
 				<p></p>
@@ -116,7 +117,7 @@ var splitClusters = getSplitClusters();
 					<ul>
 						<li>Memorize the three target data values shown at the top of the three columns (see below).</li>
 						<li>Scan the values in the list below from top to bottom. If a value matches one of the target values, then check the appropriate box.</li>
-						<li>Click the "Merge Selected Values" button to merge the selected values and start a new iteration when reached the end of the list.</li>
+						<li>When reached the end of the list, click the "Merge Selected Values" button to merge the selected values and start a new iteration.</li>
 					</ul>
 					</p>
 					<p>When there is no more iterations to work on, click the "Done Global-merging" button to finish splitting the current cluster.</p>
@@ -217,7 +218,7 @@ var splitClusters = getSplitClusters();
 						<table style="width: 100%;">
 							<tr>
 								<td style="width: 80%;">
-									<h4> When there is no more iterations to work on, click the "Done Global-merging" button to finish splitting the current cluster.</h4>
+									<h4>When there is no more iterations to work on, click the "Done Global-merging" button to finish splitting the current cluster.</h4>
 								</td>
 								<td style="width: 20%;" align="right">
 									<button class="btn btn-primary pull-right" id="donegmrgbtn" type="button" onclick="doneGlobalMergingMod()">Done Global-merging</button>
