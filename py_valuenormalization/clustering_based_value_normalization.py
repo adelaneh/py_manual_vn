@@ -40,7 +40,7 @@ class ClusteringBasesValueNormalizationApp(QObject):
 		app		= QApplication.instance()
 		if app is None:
 			app		= QApplication(sys.argv)
-		app.setWindowIcon(QIcon(self.curpath + 'icons/uw3.png'))
+		app.setWindowIcon(QIcon(self.curpath + '/icons/uw3.png'))
 		self._window		= Window()
 		self._window.setWindowTitle("Clustering-based Value Normalization")
 		# this will remove minimized status and restore window with keeping maximized/normal state
@@ -88,7 +88,7 @@ class ClusteringBasesValueNormalizationApp(QObject):
 	def load_understand_clusters(self):
 		self.html		= self.meta 
 		self.html		+= """<script type="text/javascript">var merged_clusters = %s</script>"""%(str(self.tosplit_clusters), )
-		self.html		+= open(self.curpath + "html/understand_clusters.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+		self.html		+= open(self.curpath + "/html/understand_clusters.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
 		self._window._view.setHtml(self.html)
 
@@ -130,7 +130,7 @@ class ClusteringBasesValueNormalizationApp(QObject):
 		self.html		+= """<script type="text/javascript">var split_clusters = %s;</script>"""%(str(self.split_clusters), )
 		self.current_clust_label_to_split		= sorted(self.tosplit_clusters.keys(), key = lambda x: x.lower())[0]
 		self.html		+= """<script type="text/javascript">var curClusterLabel = \"%s\";</script>"""%(self.current_clust_label_to_split, )
-		self.html		+= open(self.curpath + "html/split_clusters.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+		self.html		+= open(self.curpath + "/html/split_clusters.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
 		self._window._view.loadFinished.connect(self.split_clusters_loaded)
 		self._window._view.setHtml(self.html)
@@ -162,7 +162,7 @@ class ClusteringBasesValueNormalizationApp(QObject):
 
 		self.html		= self.meta 
 		self.html		+= """<script type="text/javascript">var merged_clusters = %s</script>"""%(str(self.merged_clusters), )
-		self.html		+= open(self.curpath + "html/local_merge.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+		self.html		+= open(self.curpath + "/html/local_merge.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
 		self._window._view.loadFinished.connect(self.local_merge_loaded)
 		self._window._view.setHtml(self.html)
@@ -196,7 +196,7 @@ class ClusteringBasesValueNormalizationApp(QObject):
 		self.html		= self.meta 
 		self.html		+= """<script type="text/javascript">var merged_clusters = %s</script>"""%(str(self.merged_clusters), )
 		self.html		+= """<script type="text/javascript">var gmic = %d</script>"""%(self.gmic, )
-		self.html		+= open(self.curpath + "html/global_merge.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+		self.html		+= open(self.curpath + "/html/global_merge.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
 		self._window._view.loadFinished.connect(self.global_merge_loaded)
 		self._window._view.setHtml(self.html)
@@ -226,7 +226,7 @@ class ClusteringBasesValueNormalizationApp(QObject):
 
 		self.html		= self.meta 
 		self.html		+= """<script type="text/javascript">var merged_clusters = %s</script>"""%(str(self.result_clusters), )
-		self.html		+= open(self.curpath + "html/result_summary.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+		self.html		+= open(self.curpath + "/html/result_summary.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
 		self._window._view.loadFinished.connect(self.result_summary_loaded)
 		self._window._view.setHtml(self.html)

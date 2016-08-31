@@ -47,7 +47,7 @@ class CostModelCalibrationApp(QObject):
 		app		= QApplication.instance()
 		if app is None:
 			app		= QApplication(sys.argv)
-		app.setWindowIcon(QIcon(self.curpath + 'icons/uw3.png'))
+		app.setWindowIcon(QIcon(self.curpath + '/icons/uw3.png'))
 		self._window		= Window()
 		self._window.setWindowTitle("Cost Model Calibration")
 		self._window.setWindowState(Qt.WindowMaximized)
@@ -64,7 +64,7 @@ class CostModelCalibrationApp(QObject):
 	#########################################
 	def load_understand_values(self):
 		self.html		= self.meta 
-		self.html		+= open(self.curpath + "html/understand_values_to_calibrate.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+		self.html		+= open(self.curpath + "/html/understand_values_to_calibrate.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 		self.html		= self.html.replace("@@INPUT_VALUES@@", self.get_html_table())
 
 		self._window._view.setHtml(self.html)
@@ -128,7 +128,7 @@ class CostModelCalibrationApp(QObject):
 		self.html		+= """<script type="text/javascript">var samples_pe_clusts20 = %s</script>"""%(str(samples_pe_clusts20), )
 		self.html		+= """<script type="text/javascript">var cluster_purities = %s;</script>"""%(str(self.cluster_purities), )
 		self.html		+= """<script type="text/javascript">var curClusterLabel = \"%s\";</script>"""%(self.cur_cluster_label, )
-		self.html		+= open(self.curpath + "html/estimate_purity.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+		self.html		+= open(self.curpath + "/html/estimate_purity.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
 		self._window._view.loadFinished.connect(self.estimate_purity_function_loaded)
 		self._window._view.setHtml(self.html)
@@ -181,7 +181,7 @@ class CostModelCalibrationApp(QObject):
 		self.html		+= """<script type="text/javascript">var clusters = %s</script>"""%(str(self.clusters), )
 		self.html		+= """<script type="text/javascript">var recorded_resps = %s;</script>"""%(str(self.recorded_resps), )
 		self.html		+= """<script type="text/javascript">var seq_counter = %d;</script>"""%(self.seq_counter, )
-		self.html		+= open(self.curpath + "html/ua_match.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+		self.html		+= open(self.curpath + "/html/ua_match.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
 		self._window._view.loadFinished.connect(self.calibrate_ua_match_loaded)
 		self._window._view.setHtml(self.html)
@@ -224,7 +224,7 @@ class CostModelCalibrationApp(QObject):
 		self.html		+= """<script type="text/javascript">var clusters = %s</script>"""%(str(self.clusters), )
 		self.html		+= """<script type="text/javascript">var recorded_resps = %s;</script>"""%(str(self.recorded_resps), )
 		self.html		+= """<script type="text/javascript">var seq_counter = %d;</script>"""%(self.seq_counter, )
-		self.html		+= open(self.curpath + "html/ua_ispure.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+		self.html		+= open(self.curpath + "/html/ua_ispure.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
 		self._window._view.loadFinished.connect(self.calibrate_ua_ispure_loaded)
 		self._window._view.setHtml(self.html)
@@ -285,7 +285,7 @@ class CostModelCalibrationApp(QObject):
 		self.html		+= """<script type="text/javascript">var clusters = %s</script>"""%(str(self.clusters), )
 		self.html		+= """<script type="text/javascript">var recorded_resps = %s;</script>"""%(str(self.recorded_resps), )
 		self.html		+= """<script type="text/javascript">var seq_counter = %d;</script>"""%(self.seq_counter, )
-		self.html		+= open(self.curpath + "html/ua_finddom.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+		self.html		+= open(self.curpath + "/html/ua_finddom.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
 		self._window._view.loadFinished.connect(self.calibrate_ua_finddoment_loaded)
 		self._window._view.setHtml(self.html)
@@ -324,7 +324,7 @@ class CostModelCalibrationApp(QObject):
 	def done_calibration(self):
 		self.html		= self.meta 
 		self.html		+= """<script type="text/javascript">var cost_model = %s</script>"""%(str(self.cost_model), )
-		self.html		+= open(self.curpath + "html/done_calibration.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+		self.html		+= open(self.curpath + "/html/done_calibration.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
 		self._window._view.setHtml(self.html)
 
