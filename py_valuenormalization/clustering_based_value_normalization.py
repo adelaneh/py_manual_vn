@@ -1,3 +1,4 @@
+from multiprocessing import Queue, Process
 import sys, os
 from pprint import pprint
 from time import sleep
@@ -5,8 +6,8 @@ import ast
 
 from copy import deepcopy
 
-import signal
-signal.signal(signal.SIGINT, signal.SIG_DFL)
+#import signal
+#signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -239,12 +240,29 @@ class ClusteringBasedValueNormalizationApp(QObject):
 		self.mainframe.evaluateJavaScript("window.scrollTo(0, 0);")
 		return
 
+class ClusteringBasedValueNormalizationAppProcess(Process):
+	def __init__(self, clusters):
+		self.queue = Queue(1)
+		super(ClusteringBasedValueNormalizationAppProcess, self).__init__()
+		self._clusters	= clusters
+
+	def run(self):
+		norm_app	= ClusteringBasedValueNormalizationApp(self._clusters)
+		norm_app.run()
+		res			= deepcopy(norm_app.result_clusters)
+		del norm_app
+
+		global app
+		app					= QApplication.instance()
+		app.exit()
+		app.flush()
+		app.quit()
+		self.queue.put(res)
+
+
 def normalize_clusters(clusters):
-	norm_app	= ClusteringBasedValueNormalizationApp(clusters)
-	norm_app.run()
-	res			= deepcopy(norm_app.result_clusters)
-	del norm_app
-
-	return res
-
+	norm_app	= ClusteringBasedValueNormalizationAppProcess(clusters)
+	norm_app.start()
+	norm_app.join()
+	return norm_app.queue.get()
 

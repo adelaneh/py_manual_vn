@@ -1,10 +1,13 @@
+from multiprocessing import Queue, Process
 import sys, os
 from pprint import pprint
 from time import sleep
 import ast
 
-import signal
-signal.signal(signal.SIGINT, signal.SIG_DFL)
+from copy import deepcopy
+
+#import signal
+#signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -161,17 +164,32 @@ class ManualValueNormalizationApp(QObject):
 		self.mainframe.evaluateJavaScript("window.scrollTo(0, 0);")
 		return
 
+class ManualValueNormalizationAppProcess(Process):
+	def __init__(self, clusters):
+		self.queue = Queue(1)
+		super(ManualValueNormalizationAppProcess, self).__init__()
+		self._clusters	= clusters
+
+	def run(self):
+		norm_app	= ManualValueNormalizationApp(self._clusters)
+		norm_app.run()
+		res			= deepcopy(norm_app.result_clusters)
+		del norm_app
+
+		global app
+		app					= QApplication.instance()
+		app.exit()
+		app.flush()
+		app.quit()
+		self.queue.put(res)
+
 def normalize_values(vals):
 	clusters	= {}
 	for val in vals:
 		clusters[val]	= [val,]
-	norm_app	= ManualValueNormalizationApp(clusters)
-	norm_app.run()
-	return norm_app.result_clusters
+	norm_app	= ManualValueNormalizationAppProcess(clusters)
+	norm_app.start()
+	norm_app.join()
+	return norm_app.queue.get()
 
-if __name__ == "__main__":
-	if len(sys.argv) > 1:
-		vals		= Utils.read_from_file(sys.argv[1])
-		
-	results		= normalize_values(vals)
 

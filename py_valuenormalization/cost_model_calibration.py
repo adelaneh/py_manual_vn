@@ -1,3 +1,4 @@
+from multiprocessing import Queue, Process
 import sys, os
 from pprint import pprint
 from time import sleep
@@ -6,8 +7,8 @@ import random as strandom
 
 from copy import deepcopy
 
-import signal
-signal.signal(signal.SIGINT, signal.SIG_DFL)
+#import signal
+#signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
@@ -331,13 +332,29 @@ class CostModelCalibrationApp(QObject):
 		self.mainframe	= self._window._view.page().mainFrame()
 		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
 
+class CostModelCalibrationAppProcess(Process):
+	def __init__(self, vals):
+		self.queue = Queue(1)
+		super(CostModelCalibrationAppProcess, self).__init__()
+		self._vals	= vals
+
+	def run(self):
+		calib_app			= CostModelCalibrationApp(self._vals)
+		calib_app.run()
+		cost_model			= deepcopy(calib_app.cost_model)
+		training_pairs		= deepcopy(calib_app.training_pairs)
+		del calib_app
+
+		global app
+		app					= QApplication.instance()
+		app.exit()
+		app.flush()
+		app.quit()
+		self.queue.put((cost_model, training_pairs))
+
 def calibrate_normalization_cost_model(vals):
-	calib_app			= CostModelCalibrationApp(vals)
-	calib_app.run()
-	cost_model			= deepcopy(calib_app.cost_model)
-	training_pairs		= deepcopy(calib_app.training_pairs)
-	del calib_app
-
-	return (cost_model, training_pairs)
-
+	calib_app	= CostModelCalibrationAppProcess(vals)
+	calib_app.start()
+	calib_app.join()
+	return calib_app.queue.get()
 
