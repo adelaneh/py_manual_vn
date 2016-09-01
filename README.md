@@ -65,7 +65,7 @@ In clustering-based value normalization, you first cluster the values using one 
 
 1. Regular hierarchical agglomerative clustering (HAC)
 2. Smart clustering, which finds the best HAC parameter settings using input training data
-3. Hybrid clustering, which finds a clustering of input values such that you need to spend minimal time to clean up the clustering.
+3. Hybrid clustering, which finds a clustering of input values such that you need to spend minimal time to clean up the clustering
 
 To cluster the values, follow these steps:
 
@@ -75,7 +75,7 @@ To cluster the values, follow these steps:
   
    where the file at ```PATH-TO-TEXT-FILE``` contains the values to be normalized, one data value per line. You can download one of our sample datasets from https://github.com/adelaneh/py_manual_vn/tree/master/py_valuenormalization/data.
 
-2. Then use one of the following commands to cluster the values:
+2. Then use one of the following sequences of commands to cluster the values:
 
     1. Regular HAC: 
 
@@ -83,7 +83,7 @@ To cluster the values, follow these steps:
 
          ```>>> clusts = hac.cluster(sim_measure = '3gram Jaccard', linkage = 'single', thr = 0.7)```
 
-         where ```vals``` is the set of input values, ```sim_measure```, ```linkage``` and ```thr``` are standard HAC parameters, and ```clusts`` is a dictionary where each key is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster.
+         where ```vals``` is the set of input values, ```sim_measure```, ```linkage``` and ```thr``` are standard HAC parameters, and ```clusts``` is a dictionary where each key is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster.
 
     2. Smart clustering:
 
@@ -93,8 +93,9 @@ To cluster the values, follow these steps:
 
          ```>>> (best_clusts, best_setting) = smc.cluster()```
 
-        where ```training_pairs``` is a dictionary where each key is a value pair ```(v1, v2)``` with ```v1``` and ```v2``` being distinct input values, and the vorresponding value is ```True``` if ```v1``` and ```v2``` refer to the same entity and ```False``` otherwise.
-        The outpurt consists of a dictionary ```best_clusts``` and a tuple ```best_setting```. Each key of the dictionary ```best_clusts``` is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster. ```best_setting = (agrscore, simk, lnk, thr)``` is a tuple of agreement score and HAC parameter settings using which ```best_clusts``` is obtained. ```agrscore``` is the agreement score between ```best_clusts``` and ```training_pairs``` is the fraction of the value pairs in ```training_pairs``` which agree with ```best_clusts```. ```sim_measure```, ```linkage``` and ```thr``` are the standard HAC parameters settings using which ```best_clusts``` is obtained.
+        where ```training_pairs``` is a dictionary where each key is a value pair ```(v1, v2)``` with ```v1``` and ```v2``` being distinct input values, and the corresponding value is ```True``` if ```v1``` and ```v2``` refer to the same entity and ```False``` otherwise.
+
+        The output consists of a dictionary ```best_clusts``` and a tuple ```best_setting```. Each key of the dictionary ```best_clusts``` is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster. ```best_setting = (agrscore, simk, lnk, thr)``` is a tuple of agreement score and HAC parameter settings using which ```best_clusts``` is obtained. ```agrscore``` is the agreement score between ```best_clusts``` and ```training_pairs```; i.e. the fraction of the value pairs in ```training_pairs``` which agree with ```best_clusts```. ```sim_measure```, ```linkage``` and ```thr``` are the standard HAC parameters settings using which ```best_clusts``` is obtained.
 
     3. Hybrid clustering:
 
@@ -104,19 +105,20 @@ To cluster the values, follow these steps:
 
         ```>>> (clusts, mcl) = hybhac.cluster()```
 
-        where ```cm``` is a cost model used by hybrid clustering algorithm to find the clustering of the input data set which requires minimum effort by you to clean it up.
-        The outpurt consists of a dictionary ```clusts``` and an integer ```mcl```. Each key of the dictionary ```clusts``` is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster. ```mcl``` is the maximum size of clusters in ```clusts```. 
+        where ```cm``` is a cost model used by hybrid clustering algorithm to find the clustering of the input data set that requires minimum effort by you to clean it up.
+
+        The outpurt consists of a dictionary ```clusts``` and an integer ```mcl```. Each key of the dictionary ```clusts``` is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster. ```mcl``` is the maximum size of the clusters in ```clusts```. 
 
 ####Cleaning Up the Clusters####
 
-Now you clean up the clustering results to arrive at the correct clustering of the input values. This phase consists of two main steps:
+Now you can clean up the clusters obtained above to arrive at the correct clustering of the input values. This phase consists of two main steps:
 
-1. Split step, where you split clusters containing values referring to more than one real-world entity into smaller clusters each of which contains values referring to a single entity. 
-2. Merge steps, in which you merge clusters referring to the same entity.
+1. Split step, where you split clusters containing values referring to more than one real-world entity into smaller clusters each of which contains values referring to a single entity 
+2. Merge steps, in which you merge clusters referring to the same entity
 
 To clean up the clustering results run the following command:
 
 ```>>> clean_clusts = vn.normalize_clusters(clusts)```
 
-where ```clusts``` is a dictionary where each key is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster. This will open a graphical user interface to clean up ```clusts``` and the results with be returned in ```clean_clusts```.
+where ```clusts``` is a dictionary where each key is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster. This will open a graphical user interface to clean up ```clusts``` and the results with be returned in ```clean_clusts``` which is a dictionary where each key is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster.
 
