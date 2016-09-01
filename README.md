@@ -104,7 +104,7 @@ To cluster the values, follow these steps:
         ```>>> (clusts, mcl) = hybhac.cluster()```
 
         where ```cm``` is a cost model used by hybrid clustering algorithm to find the clustering of the input data set which requires minimum effort by you to clean it up.
-        The outpurt consists of a dictionary ```clusts``` and an integer ```mcl```. Each key of the dictionary ```clusts``` is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster. ```mcl`` is the maximum size of clusters in ```clusts```. 
+        The outpurt consists of a dictionary ```clusts``` and an integer ```mcl```. Each key of the dictionary ```clusts``` is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster. ```mcl``` is the maximum size of clusters in ```clusts```. 
 
 ####Cleaning Up the Clusters####
 
