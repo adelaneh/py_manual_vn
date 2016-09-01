@@ -30,7 +30,7 @@ To install this package:
 
 ##Usage Guide##
 
-To use this package, import it by running:
+To use this package, import it by running the following python command:
 
    ```>>> import py_valuenormalization as vn```
 
