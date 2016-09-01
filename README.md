@@ -80,6 +80,7 @@ To cluster the values, follow these steps:
     1. Regular HAC: 
 
          ```>>> hac = vn.HierarchicalClustering(vals)```
+
          ```>>> clusts = hac.cluster(sim_measure = '3gram Jaccard', linkage = 'single', thr = 0.7)```
 
          where ```vals``` is the set of input values, ```sim_measure```, ```linkage``` and ```thr``` are standard HAC parameters, and ```clusts`` is a dictionary where each key is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster.
@@ -115,7 +116,7 @@ Now you clean up the clustering results to arrive at the correct clustering of t
 
 To clean up the clustering results run the following command:
 
-    ```>>> clean_clusts = vn.normalize_clusters(clusts)```
+```>>> clean_clusts = vn.normalize_clusters(clusts)```
 
-    where ```clusts``` is a dictionary where each key is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster. This will open a graphical user interface to clean up ```clusts``` and the results with be returned in ```clean_clusts```.
+where ```clusts``` is a dictionary where each key is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster. This will open a graphical user interface to clean up ```clusts``` and the results with be returned in ```clean_clusts```.
 
