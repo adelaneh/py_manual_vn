@@ -228,7 +228,7 @@ class HybridClustering(HierarchicalClustering):
 
 		return dend
 
-	def hybrid_cluster(self, sim_measure = None, linkage = None, precalc_dists = None, thr = None, max_clust_size = -1):
+	def cluster(self, sim_measure = None, linkage = None, precalc_dists = None, thr = None, max_clust_size = -1):
 		approx_costs		= {}
 		min_cost_lambda		= None
 		min_cost			= None

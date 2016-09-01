@@ -190,7 +190,7 @@ class HierarchicalClustering(object):
 			res[clst[0]]			= clst
 		return res
 
-	def hac(self, sim_measure = None, linkage = None, thr = None, precalc_dists = None):
+	def cluster(self, sim_measure = None, linkage = None, thr = None, precalc_dists = None):
 		self.create_dendrogram(sim_measure, linkage, precalc_dists, -1)
 		self.lambdahac_dendrogram(self.dend, thr)
 		return self.get_clusters()
