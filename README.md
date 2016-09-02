@@ -91,11 +91,11 @@ To cluster the values, follow these steps:
 
         ```>>> smc = vn.SmartClustering(vals, training_pairs)```
 
-         ```>>> (best_clusts, best_setting) = smc.cluster()```
+         ```>>> (clusts, best_setting) = smc.cluster()```
 
         where ```training_pairs``` is a dictionary where each key is a value pair ```(v1, v2)``` with ```v1``` and ```v2``` being distinct input values, and the corresponding value is ```True``` if ```v1``` and ```v2``` refer to the same entity and ```False``` otherwise.
 
-        The output consists of a dictionary ```best_clusts``` and a tuple ```best_setting```. Each key of the dictionary ```best_clusts``` is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster. ```best_setting = (agrscore, simk, lnk, thr)``` is a tuple of agreement score and HAC parameter settings using which ```best_clusts``` is obtained. ```agrscore``` is the agreement score between ```best_clusts``` and ```training_pairs```; i.e. the fraction of the value pairs in ```training_pairs``` which agree with ```best_clusts```. ```sim_measure```, ```linkage``` and ```thr``` are the standard HAC parameters settings using which ```best_clusts``` is obtained.
+        The output consists of a dictionary ```clusts``` and a tuple ```best_setting```. Each key of the dictionary ```clusts``` is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster. ```best_setting = (agrscore, simk, lnk, thr)``` is a tuple of agreement score and HAC parameter settings using which ```clusts``` is obtained. ```agrscore``` is the agreement score between ```clusts``` and ```training_pairs```; i.e. the fraction of the value pairs in ```training_pairs``` which agree with ```clusts```. ```sim_measure```, ```linkage``` and ```thr``` are the standard HAC parameters settings using which ```clusts``` is obtained.
 
     3. Hybrid clustering:
 
