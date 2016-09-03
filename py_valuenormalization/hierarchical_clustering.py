@@ -1,3 +1,5 @@
+import sys
+
 if (sys.version_info > (3, 0)):
 	from .priority_queue import MyPriorityQueue
 	from .value_normalization_misc import SimMeasureNotSupportedException

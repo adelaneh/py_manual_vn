@@ -1,3 +1,5 @@
+import sys
+
 if (sys.version_info > (3, 0)):
 	from .hierarchical_clustering import HierarchicalClustering
 else:

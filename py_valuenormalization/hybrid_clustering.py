@@ -1,3 +1,4 @@
+import sys
 from copy import deepcopy
 
 if (sys.version_info > (3, 0)):
