@@ -14,8 +14,12 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtWebKit import *
 
-from value_normalization_misc import *
-from hierarchical_clustering import *
+if (sys.version_info > (3, 0)):
+	from .value_normalization_misc import *
+	from .hierarchical_clustering import *
+else:
+	from value_normalization_misc import *
+	from hierarchical_clustering import *
 
 class CostModelCalibrationApp(QObject):
 	def __init__(self, vals, meta_file='html/meta.html', parent=None):

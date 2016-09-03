@@ -1,9 +1,15 @@
 from copy import deepcopy
 
-from priority_queue import MyPriorityQueue
-from value_normalization_misc import SimMeasureNotSupportedException
-from value_normalization_misc import Utils
-from hierarchical_clustering import HierarchicalClustering
+if (sys.version_info > (3, 0)):
+	from .priority_queue import MyPriorityQueue
+	from .value_normalization_misc import SimMeasureNotSupportedException
+	from .value_normalization_misc import Utils
+	from .hierarchical_clustering import HierarchicalClustering
+else:
+	from priority_queue import MyPriorityQueue
+	from value_normalization_misc import SimMeasureNotSupportedException
+	from value_normalization_misc import Utils
+	from hierarchical_clustering import HierarchicalClustering
 
 from py_stringmatching.similarity_measure.jaro_winkler import JaroWinkler
 from py_stringmatching.similarity_measure.levenshtein import Levenshtein

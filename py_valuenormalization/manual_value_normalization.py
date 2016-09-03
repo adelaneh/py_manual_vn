@@ -13,7 +13,10 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtWebKit import *
 
-from value_normalization_misc import *
+if (sys.version_info > (3, 0)):
+	from .value_normalization_misc import *
+else:
+	from value_normalization_misc import *
 
 class ManualValueNormalizationApp(QObject):
 	def __init__(self, clusters, meta_file='html/meta.html', parent=None):

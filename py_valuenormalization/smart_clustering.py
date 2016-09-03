@@ -1,4 +1,7 @@
-from hierarchical_clustering import HierarchicalClustering
+if (sys.version_info > (3, 0)):
+	from .hierarchical_clustering import HierarchicalClustering
+else:
+	from hierarchical_clustering import HierarchicalClustering
 
 class SmartClustering(HierarchicalClustering):
 	def __init__(self, vals, training_pairs):

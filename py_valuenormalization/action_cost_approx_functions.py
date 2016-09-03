@@ -1,6 +1,9 @@
 from math import floor, log, pow
 
-from action_cost_functions import *
+if (sys.version_info > (3, 0)):
+	from .action_cost_functions import *
+else:
+	from action_cost_functions import *
 
 ###########################################################################################################
 ################# U S E R   E D I T   C O S T   E S T I M A T I O N   F U N C T I O N S ###################

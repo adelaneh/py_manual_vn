@@ -1,5 +1,9 @@
-from priority_queue import MyPriorityQueue
-from value_normalization_misc import SimMeasureNotSupportedException
+if (sys.version_info > (3, 0)):
+	from .priority_queue import MyPriorityQueue
+	from .value_normalization_misc import SimMeasureNotSupportedException
+else:
+	from priority_queue import MyPriorityQueue
+	from value_normalization_misc import SimMeasureNotSupportedException
 
 from py_stringmatching.similarity_measure.jaro_winkler import JaroWinkler
 from py_stringmatching.similarity_measure.levenshtein import Levenshtein
