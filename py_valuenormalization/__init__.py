@@ -1,6 +1,10 @@
 # coding=utf-8
 import sys
-reload(sys)
+if (sys.version_info > (3, 0)):
+	import importlib
+	importlib.reload(sys)
+else:
+	reload(sys)
 sys.setdefaultencoding("UTF-8")
 
 from value_normalization_misc import *
