@@ -191,8 +191,8 @@ def normalize_values(vals):
 	for val in vals:
 		clusters[val]	= [val,]
 	norm_app	= ManualValueNormalizationAppProcess(clusters)
-	norm_app.start()
 	norm_app.daemon	= True
+	norm_app.start()
 	norm_app.join()
 	return norm_app.queue.get()
 
