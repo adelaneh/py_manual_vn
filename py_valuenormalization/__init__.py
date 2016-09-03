@@ -5,7 +5,7 @@ if (sys.version_info > (3, 0)):
 	importlib.reload(sys)
 else:
 	reload(sys)
-sys.setdefaultencoding("UTF-8")
+	sys.setdefaultencoding("UTF-8")
 
 from value_normalization_misc import *
 
