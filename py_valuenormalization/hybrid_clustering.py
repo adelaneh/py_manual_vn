@@ -18,24 +18,30 @@ from py_stringmatching.similarity_measure.jaccard import Jaccard
 from py_stringmatching.tokenizer.qgram_tokenizer import QgramTokenizer
 
 class HybridClustering(HierarchicalClustering):
-	def __init__(self, vals, cost_model):
+	def __init__(self, vals, cost_model, default_sim_measure_str = None, default_linkage = None, default_thr = None):
 		super(HybridClustering, self).__init__(vals)
 		self.cost_model				= cost_model
+		if default_sim_measure_str is not None:
+			HierarchicalClustering._default_sim_measure_str	= default_sim_measure_str
+		if default_linkage is not None:
+			HierarchicalClustering._default_linkage			= default_linkage
+		if default_thr is not None:
+			HierarchicalClustering._default_thr				= default_thr
 
-	def shotgun_create_dendrogram(self, sim_measure = None, linkage = None, precalc_dists = None, thr = None, max_clust_size = -1):
+	def shotgun_create_dendrogram(self, sim_measure_str = None, linkage = None, precalc_dists = None, thr = None, max_clust_size = -1):
 		self.max_clust_size		= max_clust_size if max_clust_size != -1 else len(self.vals)
 		self.dend				= []
 		if self.max_clust_size == 1:
 			return self.dend
 
-		self.sim_measure		= sim_measure if sim_measure is not None else '3gram Jaccard'
-		self.linkage			= linkage if linkage is not None else 'single'
-		self.thr				= thr if thr is not None else 0.7
+		self.sim_measure_str	= sim_measure_str if sim_measure_str is not None else HierarchicalClustering._default_sim_measure_str
+		self.linkage			= linkage if linkage is not None else HierarchicalClustering._default_linkage
+		self.thr				= thr if thr is not None else HierarchicalClustering._default_thr
 		self.stop_when			= lambda x: x[0] > self.thr
 
 		self.init_clustering()
 
-		self.dists				= precalc_dists if precalc_dists is not None else self.calc_dists(self.sim_measure)
+		self.dists				= precalc_dists if precalc_dists is not None else self.calc_dists(self.sim_measure_str)
 		self.clust_dists		= {}
 		self.dend_hist			= {}
 		myq						= MyPriorityQueue()
@@ -275,7 +281,7 @@ class HybridClustering(HierarchicalClustering):
 			if min_cost is None or min_cost > approx_cost:
 				min_cost				= approx_cost
 				min_cost_lambda			= lambda_i
-				best_clusts				= clusts
+				best_clusts				= self.get_clusters()
 
 		return (best_clusts, min_cost_lambda)
 

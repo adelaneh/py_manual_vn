@@ -2,6 +2,7 @@ from multiprocessing import Queue, Process
 import sys, os
 from pprint import pprint
 from time import sleep
+from time import time as ts
 import ast
 
 from copy import deepcopy
@@ -15,13 +16,16 @@ from PyQt4.QtWebKit import *
 
 if (sys.version_info > (3, 0)):
 	from .value_normalization_misc import *
+	from .logger import *
 else:
 	from value_normalization_misc import *
+	from logger import *
 
-class ClusteringBasedValueNormalizationApp(QObject):
+class ClusteringBasedValueNormalizationApp(QObject, Logger):
 	def __init__(self, clusters, meta_file='html/meta.html', parent=None):
 #		super(ClusteringBasesValueNormalizationApp, self).__init__(parent)
 		QObject.__init__(self)
+		Logger.__init__(self, name="ClusteringBasedValueNormalizationApp")
 
 		self.curpath			= os.path.abspath(os.path.dirname(__file__))
 		self.tosplit_clusters	= clusters
@@ -108,6 +112,8 @@ class ClusteringBasedValueNormalizationApp(QObject):
 		btn				= self.mainframe.documentElement().findFirst('button[id="start-cleanup-btn"]')
 		btn.evaluateJavaScript('this.onclick=norm_app.start_split_clusters')
 
+#		self.log((1, ts()))
+
 	#########################################
 	############# Split clusters ############
 	#########################################
@@ -136,6 +142,7 @@ class ClusteringBasedValueNormalizationApp(QObject):
 		self.html		+= """<script type="text/javascript">var curClusterLabel = \"%s\";</script>"""%(self.current_clust_label_to_split, )
 		self.html		+= open(self.curpath + "/html/split_clusters.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
+		self._window._view.loadFinished.disconnect()
 		self._window._view.loadFinished.connect(self.split_clusters_loaded)
 		self._window._view.setHtml(self.html)
 
@@ -155,6 +162,9 @@ class ClusteringBasedValueNormalizationApp(QObject):
 
 	@pyqtSlot()
 	def split_clusters_loaded(self):
+		self.mainframe.addToJavaScriptWindowObject('norm_app', self)
+
+		self.log((2, ts()))
 		return
 
 	#########################################
@@ -168,6 +178,7 @@ class ClusteringBasedValueNormalizationApp(QObject):
 		self.html		+= """<script type="text/javascript">var merged_clusters = %s</script>"""%(str(self.merged_clusters), )
 		self.html		+= open(self.curpath + "/html/local_merge.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
+		self._window._view.loadFinished.disconnect()
 		self._window._view.loadFinished.connect(self.local_merge_loaded)
 		self._window._view.setHtml(self.html)
 
@@ -182,7 +193,10 @@ class ClusteringBasedValueNormalizationApp(QObject):
 
 	@pyqtSlot()
 	def local_merge_loaded(self):
+		self.mainframe.addToJavaScriptWindowObject('norm_app', self)
 		self.mainframe.evaluateJavaScript("window.scrollTo(0, %d);"%(self.pgoffset, ))
+
+		self.log((3, ts()))
 		return
 
 	#########################################
@@ -202,6 +216,7 @@ class ClusteringBasedValueNormalizationApp(QObject):
 		self.html		+= """<script type="text/javascript">var gmic = %d</script>"""%(self.gmic, )
 		self.html		+= open(self.curpath + "/html/global_merge.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
+		self._window._view.loadFinished.disconnect()
 		self._window._view.loadFinished.connect(self.global_merge_loaded)
 		self._window._view.setHtml(self.html)
 
@@ -217,7 +232,10 @@ class ClusteringBasedValueNormalizationApp(QObject):
 
 	@pyqtSlot()
 	def global_merge_loaded(self):
+		self.mainframe.addToJavaScriptWindowObject('norm_app', self)
 		self.mainframe.evaluateJavaScript("window.scrollTo(0, 0);")
+
+		self.log((4, ts()))
 		return
 
 	#########################################
@@ -232,6 +250,7 @@ class ClusteringBasedValueNormalizationApp(QObject):
 		self.html		+= """<script type="text/javascript">var merged_clusters = %s</script>"""%(str(self.result_clusters), )
 		self.html		+= open(self.curpath + "/html/result_summary.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
+		self._window._view.loadFinished.disconnect()
 		self._window._view.loadFinished.connect(self.result_summary_loaded)
 		self._window._view.setHtml(self.html)
 
@@ -240,18 +259,24 @@ class ClusteringBasedValueNormalizationApp(QObject):
 
 	@pyqtSlot(str)
 	def result_summary_loaded(self):
+		self.mainframe.addToJavaScriptWindowObject('norm_app', self)
 		self.mainframe.evaluateJavaScript("window.scrollTo(0, 0);")
+
+		self.log((5, ts()))
 		return
 
 class ClusteringBasedValueNormalizationAppProcess(Process):
 	def __init__(self, clusters):
-		self.queue = Queue(1)
+		self.queue		= Queue(1)
 		super(ClusteringBasedValueNormalizationAppProcess, self).__init__()
 		self._clusters	= clusters
+		self._ttf		= 0
 
 	def run(self):
 		norm_app	= ClusteringBasedValueNormalizationApp(self._clusters)
 		norm_app.run()
+		if len(norm_app._log_entries) > 0 and norm_app._log_entries[-1][0] == 5:
+			self._ttf	= norm_app._log_entries[-1][1] - norm_app._log_entries[0][1]
 		res			= deepcopy(norm_app.result_clusters)
 		del norm_app
 
@@ -260,7 +285,7 @@ class ClusteringBasedValueNormalizationAppProcess(Process):
 		app.exit()
 		app.flush()
 		app.quit()
-		self.queue.put(res)
+		self.queue.put((res, self._ttf))
 
 
 def normalize_clusters(clusters):

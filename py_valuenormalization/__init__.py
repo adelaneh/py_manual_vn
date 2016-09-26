@@ -34,3 +34,6 @@ else:
 def read_from_file(path):
 	return Utils.read_from_file(path)
 
+def read_map_from_file(path):
+	return Utils.read_map_from_file(path)
+

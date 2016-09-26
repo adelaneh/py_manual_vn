@@ -25,12 +25,11 @@ class SmartClustering(HierarchicalClustering):
 				dend			= self.create_dendrogram(precalc_dists = dists, linkage = lnk)
 				for thr in stop_ths:
 					vtc				= self.lambdahac_dendrogram(dend = dend, thr = thr)
-					clusts			= self.get_clusters()
 
 					agrscore		= self.calc_agreement_score()
 
 					if agrscore[2] > best_agrscore:
-						best_clusts		= clusts
+						best_clusts		= self.get_clusters()
 						best_agrscore	= agrscore[2]
 					clust_settings.append((agrscore, simk, lnk, thr))
 

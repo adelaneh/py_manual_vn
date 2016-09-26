@@ -14,6 +14,7 @@ import numpy
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4.QtWebKit import *
+from PyQt4.QtNetwork import *
 
 class WebPage(QWebPage):
 	"""
@@ -45,6 +46,7 @@ class Window(QMainWindow):
 		self._layout.addWidget(self._view)
 		self.setCentralWidget(self.centralwidget)
 
+#		self._view.page().settings().setNetworkAccessManager(QNetworkAccessManager())
 		self._view.page().settings().setObjectCacheCapacities(0, 0, 0)
 		self._view.page().settings().setMaximumPagesInCache(0)
 		self._view.page().settings().setAttribute(QWebSettings.DeveloperExtrasEnabled, True)
@@ -75,6 +77,18 @@ class Utils:
 					if line not in ['', u'']:
 						vals.append(unicode(line))
 		return sorted([str(val) for val in vals], key=lambda s: s.lower())
+
+	@staticmethod
+	def read_map_from_file(filename):
+		val_map		= {}
+
+		with open(filename) as f:
+			for line in f:
+				line		= unicode(line.strip())
+				if line not in ['', u'']:
+					toks				= line.split('\t')
+					val_map[str(toks[0])]	= str(toks[1])
+		return val_map
 
 	@staticmethod
 	def alpha_lambda_WP(x, aa, bb):

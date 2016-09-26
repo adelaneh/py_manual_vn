@@ -13,8 +13,13 @@ from py_stringmatching.similarity_measure.jaccard import Jaccard
 from py_stringmatching.tokenizer.qgram_tokenizer import QgramTokenizer
 
 class HierarchicalClustering(object):
+	_default_sim_measure_str	= '3gram Jaccard'
+	_default_linkage			= 'single'
+	_default_thr				= 0.7
+
 	def __init__(self, vals):
-		self.vals					= sorted(vals, reverse=True)
+		self.vals					= sorted(vals, key = lambda x: x.lower(), reverse=True)
+		self.val_map				= vals if isinstance(vals, dict) else None
 		# whether to show debugging info or not	
 		self.show					= False
 
@@ -51,7 +56,7 @@ class HierarchicalClustering(object):
 			raise SimMeasureNotSupportedException("Similarity measure named %s is not supported. Supported similarity measures are %s"%(sim_measure_str, str(self.str_sims.keys())))
 
 	def calc_dists(self, sim_measure_str = None):
-		self.sim_measure				= self.get_sim_measure(sim_measure_str) if sim_measure_str is not None else self.get_sim_measure('jarowinkler')
+		self.sim_measure				= self.get_sim_measure(sim_measure_str if sim_measure_str is not None else HierarchicalClustering._default_sim_measure_str)
 		
 		# unordered pair of values -> string distance
 		self.dists					= {}
@@ -70,7 +75,7 @@ class HierarchicalClustering(object):
 		if self.max_clust_size == 1:
 			return self.dend
 
-		self.linkage			= linkage if linkage is not None else 'single'
+		self.linkage			= linkage if linkage is not None else HierarchicalClustering._default_linkage
 
 		self.init_clustering()
 		# unordered pair of values -> string distance
@@ -161,7 +166,7 @@ class HierarchicalClustering(object):
 		return self.dend
 
 	def lambdahac_dendrogram(self, dend = None, thr = None):
-		self.thr			= thr if thr is not None else 0.7
+		self.thr			= thr if thr is not None else HierarchicalClustering._default_thr
 		self.stop_when		= lambda x: x[0] > self.thr
 		if dend is not None:
 			self.dend			= dend
@@ -189,7 +194,7 @@ class HierarchicalClustering(object):
 		for kk in self.val_to_clustid_map:
 			if self.val_to_clustid_map[kk] not in clustid_to_val_map:
 				clustid_to_val_map[self.val_to_clustid_map[kk]]	= []
-			clustid_to_val_map[self.val_to_clustid_map[kk]].append(kk)
+			clustid_to_val_map[self.val_to_clustid_map[kk]].append(self.val_map[kk] if self.val_map is not None else kk)
 		clstlst					= sorted([sorted(vv) for vv in list(clustid_to_val_map.values())], key=lambda x: x[0].lower())
 		res						= {}
 		for clst in clstlst:

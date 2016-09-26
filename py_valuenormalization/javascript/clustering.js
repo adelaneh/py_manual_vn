@@ -45,7 +45,7 @@ var removeElementById = function(id) {
 var loadClustersInColumns = function(e) {
 	var txt = "<table style=\"width:70%\"><tr>";
 	var colCnt = 1;
-	var curCluster = allClusts[curClusterLabel].sort();
+	var curCluster = allClusts[curClusterLabel].sort(compStrCaseInsensitive);
 	var maxColSize = Math.floor(curCluster.length / colCnt);
 	if ((curCluster.length / colCnt) != maxColSize) { maxColSize = maxColSize + 1; }
 	if (curCluster.length < 11) { maxColSize = 10; }
@@ -148,6 +148,21 @@ var showClusteringSummary = function(e) {
 
 var pullOutCluster = function(e){
 	var curClstr = allClusts[curClusterLabel];
+
+	var selClustCnt = 0;
+	for (var ii = curClstr.length - 1; ii >= 0; ii--) {
+		var kk = curClstr[ii];
+		var curEl = document.getElementById(kk);
+		if (curEl != null) {
+			var parentEl = document.getElementById(kk).parentElement;
+			if (parentEl.className.indexOf("active") > -1) {
+				selClustCnt = selClustCnt + 1;
+			}
+		}
+	}
+
+	if (selClustCnt < 1) { return; }
+
 	delete allClusts[curClusterLabel];
 
 	var poclust = [];
@@ -163,8 +178,6 @@ var pullOutCluster = function(e){
 			}
 		}
 	}
-
-	if (poclust.length < 1) { return; }
 
 	curClstr = curClstr.sort(compStrCaseInsensitive);
 	curClstrLbl = curClstr[0];
@@ -200,7 +213,6 @@ var pullOutCluster = function(e){
 
 var pullOutRemainder = function(e){
 	var curClstr = allClusts[curClusterLabel];
-	delete allClusts[curClusterLabel];
 
 	var nselClustCnt = 0;
 	for (var ii = curClstr.length - 1; ii >= 0; ii--) {
@@ -217,6 +229,8 @@ var pullOutRemainder = function(e){
 		alert("Each cluster has at least one dominating entity. So you need to leave at least one value unselected.");
 		return;
 	}
+
+	delete allClusts[curClusterLabel];
 
 	var poclust = [];
 	for (var ii = curClstr.length - 1; ii >= 0; ii--) {
@@ -325,11 +339,14 @@ var loadPureClustersInColumns = function(e) {
 	for (var rowinx = 0; rowinx < remainingClusters.length; rowinx++){
 		txt = txt + "<tr>";
 		txt = txt + "<td><div style=\"width:100%;\" class=\"btn-group\" role=\"group\" data-toggle=\"buttons\"><label class=\"btn outline btn-block btn_clust_mrg\" data-container=\"body\" data-toggle=\"popover\" data-placement=\"right\" data-html=\"true\" data-content=\"";
-		for (var valinx = 0; valinx < mergedClusters[remainingClusters[rowinx]].length; valinx++){
+		for (var valinx = 0; valinx < Math.min(mergedClusters[remainingClusters[rowinx]].length, 20); valinx++){
 			txt = txt + mergedClusters[remainingClusters[rowinx]].sort(compStrCaseInsensitive)[valinx]
 			if (valinx < mergedClusters[remainingClusters[rowinx]].length - 1) {
 				txt = txt + "<br />";
 			}
+		}
+		if (mergedClusters[remainingClusters[rowinx]].length > 20) {
+			txt = txt + "...";
 		}
 		txt = txt + "\" data-trigger=\"hover\">";// onclick=\"logClusterButtonClick('" + remainingClusters[rowinx]+ "');\">";
 		txt = txt + "<input id=\"" + remainingClusters[rowinx] + "\" type=\"checkbox\" autocomplete=\"off\">" + remainingClusters[rowinx];
@@ -412,8 +429,11 @@ var loadGlobalMergeClusters = function(e) {
 	var headerTXT = "<tr><td style=\"width: 25%;\" align=\"center\"><p></p></td>";
 	for (var colinx = 0; colinx < colHeaders.length; colinx++) {
 		headerTXT = headerTXT + "<td style=\"width: 25%;\" align=\"center\" data-container=\"body\" data-toggle=\"popover\" data-placement=\"top\" data-html=\"true\" data-trigger=\"hover\" data-content=\"";
-		for (var valinx = 0; valinx < mergedClusters[colHeaders[colinx]].length; valinx++){
+		for (var valinx = 0; valinx < Math.min(mergedClusters[colHeaders[colinx]].length, 20); valinx++){
 			headerTXT = headerTXT + mergedClusters[colHeaders[colinx]][valinx] + "<br />";
+		}
+		if (mergedClusters[colHeaders[colinx]].length > 20) {
+			headerTXT = headerTXT + "...<br />";
 		}
 		headerTXT = headerTXT + "\"><b>" + colHeaders[colinx] + "</b></td>";
 	}
@@ -427,15 +447,21 @@ var loadGlobalMergeClusters = function(e) {
 		}
 
 		txt = txt + "<tr><td style=\"width: 25%;\" data-container=\"body\" data-toggle=\"popover\" data-placement=\"top\" data-html=\"true\" data-trigger=\"hover\" data-content=\"";
-		for (var valinx = 0; valinx < mergedClusters[remainingClusters[rowinx]].length; valinx++){
+		for (var valinx = 0; valinx < Math.min(mergedClusters[remainingClusters[rowinx]].length, 20); valinx++){
 			txt = txt + mergedClusters[remainingClusters[rowinx]][valinx] + "<br />";
+		}
+		if (mergedClusters[remainingClusters[rowinx]].length > 20) {
+			txt = txt + "...<br />";
 		}
 		txt = txt + "\">" + remainingClusters[rowinx] + "</td>";
 
 		for (var colinx = 0; colinx < colHeaders.length; colinx++) {
 			txt = txt + "<td style=\"width: 25%;\" align=\"center\"><input id=\"" + rowinx + "@" + colinx + "\" type=\"checkbox\" data-container=\"body\" data-toggle=\"popover\" data-placement=\"left\" data-html=\"true\" data-trigger=\"hover\" data-content=\"";
-			for (var valinx = 0; valinx < mergedClusters[colHeaders[colinx]].length; valinx++){
+			for (var valinx = 0; valinx < Math.min(mergedClusters[colHeaders[colinx]].length, 20); valinx++){
 				txt = txt + mergedClusters[colHeaders[colinx]][valinx] + "<br />";
+			}
+			if (mergedClusters[colHeaders[colinx]].length > 20) {
+				txt = txt + "...<br />";
 			}
 			txt = txt + "\"";
 			if (colinx == rowinx) {
@@ -704,7 +730,7 @@ var doneGlobalMergingMod = function() {
 var loadMergedClustersInColumns = function(e) {
 	var txt = "<table style=\"width:30%;\"><tr>";
 	var colCnt = 1;
-	var remainingClusters = Object.keys(mergedClusters).sort();
+	var remainingClusters = Object.keys(mergedClusters).sort(compStrCaseInsensitive);
 	var maxColSize = Math.floor(remainingClusters.length / colCnt);
 	if ((remainingClusters.length / colCnt) != maxColSize) { maxColSize = maxColSize + 1; }
 	if (remainingClusters.length < 11) { maxColSize = 10; }
@@ -719,8 +745,11 @@ var loadMergedClustersInColumns = function(e) {
 			//				txt = txt + "<label class=\"btn btn-default btn-block btn_clust\">";
 			txt = txt + "<label class=\"btn btn-success btn-block btn_clust_res\" data-container=\"body\" data-toggle=\"popover\" data-placement=\"left\" data-html=\"true\" data-content=\"";
 			//				txt = txt + "Something";
-			for (var valinx = 0; valinx < mergedClusters[remainingClusters[rowinx]].length; valinx++){
+			for (var valinx = 0; valinx < Math.min(mergedClusters[remainingClusters[rowinx]].length, 20); valinx++){
 				txt = txt + mergedClusters[remainingClusters[rowinx]][valinx] + "<br />";
+			}
+			if (mergedClusters[remainingClusters[rowinx]].length > 20) {
+				txt = txt + "...<br />";
 			}
 			txt = txt + "\" data-trigger=\"hover\" onclick=\"logClusterButtonClick('" + remainingClusters[rowinx]+ "');\">";
 			txt = txt + "<input id=\"" + remainingClusters[rowinx] + "\" type=\"checkbox\" autocomplete=\"off\">" + remainingClusters[rowinx];

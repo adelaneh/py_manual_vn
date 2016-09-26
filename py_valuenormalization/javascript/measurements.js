@@ -1,3 +1,7 @@
+var compStrCaseInsensitive = function (a, b) {
+	return a.toLowerCase().localeCompare(b.toLowerCase());
+}
+
 var vpkey = [];
 var ispure_tr_pairs = [];
 
@@ -105,9 +109,9 @@ var loadSampleClustersInColumns = function(e) {
 	var colCnt = 1;
 	var curCluster = "";
 	if (curClusterLabel in samples_pe_clusts10) {
-		curCluster = samples_pe_clusts10[curClusterLabel].sort();
+		curCluster = samples_pe_clusts10[curClusterLabel].sort(compStrCaseInsensitive);
 	} else if (curClusterLabel in samples_pe_clusts20) {
-		curCluster = samples_pe_clusts20[curClusterLabel].sort();
+		curCluster = samples_pe_clusts20[curClusterLabel].sort(compStrCaseInsensitive);
 	}
 
 	var maxColSize = Math.floor(curCluster.length / colCnt);
@@ -137,10 +141,10 @@ var calcPurity = function() {
 	var curCluster = "";
 	var lambda = 0;
 	if (curClusterLabel in samples_pe_clusts10) {
-		curCluster = samples_pe_clusts10[curClusterLabel].sort();
+		curCluster = samples_pe_clusts10[curClusterLabel].sort(compStrCaseInsensitive);
 		lambda = 10;
 	} else if (curClusterLabel in samples_pe_clusts20) {
-		curCluster = samples_pe_clusts20[curClusterLabel].sort();
+		curCluster = samples_pe_clusts20[curClusterLabel].sort(compStrCaseInsensitive);
 		lambda = 20;
 	}
 	var clstsz = curCluster.length;
@@ -212,7 +216,7 @@ var loadClusterValues = function(e) {
 	for (var jj = 0; jj < allClusts[ci1].length; jj++) {
 		values.push(allClusts[ci1][jj]);
 	}
-	values.sort();
+	values.sort(compStrCaseInsensitive);
 	if (trycnt == 20) { values = shuffle(values); }
 	fillClusterTable(false);
 	recorded_resps['clusters'].push(ci1);
@@ -252,13 +256,13 @@ var loadClusterValuesForFindDom = function(e) {
 	var ci1 = rand_key(allClusts);
 	var trycnt = 0;
 	if (seq_counter > 2) {
-		while (ci1 in recorded_resps['clusters'] || allClusts[ci1].length == 1 || allClusts[ci1].length > omega_1 || trycnt < maxtries ) {
+		while ( ( ci1 in recorded_resps['clusters'] || allClusts[ci1].length == 1 || allClusts[ci1].length > omega_1 ) && trycnt < maxtries ) {
 			ci1 = rand_key(allClusts);
 			trycnt = trycnt + 1;
 		}
 	}
 	else {
-		while (ci1 in recorded_resps['clusters'] || allClusts[ci1].length <= omega_1 || trycnt < maxtries) {
+		while ( (ci1 in recorded_resps['clusters'] || allClusts[ci1].length <= omega_1 ) && trycnt < maxtries) {
 			ci1 = rand_key(allClusts);
 			trycnt = trycnt + 1;
 		}
@@ -266,7 +270,7 @@ var loadClusterValuesForFindDom = function(e) {
 	for (var jj = 0; jj < allClusts[ci1].length; jj++) {
 		values.push(allClusts[ci1][jj]);
 	}
-	values.sort();
+	values.sort(compStrCaseInsensitive);
 	if (trycnt == maxtries) { values = shuffle(values); }
 	fillClusterTable(true);
 	recorded_resps['clusters'].push(ci1);

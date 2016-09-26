@@ -2,6 +2,7 @@ from multiprocessing import Queue, Process
 import sys, os
 from pprint import pprint
 from time import sleep
+from time import time as ts
 import ast
 import random as strandom
 
@@ -17,17 +18,25 @@ from PyQt4.QtWebKit import *
 if (sys.version_info > (3, 0)):
 	from .value_normalization_misc import *
 	from .hierarchical_clustering import *
+	from .logger import *
 else:
 	from value_normalization_misc import *
 	from hierarchical_clustering import *
+	from logger import *
 
-class CostModelCalibrationApp(QObject):
+class CostModelCalibrationApp(QObject, Logger):
 	def __init__(self, vals, meta_file='html/meta.html', parent=None):
 #		super(CostModelCalibrationApp, self).__init__(parent)
 		QObject.__init__(self)
+		Logger.__init__(self, name="CostModelCalibrationApp")
 
 		self.curpath			= os.path.abspath(os.path.dirname(__file__))
 		self.vals				= vals
+		self.inv_val_map		= None
+		if isinstance(self.vals, dict):
+			self.inv_val_map		= {}
+			for (kk, vv) in self.vals.items():
+				self.inv_val_map[vv]	= kk
 
 		self.cost_model			= Utils.get_default_cost_model()
 
@@ -42,7 +51,7 @@ class CostModelCalibrationApp(QObject):
 	def get_html_table(self):
 		inp_val_table	= ""
 		cnt				= 1
-		for val in self.vals:
+		for val in (self.inv_val_map if self.inv_val_map is not None else self.vals):
 			inp_val_table	+= '<tr><th class="col-xs-2">%d</th><td class="col-xs-8">%s</td></tr>\n'%(cnt, val)
 			cnt				+= 1
 		return inp_val_table
@@ -86,6 +95,8 @@ class CostModelCalibrationApp(QObject):
 		self.mainframe.addToJavaScriptWindowObject('calib_app', self)
 		btn				= self.mainframe.documentElement().findFirst('button[id="start-calib-btn"]')
 		btn.evaluateJavaScript('this.onclick=calib_app.estimate_purity_function')
+
+#		self.log((1, ts()))
 
 	#########################################
 	######### Cost Model Calibration ########
@@ -135,6 +146,7 @@ class CostModelCalibrationApp(QObject):
 		self.html		+= """<script type="text/javascript">var curClusterLabel = \"%s\";</script>"""%(self.cur_cluster_label, )
 		self.html		+= open(self.curpath + "/html/estimate_purity.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
+		self._window._view.loadFinished.disconnect()
 		self._window._view.loadFinished.connect(self.estimate_purity_function_loaded)
 		self._window._view.setHtml(self.html)
 
@@ -151,7 +163,10 @@ class CostModelCalibrationApp(QObject):
 			for vi1 in range(len(cur_clust)):
 				for vi2 in range(vi1 + 1, len(cur_clust)):
 					if cur_clust[vi1] in cluster_doment_vals[kk]:
-						self.training_pairs[tuple(sorted([cur_clust[vi1], cur_clust[vi2]]))]   = cur_clust[vi2] in cluster_doment_vals[kk]
+						if self.inv_val_map is not None:
+							self.training_pairs[tuple(sorted([self.inv_val_map[cur_clust[vi1]], self.inv_val_map[cur_clust[vi2]]]))]   = cur_clust[vi2] in cluster_doment_vals[kk]
+						else:
+							self.training_pairs[tuple(sorted([cur_clust[vi1], cur_clust[vi2]]))]   = cur_clust[vi2] in cluster_doment_vals[kk]
 
 		####### ESTIMATE PURITY FUNCTION PARAMS ############
 		dd							= [(1, 1),]
@@ -171,6 +186,9 @@ class CostModelCalibrationApp(QObject):
 
 	@pyqtSlot()
 	def estimate_purity_function_loaded(self):
+		self.mainframe.addToJavaScriptWindowObject('calib_app', self)
+
+		self.log((2, ts()))
 		return
 
 	#########################################
@@ -188,6 +206,7 @@ class CostModelCalibrationApp(QObject):
 		self.html		+= """<script type="text/javascript">var seq_counter = %d;</script>"""%(self.seq_counter, )
 		self.html		+= open(self.curpath + "/html/ua_match.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
+		self._window._view.loadFinished.disconnect()
 		self._window._view.loadFinished.connect(self.calibrate_ua_match_loaded)
 		self._window._view.setHtml(self.html)
 
@@ -200,7 +219,10 @@ class CostModelCalibrationApp(QObject):
 		ua_match_tr_pairs	= ast.literal_eval(tr_pairs.__str__())
 
 		for vpair in ua_match_tr_pairs:
-			self.training_pairs[tuple(sorted(vpair[0]))]	= vpair[1] == "1"
+			if self.inv_val_map is not None:
+				self.training_pairs[tuple(sorted([self.inv_val_map[vpair[0][0]], self.inv_val_map[vpair[0][1]]]))]	= vpair[1] == "1"
+			else:
+				self.training_pairs[tuple(sorted(vpair[0]))]	= vpair[1] == "1"
 
 		####### ESTIMATE MATCH PARAMS ############
 		tss					= self.recorded_resps['times']
@@ -214,6 +236,9 @@ class CostModelCalibrationApp(QObject):
 
 	@pyqtSlot()
 	def calibrate_ua_match_loaded(self):
+		self.mainframe.addToJavaScriptWindowObject('calib_app', self)
+
+		self.log((3, ts()))
 		return
 
 	#########################################
@@ -231,6 +256,7 @@ class CostModelCalibrationApp(QObject):
 		self.html		+= """<script type="text/javascript">var seq_counter = %d;</script>"""%(self.seq_counter, )
 		self.html		+= open(self.curpath + "/html/ua_ispure.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
+		self._window._view.loadFinished.disconnect()
 		self._window._view.loadFinished.connect(self.calibrate_ua_ispure_loaded)
 		self._window._view.setHtml(self.html)
 
@@ -251,7 +277,10 @@ class CostModelCalibrationApp(QObject):
 				cur_clust	= self.clusters[kk]
 				for vi1 in range(len(cur_clust)):
 					for vi2 in range(vi1 + 1, len(cur_clust)):
-						self.training_pairs[tuple(sorted([cur_clust[vi1], cur_clust[vi2]]))]   = True
+						if self.inv_val_map is not None:
+							self.training_pairs[tuple(sorted([self.inv_val_map[cur_clust[vi1]], self.inv_val_map[cur_clust[vi2]]]))]   = True
+						else:
+							self.training_pairs[tuple(sorted([cur_clust[vi1], cur_clust[vi2]]))]   = True
 
 
 		####### ESTIMATE ISPURE PARAMS ############
@@ -275,6 +304,9 @@ class CostModelCalibrationApp(QObject):
 
 	@pyqtSlot()
 	def calibrate_ua_ispure_loaded(self):
+		self.mainframe.addToJavaScriptWindowObject('calib_app', self)
+
+		self.log((4, ts()))
 		return
 
 	#########################################
@@ -292,6 +324,7 @@ class CostModelCalibrationApp(QObject):
 		self.html		+= """<script type="text/javascript">var seq_counter = %d;</script>"""%(self.seq_counter, )
 		self.html		+= open(self.curpath + "/html/ua_finddom.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
+		self._window._view.loadFinished.disconnect()
 		self._window._view.loadFinished.connect(self.calibrate_ua_finddoment_loaded)
 		self._window._view.setHtml(self.html)
 
@@ -316,10 +349,15 @@ class CostModelCalibrationApp(QObject):
 		(self.cost_model['user']['eta_1'], )	= Utils.fit_lin_nointercept_leastsq(ua_finddom_fitdata[:opcnt/2])
 		(self.cost_model['user']['eta_2'], )	= Utils.fit_quad_nointercept_leastsq(ua_finddom_fitdata[opcnt/2 + 1:])
 
+		self._window._view.loadFinished.disconnect()
+
 		self.done_calibration()
 
 	@pyqtSlot()
 	def calibrate_ua_finddoment_loaded(self):
+		self.mainframe.addToJavaScriptWindowObject('calib_app', self)
+
+		self.log((5, ts()))
 		return
 
 	#########################################
@@ -336,15 +374,20 @@ class CostModelCalibrationApp(QObject):
 		self.mainframe	= self._window._view.page().mainFrame()
 		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
 
+		self.log((6, ts()))
+
 class CostModelCalibrationAppProcess(Process):
 	def __init__(self, vals):
-		self.queue = Queue(1)
+		self.queue		= Queue(1)
 		super(CostModelCalibrationAppProcess, self).__init__()
-		self._vals	= vals
+		self._vals		= vals
+		self._ttf		= 0
 
 	def run(self):
 		calib_app			= CostModelCalibrationApp(self._vals)
 		calib_app.run()
+		if len(calib_app._log_entries) > 0 and calib_app._log_entries[-1][0] == 6:
+			self._ttf			= calib_app._log_entries[-1][1] - calib_app._log_entries[0][1]
 		cost_model			= deepcopy(calib_app.cost_model)
 		training_pairs		= deepcopy(calib_app.training_pairs)
 		del calib_app
@@ -354,7 +397,7 @@ class CostModelCalibrationAppProcess(Process):
 		app.exit()
 		app.flush()
 		app.quit()
-		self.queue.put((cost_model, training_pairs))
+		self.queue.put((cost_model, training_pairs, self._ttf))
 
 def calibrate_normalization_cost_model(vals):
 	calib_app	= CostModelCalibrationAppProcess(vals)
