@@ -11831,7 +11831,8 @@ a.anchor-link {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><h1 align="center">Value Normalization: An Introduction</h1></p>
-<p><h3 align="center">Adel Ardalan</h3></p>
+<p><h2 align="center">Adel Ardalan</h2></p>
+<p><h3 align="center">With Walter Cai and AnHai Doan</h3></p>
 <h4 align="center">University of Wisconsin-Madison</h4>
 </div>
 </div>
@@ -11841,8 +11842,104 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="What-is-value-normalization?">What is value normalization?<a class="anchor-link" href="#What-is-value-normalization?">&#182;</a></h1><ul>
-<li>It is a step in the data cleaning procedure.</li>
+<h1 id="Motivation">Motivation<a class="anchor-link" href="#Motivation">&#182;</a></h1><p>(Attribute) value normalization is one of the important steps in the data cleaning pipelines.</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Suppose you are given the following table to analyze the sales of different products and categories:</p>
+<table>
+<thead><tr>
+<th>Title</th>
+<th>Brand</th>
+<th>Color</th>
+<th>Price</th>
+<th>...</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sony 55-inch Smart LED TV</td>
+<td>Sony</td>
+<td>black</td>
+<td>799.99</td>
+<td>...</td>
+</tr>
+<tr>
+<td>VIZIO M50 LED TV</td>
+<td>VIZIO</td>
+<td>Charcoal</td>
+<td>849.99</td>
+<td>...</td>
+</tr>
+<tr>
+<td>Panasonic VIERA Plasma</td>
+<td>Panasonic</td>
+<td>BLK</td>
+<td>849.99</td>
+<td>...</td>
+</tr>
+<tr>
+<td>Samsung 32" HDTV</td>
+<td>Samsung</td>
+<td>Silver</td>
+<td>729.99</td>
+<td>...</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Motivation-(Cont.)">Motivation (Cont.)<a class="anchor-link" href="#Motivation-(Cont.)">&#182;</a></h1><p>Multiple values in a single column might refer to the same real-world entity.</p>
+<ul>
+<li>In the table above, <em>black</em>, <em>Charcoal</em> and <em>BLK</em> refer to the same color.  </li>
+</ul>
+<p>This might hurt the effectiveness of various data analysis tasks.</p>
+<ul>
+<li>For example if you're looking for the sales of all black TVs, you might not get the results of items with colors  <em>Charcoal</em> or <em>BLK</em>.</li>
+</ul>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Motivation-(Cont.)">Motivation (Cont.)<a class="anchor-link" href="#Motivation-(Cont.)">&#182;</a></h1><p>To deal with this issue we <em>normalize</em> the attribute values.</p>
+<ul>
+<li>First, for each value of the target attribute, we create a <em>normalization rule</em>. <ul>
+<li>For the color attribute of our example table, we have the following normalization rules: <ul>
+<li>Charcoal $\rightarrow$ Black</li>
+<li>BLK $\rightarrow$ Black</li>
+<li>black $\rightarrow$ Black</li>
+<li>Silver $\rightarrow$ Silver</li>
+</ul>
+</li>
+<li>Each value on the left-hand-side of the the above rules is a value of the target attribute (here, the color attribute).</li>
+<li>On the right-hand-side of each rule is the <em>canonical value</em> associated with the value on the LHS.</li>
+</ul>
+</li>
 </ul>
 
 </div>
@@ -11854,12 +11951,7 @@ a.anchor-link {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <ul>
-<li>Given a set of input values $V = \{v_1, \dots, v_m\}$, we want to group them into subsets $\{c_1, \dots, c_n\} = C$ such that:<ul>
-<li>$\bigcup\limits_{j=1}^{n} c_j = V$ and for each $i \neq j$, $c_i \cap c_j = \emptyset$ (i.e. $C$ is a partitioning of $V$)</li>
-<li>all the values in each $c_i$ refer to the same real-world entity and </li>
-<li>no two distinct groups $c_i$ and $c_j$ with $i\neq j$ refer to the same entity.</li>
-</ul>
-</li>
+<li>Then we go through the rows of the table one by one and when the value of the target attribute matches the LHS of one of the rules, we replace it with the RHS of that rule.</li>
 </ul>
 
 </div>
@@ -11870,9 +11962,67 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Example">Example<a class="anchor-link" href="#Example">&#182;</a></h1><ul>
-<li>Take the following list of values:
-<img src="bigtensample.png"></li>
+<h1 id="Motivation-(Cont.)">Motivation (Cont.)<a class="anchor-link" href="#Motivation-(Cont.)">&#182;</a></h1><p>The normalized table would look like the following:</p>
+<table>
+<thead><tr>
+<th>Title</th>
+<th>Brand</th>
+<th>Color</th>
+<th>Price</th>
+<th>...</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sony 55-inch Smart LED TV</td>
+<td>Sony</td>
+<td>Black</td>
+<td>799.99</td>
+<td>...</td>
+</tr>
+<tr>
+<td>VIZIO M50 LED TV</td>
+<td>VIZIO</td>
+<td>Black</td>
+<td>849.99</td>
+<td>...</td>
+</tr>
+<tr>
+<td>Panasonic VIERA Plasma</td>
+<td>Panasonic</td>
+<td>Black</td>
+<td>849.99</td>
+<td>...</td>
+</tr>
+<tr>
+<td>Samsung 32" HDTV</td>
+<td>Samsung</td>
+<td>Silver</td>
+<td>729.99</td>
+<td>...</td>
+</tr>
+<tr>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div></section></section><section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Value-Normalization-Problem-Definition">Value Normalization Problem Definition<a class="anchor-link" href="#Value-Normalization-Problem-Definition">&#182;</a></h1><p>Given a set of input values $V = \{v_1, \dots, v_m\}$, we want to create a set of normalization rules $\mathcal{R} = \{v_j \rightarrow \tilde{v_j} | j = 1, \dots, m\}$ such that:</p>
+<ul>
+<li>$\tilde{v_j}$ is the canonical value of $v_j$ and </li>
+<li>$\tilde{v_j} = \tilde{v_k}$ if and only if $v_j$ and $v_k$ refer to the same real-world entity.</li>
 </ul>
 
 </div>
@@ -11883,10 +12033,51 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Example-(Cont.)">Example (Cont.)<a class="anchor-link" href="#Example-(Cont.)">&#182;</a></h1><ul>
-<li>The correct clustering of these values would be:
-<img src="bigtensamplegoldenclusters.png"></li>
-</ul>
+<h1 id="Need-Human-in-the-Loop">Need Human in the Loop<a class="anchor-link" href="#Need-Human-in-the-Loop">&#182;</a></h1><p>We can try to solve the above problem using synonym discovery methods.</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>However we argue that fully automated methods are often inaccurate and thus in real-world scenarios, a human needs to come in and clean up the results of such methods.</p>
+
+</div>
+</div>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Hence the bottleneck of the real-world value normalization tasks would be the human effort.</p>
+
+</div>
+</div>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We thus aim at reducing user effort when normalizing values.</p>
+
+</div>
+</div>
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Minimum-Effort-Value-Normalization-Problem-Definition">Minimum-Effort Value Normalization Problem Definition<a class="anchor-link" href="#Minimum-Effort-Value-Normalization-Problem-Definition">&#182;</a></h1><p>Suppose a user $u$ wants to normalize a set of input values $V = \{v_1, \dots, v_m\}$. We want to create a normalization approach for $u$ to normalize $V$ such that:</p>
+<ol>
+<li>the precision and the recall of the normalization results are 1.0 and</li>
+<li>the effort spent by $u$ during the normalization process is minimized.</li>
+</ol>
 
 </div>
 </div>
@@ -11909,10 +12100,226 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Manual-Value-Normalization">Manual Value Normalization<a class="anchor-link" href="#Manual-Value-Normalization">&#182;</a></h1><ul>
-<li>Consists of two main steps:<ol>
-<li>Local merging</li>
-<li>Global merging</li>
+<h1 id="Manual-Value-Normalization">Manual Value Normalization<a class="anchor-link" href="#Manual-Value-Normalization">&#182;</a></h1><p><strong>Naive approach</strong>: a user goes through the values one by one and creates a normalization rule per value.</p>
+<ul>
+<li>Advantage:<ul>
+<li>Easy to understand</li>
+</ul>
+</li>
+<li>Disadvantage: <ul>
+<li>Extremely slow for even a few tens of values</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Better approach</strong>:</p>
+<ol>
+<li>First the user groups the values into clusters of synonyms</li>
+<li>Then she labels each group with the appropriate canonical value</li>
+<li>Finally we create a rule per value which maps it to the label of the cluster is belongs to.</li>
+</ol>
+
+</div>
+</div>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Note</strong>: For the rest of our discussion we ignore the labeling part since it is the same across all the normalization methods we study.</p>
+
+</div>
+</div>
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Manual-Value-Normalization">Manual Value Normalization<a class="anchor-link" href="#Manual-Value-Normalization">&#182;</a></h1><p>A reasonable manual normalization approach consists of two main steps:</p>
+<ol>
+<li>Local-merging (short-term memory size = 3)<div align="middle"><img style="width: 60%;" src="LocalMergeExample.png"></div></li>
+</ol>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Manual-Value-Normalization-(Cont.)">Manual Value Normalization (Cont.)<a class="anchor-link" href="#Manual-Value-Normalization-(Cont.)">&#182;</a></h1><p>A reasonable manual normalization approach consists of two main steps:</p>
+<ol>
+<li>Local-merging</li>
+<li>Global-merging<div align="middle"><img style="width: 60%;" src="GlobalMergeExample.png"></div></li>
+</ol>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Manual-Value-Normalization-(Cont.)">Manual Value Normalization (Cont.)<a class="anchor-link" href="#Manual-Value-Normalization-(Cont.)">&#182;</a></h1><p>Normalization rules:</p>
+<div align="middle"><img style="width: 100%;" src="NormRulesExample.png"></div>
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Manual-Value-Normalization-(Cont.)">Manual Value Normalization (Cont.)<a class="anchor-link" href="#Manual-Value-Normalization-(Cont.)">&#182;</a></h1><ul>
+<li>Advantages:<ul>
+<li>Fairly simple to understand</li>
+</ul>
+</li>
+<li>Disadvantage:<ul>
+<li>Still slow</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Clustering-Based-Value-Normalization">Clustering-Based Value Normalization<a class="anchor-link" href="#Clustering-Based-Value-Normalization">&#182;</a></h1><ul>
+<li>First we apply a clustering algorithm, such as hierarchical agglomerative clustering (HAC), to the attribute values.</li>
+</ul>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div align="middle"><img style="width: 30%; align: middle;" src="BadClusteringExample.png"></div>
+</div>
+</div>
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Clustering-Based-Value-Normalization-(Cont.)">Clustering-Based Value Normalization (Cont.)<a class="anchor-link" href="#Clustering-Based-Value-Normalization-(Cont.)">&#182;</a></h1><ul>
+<li>Then the user goes through the resulting clusters one by one and for each cluster she splits the cluster if it is not pure; i.e. if it contains values referring to multiple entities.</li>
+</ul>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div align="middle"><img style="width: 30%; align: middle;" src="PureClusteringExample.png"></div>
+</div>
+</div>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Finally she executes the local-merging and global-merging steps (as described before) on the clusters from the previous step.</li>
+</ul>
+
+</div>
+</div>
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Clustering-Based-Value-Normalization-(Cont.)">Clustering-Based Value Normalization (Cont.)<a class="anchor-link" href="#Clustering-Based-Value-Normalization-(Cont.)">&#182;</a></h1><p>If the clusters generated by the clustering algorithm are mostly clean, then clustering-based normalization would significantly reduce user effort.</p>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>However in reality, clustering algorithms are far from perfect:</p>
+<ul>
+<li>They often produce big, messy clusters.</li>
+<li>These clusters are very hard to understand and clean up.</li>
+<li>Real-world analysts are known to fall back to manually normalizing values after having a hard time cleaning up clustering algorithm results.</li>
+</ul>
+
+</div>
+</div>
+</div></div></section></section><section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Our-Key-Idea">Our Key Idea<a class="anchor-link" href="#Our-Key-Idea">&#182;</a></h1><ul>
+<li>Stop the clustering algorithm before it starts producing large and messy clusters</li>
+</ul>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>We can do this by limiting the size of the clusters generated by the clustering algorithm.</li>
+</ul>
+
+</div>
+</div>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>But what should be the maximum cluster size?</li>
+</ul>
+
+</div>
+</div>
+</div></div></section><section>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Hybrid-Machine-Human-Value-Normalization">Hybrid Machine-Human Value Normalization<a class="anchor-link" href="#Hybrid-Machine-Human-Value-Normalization">&#182;</a></h1><ul>
+<li>First for each possible value of the maximum cluster size $1 \leq \lambda \leq m$ we create <em>a normalization plan</em> which consists of two parts:<ol>
+<li><em>Machine part</em>: we run a modified HAC algorithm, called $\lambda$HAC, which limits the size of the output clusters by setting a parameter $\lambda$. The standard HAC parameters are set to default values.</li>
+<li><em>Human part</em>: the user cleans up the results of the machine part by first splitting the impure clusters and then executing the two-stage manual normalization method, as described before. We develop a pseudo-code of the human part as a guideline for the user to clean up the results of the machine part.</li>
 </ol>
 </li>
 </ul>
@@ -11925,51 +12332,37 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Local-Merging-Example">Local Merging Example<a class="anchor-link" href="#Local-Merging-Example">&#182;</a></h1><p><img src="bigtensample.png"></p>
-
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Local-Merging-Example-(Cont.)">Local Merging Example (Cont.)<a class="anchor-link" href="#Local-Merging-Example-(Cont.)">&#182;</a></h1><p><img src="bigtensamplelocalmerge.png"></p>
-
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Global-Merging-Example">Global Merging Example<a class="anchor-link" href="#Global-Merging-Example">&#182;</a></h1><p><img src="bigtensamplegoldenclusters.png"></p>
-
-</div>
-</div>
-</div></section><section>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Clustering-based-Value-Normalization">Clustering-based Value Normalization<a class="anchor-link" href="#Clustering-based-Value-Normalization">&#182;</a></h1><ul>
-<li>Consists of two main steps:<ol>
-<li>Splitting</li>
-<li>Merging<ol>
-<li>Local merging</li>
-<li>Global merging</li>
-</ol>
-</li>
-</ol>
-</li>
+<h1 id="Hybrid-Machine-Human-Value-Normalization-(Cont.)">Hybrid Machine-Human Value Normalization (Cont.)<a class="anchor-link" href="#Hybrid-Machine-Human-Value-Normalization-(Cont.)">&#182;</a></h1><ul>
+<li>We then develop a cost approximation method to approximate the effort user spends cleaning up the results of the machine part of each plan following the above pseudo-code.</li>
 </ul>
 
 </div>
 </div>
-</div></section></section><section><section>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Next we enumerate the plans in the above space by changing the maximum cluster size $\lambda$. For each $P_{\lambda}$ we approximate the cost of the plan using our cost approximation method.</li>
+</ul>
+
+</div>
+</div>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Finally we pick the plan $P_{\lambda^*}$ with the lowest cost and execute it; i.e. run $\lambda$HAC with maximum cluster size $\lambda^*$ and then ask the user to clean up the resulting clusters.</li>
+</ul>
+
+</div>
+</div>
+</div></div></section></section><section><section>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
