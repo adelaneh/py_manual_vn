@@ -11852,7 +11852,7 @@ a.anchor-link {
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Suppose you are given the following table to analyze the sales of different products and categories:</p>
+<p>Suppose you are given the following table to analyze the sales of different products:</p>
 <table>
 <thead><tr>
 <th>Title</th>
@@ -11911,8 +11911,17 @@ a.anchor-link {
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Motivation-(Cont.)">Motivation (Cont.)<a class="anchor-link" href="#Motivation-(Cont.)">&#182;</a></h1><p>Multiple values in a single column might refer to the same real-world entity.</p>
 <ul>
-<li>In the table above, <em>black</em>, <em>Charcoal</em> and <em>BLK</em> refer to the same color.  </li>
+<li>In the table above, <em>black</em>, <em>Charcoal</em> and <em>BLK</em> refer to the same color. </li>
 </ul>
+
+</div>
+</div>
+</div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <p>This might hurt the effectiveness of various data analysis tasks.</p>
 <ul>
 <li>For example if you're looking for the sales of all black TVs, you might not get the results of items with colors  <em>Charcoal</em> or <em>BLK</em>.</li>
@@ -11920,7 +11929,17 @@ a.anchor-link {
 
 </div>
 </div>
-</div></section><section>
+</div></div><div class="fragment">
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Furthermore as more data comes in, we want to detect and resolve the above problem for attribute values of the new items.</p>
+
+</div>
+</div>
+</div></div></section><section>
 <div class="cell border-box-sizing text_cell rendered">
 <div class="prompt input_prompt">
 </div>
@@ -12318,7 +12337,7 @@ a.anchor-link {
 <div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Hybrid-Machine-Human-Value-Normalization">Hybrid Machine-Human Value Normalization<a class="anchor-link" href="#Hybrid-Machine-Human-Value-Normalization">&#182;</a></h1><ul>
 <li>First for each possible value of the maximum cluster size $1 \leq \lambda \leq m$ we create <em>a normalization plan</em> which consists of two parts:<ol>
-<li><em>Machine part</em>: we run a modified HAC algorithm, called $\lambda$HAC, which limits the size of the output clusters by setting a parameter $\lambda$. The standard HAC parameters are set to default values.</li>
+<li><em>Machine part</em>: we run a modified HAC algorithm, called $\lambda$HAC, which limits the size of the output clusters by $\lambda$. The standard HAC parameters are set to default values.</li>
 <li><em>Human part</em>: the user cleans up the results of the machine part by first splitting the impure clusters and then executing the two-stage manual normalization method, as described before. We develop a pseudo-code of the human part as a guideline for the user to clean up the results of the machine part.</li>
 </ol>
 </li>
