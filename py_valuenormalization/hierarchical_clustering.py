@@ -25,7 +25,7 @@ class HierarchicalClustering(object):
 
 		jarowinkler_sim				= JaroWinkler()
 		levenshtein_sim				= Levenshtein()
-		qgtok						= QgramTokenizer(qval = 3, padding = False)
+		qgtok						= QgramTokenizer(qval = 3, padding = True)
 		jaccard_sim					= Jaccard()
 		Jaccard3Gram				= lambda x, y: jaccard_sim.get_sim_score(qgtok.tokenize(x), qgtok.tokenize(y))
 

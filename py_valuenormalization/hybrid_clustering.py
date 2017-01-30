@@ -32,7 +32,7 @@ class HybridClustering(HierarchicalClustering):
 		self.max_clust_size		= max_clust_size if max_clust_size != -1 else len(self.vals)
 		self.dend				= []
 		if self.max_clust_size == 1:
-			return self.dend
+			return (self.dend_hist, self.vals, self.dists)
 
 		self.sim_measure_str	= sim_measure_str if sim_measure_str is not None else HierarchicalClustering._default_sim_measure_str
 		self.linkage			= linkage if linkage is not None else HierarchicalClustering._default_linkage
@@ -167,11 +167,12 @@ class HybridClustering(HierarchicalClustering):
 		if max_clust_size == 1 or max_clust_size >= clszlim:
 			dend				= self.dend_hist[min(max_clust_size, clszlim)][1]
 		else:
-			dend				= self.shotgun_complete_dendrogram(max_clust_size)
+			mcs					= sorted(filter(lambda x: x >= max_clust_size, dend_hist.keys()))[0]
+			dend				= self.shotgun_complete_dendrogram(max_clust_size, mcs)
 		return self.shotgun_lambdahac_dendrogram(dend)
 		
-	def shotgun_complete_dendrogram(self, max_clust_size):
-		(clusts, dend, myq)		= self.dend_hist[max_clust_size]
+	def shotgun_complete_dendrogram(self, max_clust_size, mcs):
+		(clusts, dend, myq)		= self.dend_hist[mcs]
 
 		blkdpairs		= {}
 
@@ -248,7 +249,9 @@ class HybridClustering(HierarchicalClustering):
 
 		self.shotgun_create_dendrogram(sim_measure, linkage, precalc_dists, thr, max_clust_size)
 
-		for lambda_i in sorted(self.dend_hist.keys()):
+		max_lambda			= max(self.dend_hist.keys())
+
+		for lambda_i in range(1, max_lambda + 1):
 			self.shotgun_lambdahac_continue_from_dendrogram(lambda_i)
 
 			clusts					= self.get_clusters()
