@@ -19,12 +19,9 @@ class HierarchicalClustering(object):
 
 	def __init__(self, vals):
 		self.vals					= sorted(vals, key = lambda x: x.lower(), reverse=True)
-		self.val_map				= vals if isinstance(vals, dict) else None
 		# whether to show debugging info or not	
 		self.show					= False
 
-		jarowinkler_sim				= JaroWinkler()
-		levenshtein_sim				= Levenshtein()
 		qgtok						= QgramTokenizer(qval = 3, padding = True)
 		jaccard_sim					= Jaccard()
 		Jaccard3Gram				= lambda x, y: jaccard_sim.get_sim_score(qgtok.tokenize(x), qgtok.tokenize(y))
@@ -57,15 +54,18 @@ class HierarchicalClustering(object):
 
 	def calc_dists(self, sim_measure_str = None):
 		self.sim_measure				= self.get_sim_measure(sim_measure_str if sim_measure_str is not None else HierarchicalClustering._default_sim_measure_str)
-		
+
 		# unordered pair of values -> string distance
 		self.dists					= {}
+        
 		for i in range(0, len(self.vals)):
 			vi								= self.vals[i]
 			for j in range(i+1, len(self.vals)):
 				vj								= self.vals[j]
 				curdist							= 1. - self.sim_measure(vi, vj)
 				self.dists[frozenset([vi, vj])]	= curdist
+
+
 
 		return self.dists
 
@@ -81,20 +81,15 @@ class HierarchicalClustering(object):
 		# unordered pair of values -> string distance
 		self.dists				= precalc_dists if precalc_dists is not None else self.calc_dists(sim_measure)
 		# unordered pair of cluster labels -> cluster distance
-		self.clust_dists		= {}
+
 		myq						= MyPriorityQueue()
 
-		tmp_cntr				= 0
-
 		for i in range(0, len(self.vals)):
-			tmp_cntr += 1
-
 			vi		= self.vals[i]
 			for j in range(i+1, len(self.vals)):
 				vj		= self.vals[j]
 				curdist										= self.dists[frozenset([vi, vj])]
 				(cidi, cidj)								= tuple(sorted([self.val_to_clustid_map[vi], self.val_to_clustid_map[vj]]))
-				self.clust_dists[(cidi, cidj)]				= curdist
 				myq.add_task((cidi, cidj), curdist)
 
 		blkdpairs		= {}
@@ -121,9 +116,10 @@ class HierarchicalClustering(object):
 			new_clust			= mrgd_clust
 
 			if len(new_clust) < min_clust_size:
-				min_clust_size		= len(new_clust)
-
-			new_clust_dists		= {}
+				min_sum_clust_pair  = min_clust_size
+				min_clust_size      = len(new_clust)
+                
+			#new_clust_dists		= {}
 			for other_clust_id in self.clusts:
 				if other_clust_id in [mrgd_clust_id, delt_clust_id]:
 					continue
@@ -153,14 +149,16 @@ class HierarchicalClustering(object):
 					myq.add_task((cid1, cid2), new_dist)
 
 				if len(self.clusts[other_clust_id]) < min_clust_size:
+					min_sum_clust_pair  = min_clust_size
 					min_clust_size		= len(self.clusts[other_clust_id])
-				if ( len(self.clusts[other_clust_id]) + len(new_clust_dists) ) < min_sum_clust_pair:
-					min_sum_clust_pair		= ( len(self.clusts[other_clust_id]) + len(new_clust_dists) )
+                    
+				elif len(self.clusts[other_clust_id]) < min_sum_clust_pair:
+					min_sum_clust_pair		=  len(self.clusts[other_clust_id]) 
 
 			self.clusts[mrgd_clust_id]		= new_clust
 			self.clusts.pop(delt_clust_id, None)
 
-			if min_clust_size >= self.max_clust_size or min_sum_clust_pair > self.max_clust_size:
+			if min_clust_size + min_sum_clust_pair > self.max_clust_size:
 				break
 
 		return self.dend
@@ -194,7 +192,7 @@ class HierarchicalClustering(object):
 		for kk in self.val_to_clustid_map:
 			if self.val_to_clustid_map[kk] not in clustid_to_val_map:
 				clustid_to_val_map[self.val_to_clustid_map[kk]]	= []
-			clustid_to_val_map[self.val_to_clustid_map[kk]].append(self.val_map[kk] if self.val_map is not None else kk)
+			clustid_to_val_map[self.val_to_clustid_map[kk]].append(kk)
 		clstlst					= sorted([sorted(vv) for vv in list(clustid_to_val_map.values())], key=lambda x: x[0].lower())
 		res						= {}
 		for clst in clstlst:
