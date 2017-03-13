@@ -13,7 +13,7 @@ from py_stringmatching.similarity_measure.jaccard import Jaccard
 from py_stringmatching.tokenizer.qgram_tokenizer import QgramTokenizer
 
 class HierarchicalClustering(object):
-	_default_sim_measure_str	= '3gram Jaccard'
+	_default_sim_measure_str = '3gram Jaccard'
 	_default_linkage			= 'single'
 	_default_thr				= 0.7
 
