@@ -14,36 +14,32 @@ from py_stringmatching.tokenizer.qgram_tokenizer import QgramTokenizer
 
 class HierarchicalClustering(object):
 	_default_sim_measure_str = '3gram Jaccard'
-	_default_linkage			= 'single'
-	_default_thr				= 0.7
+	_default_linkage = 'single'
+	_default_thr = 0.7
 
 	def __init__(self, vals):
-		self.vals					= sorted(vals, key = lambda x: x.lower(), reverse=True)
+		self.vals = sorted(vals, key = lambda x: x.lower(), reverse=True)
 		# whether to show debugging info or not	
-		self.show					= False
-
-		qgtok						= QgramTokenizer(qval = 3, padding = True)
-		jaccard_sim					= Jaccard()
-		Jaccard3Gram				= lambda x, y: jaccard_sim.get_sim_score(qgtok.tokenize(x), qgtok.tokenize(y))
-
-		self.str_sims				= {
-			'Jaro-Winkler':		JaroWinkler().get_sim_score,
-			'Levenshtein':		Levenshtein().get_sim_score, 
-			'3gram Jaccard':	Jaccard3Gram
+		self.show = False
+		qgtok = QgramTokenizer(qval = 3, padding = True)
+		jaccard_sim = Jaccard()
+		Jaccard3Gram = lambda x, y: jaccard_sim.get_sim_score(qgtok.tokenize(x), qgtok.tokenize(y))
+		self.str_sims = {
+			'Jaro-Winkler': JaroWinkler().get_sim_score,
+			'Levenshtein': Levenshtein().get_sim_score, 
+			'3gram Jaccard': Jaccard3Gram
 		}
-
-		self.linkages				= ['single', 'average', 'complete']
+		self.linkages = ['single', 'average', 'complete']
 
 	def init_clustering(self):
 		# value -> cluster id
-		self.val_to_clustid_map		= {}
-		# cluster id -> list of values
-		self.clusts					= {}
-
-		clst_cntr	= 1
+		self.val_to_clustid_map = {}
+		# cluster id -> list of values in cluster
+		self.clusts = {}
+		clst_cntr = 1
 		for val in self.vals:
-			self.val_to_clustid_map[val]		= clst_cntr
-			self.clusts[clst_cntr]				= [val,]
+			self.val_to_clustid_map[val] = clst_cntr
+			self.clusts[clst_cntr] = [val,]
 			clst_cntr += 1
 
 	def get_sim_measure(self, sim_measure_str):
@@ -53,150 +49,133 @@ class HierarchicalClustering(object):
 			raise SimMeasureNotSupportedException("Similarity measure named %s is not supported. Supported similarity measures are %s"%(sim_measure_str, str(self.str_sims.keys())))
 
 	def calc_dists(self, sim_measure_str = None):
-		self.sim_measure				= self.get_sim_measure(sim_measure_str if sim_measure_str is not None else HierarchicalClustering._default_sim_measure_str)
-
+		self.sim_measure = self.get_sim_measure(sim_measure_str if sim_measure_str is not None else HierarchicalClustering._default_sim_measure_str)
 		# unordered pair of values -> string distance
-		self.dists					= {}
-        
+		self.dists = {}
 		for i in range(0, len(self.vals)):
-			vi								= self.vals[i]
+			vi = self.vals[i]
 			for j in range(i+1, len(self.vals)):
-				vj								= self.vals[j]
-				curdist							= 1. - self.sim_measure(vi, vj)
-				self.dists[frozenset([vi, vj])]	= curdist
-
-
-
+				vj = self.vals[j]
+				curdist = 1. - self.sim_measure(vi, vj)
+				self.dists[frozenset([vi, vj])] = curdist
 		return self.dists
 
 	def create_dendrogram(self, sim_measure = None, linkage = None, precalc_dists = None, max_clust_size = -1):
-		self.max_clust_size		= max_clust_size if max_clust_size != -1 else len(self.vals)
-		self.dend				= []
+		self.max_clust_size = max_clust_size if max_clust_size != -1 else len(self.vals)
+		self.dend = []
 		if self.max_clust_size == 1:
 			return self.dend
-
-		self.linkage			= linkage if linkage is not None else HierarchicalClustering._default_linkage
-
+		self.linkage = linkage if linkage is not None else HierarchicalClustering._default_linkage
 		self.init_clustering()
 		# unordered pair of values -> string distance
-		self.dists				= precalc_dists if precalc_dists is not None else self.calc_dists(sim_measure)
-		# unordered pair of cluster labels -> cluster distance
-
-		myq						= MyPriorityQueue()
+		self.dists = precalc_dists if precalc_dists is not None else self.calc_dists(sim_measure)
+		myq = MyPriorityQueue()
 
 		for i in range(0, len(self.vals)):
-			vi		= self.vals[i]
+			vi = self.vals[i]
 			for j in range(i+1, len(self.vals)):
-				vj		= self.vals[j]
-				curdist										= self.dists[frozenset([vi, vj])]
-				(cidi, cidj)								= tuple(sorted([self.val_to_clustid_map[vi], self.val_to_clustid_map[vj]]))
+				vj = self.vals[j]
+				curdist = self.dists[frozenset([vi, vj])]
+				(cidi, cidj) = tuple(sorted([self.val_to_clustid_map[vi], self.val_to_clustid_map[vj]]))
 				myq.add_task((cidi, cidj), curdist)
 
-		blkdpairs		= {}
+		blkdpairs = {}
 
 		while not myq.is_empty():
-			nextclustpair		= myq.pop_task()
-
+			nextclustpair = myq.pop_task()
 			if ( len(self.clusts[nextclustpair[1][0]]) + len(self.clusts[nextclustpair[1][1]]) ) > self.max_clust_size:
-				blkdpairs[nextclustpair[1]]		= nextclustpair[0]
+				blkdpairs[nextclustpair[1]] = nextclustpair[0]
 				continue
 
 			### MERGE CLUSTER ###
-			mrgd_clust_id		= nextclustpair[1][0]
-			mrgd_clust			= self.clusts[mrgd_clust_id]
-			delt_clust_id		= nextclustpair[1][1]
-			delt_clust			= self.clusts[delt_clust_id]
-
+			min_clust_size = len(self.vals)
+			min_sum_clust_pair = len(self.vals)
+			mrgd_clust_id = nextclustpair[1][0]
+			mrgd_clust = self.clusts[mrgd_clust_id]
+			delt_clust_id = nextclustpair[1][1]
+			delt_clust = self.clusts[delt_clust_id]
 			self.dend.append(((list(mrgd_clust), list(delt_clust)), nextclustpair[0]));
-
-			min_clust_size		= len(self.vals)
-			min_sum_clust_pair	= len(self.vals)
-
 			mrgd_clust.extend(delt_clust)
-			new_clust			= mrgd_clust
-
+			new_clust = mrgd_clust
+            
 			if len(new_clust) < min_clust_size:
-				min_sum_clust_pair  = min_clust_size
-				min_clust_size      = len(new_clust)
+				min_sum_clust_pair = min_clust_size
+				min_clust_size = len(new_clust)
                 
-			#new_clust_dists		= {}
 			for other_clust_id in self.clusts:
 				if other_clust_id in [mrgd_clust_id, delt_clust_id]:
 					continue
 
-				(cid1, cid2)		= (other_clust_id, mrgd_clust_id) if other_clust_id < mrgd_clust_id else (mrgd_clust_id, other_clust_id)
+				(cid1, cid2) = (other_clust_id, mrgd_clust_id) if other_clust_id < mrgd_clust_id else (mrgd_clust_id, other_clust_id)
 				try:
-					new_dist			= myq.remove_task((cid1, cid2))
+					new_dist = myq.remove_task((cid1, cid2))
 				except KeyError:
-					new_dist			= blkdpairs[(cid1, cid2)]
+					new_dist = blkdpairs[(cid1, cid2)]
 
-				other_link_inx		= (other_clust_id, delt_clust_id) if other_clust_id < delt_clust_id else (delt_clust_id, other_clust_id)
+				other_link_inx = (other_clust_id, delt_clust_id) if other_clust_id < delt_clust_id else (delt_clust_id, other_clust_id)
 				try:
-					other_clust_dist	= myq.remove_task(other_link_inx)
+					other_clust_dist = myq.remove_task(other_link_inx)
 				except KeyError:
-					other_clust_dist	= blkdpairs[other_link_inx]
+					other_clust_dist = blkdpairs[other_link_inx]
 
-				if self.linkage == 'average':		new_dist		= ( 
-						( len(self.clusts[cid1]) * len(self.clusts[cid2]) * new_dist ) + 
-						( len(self.clusts[other_clust_id]) * len(self.clusts[delt_clust_id]) * other_clust_dist)
-						) / ( len(self.clusts[other_clust_id]) * ( len(self.clusts[delt_clust_id]) + len(self.clusts[mrgd_clust_id]) ) )
-				elif self.linkage == 'complete':	new_dist		= max(new_dist, other_clust_dist)
-				elif self.linkage == 'single':		new_dist		= min(new_dist, other_clust_dist)
+				if self.linkage == 'average':
+					new_dist = ( ( len(self.clusts[cid1]) * len(self.clusts[cid2]) * new_dist ) + ( len(self.clusts[other_clust_id]) * len(self.clusts[delt_clust_id]) * other_clust_dist)) / ( len(self.clusts[other_clust_id]) * ( len(self.clusts[delt_clust_id]) + len(self.clusts[mrgd_clust_id]) ) )
+				elif self.linkage == 'complete':
+					new_dist = max(new_dist, other_clust_dist)
+				elif self.linkage == 'single':
+					new_dist = min(new_dist, other_clust_dist)
 
 				if (cid1, cid2) in blkdpairs:
-					blkdpairs[(cid1, cid2)]		= new_dist
+					blkdpairs[(cid1, cid2)] = new_dist
 				else:
 					myq.add_task((cid1, cid2), new_dist)
 
 				if len(self.clusts[other_clust_id]) < min_clust_size:
-					min_sum_clust_pair  = min_clust_size
-					min_clust_size		= len(self.clusts[other_clust_id])
-                    
+					min_sum_clust_pair = min_clust_size
+					min_clust_size = len(self.clusts[other_clust_id])    
 				elif len(self.clusts[other_clust_id]) < min_sum_clust_pair:
-					min_sum_clust_pair		=  len(self.clusts[other_clust_id]) 
+					min_sum_clust_pair = len(self.clusts[other_clust_id]) 
 
-			self.clusts[mrgd_clust_id]		= new_clust
+			self.clusts[mrgd_clust_id] = new_clust
 			self.clusts.pop(delt_clust_id, None)
 
 			if min_clust_size + min_sum_clust_pair > self.max_clust_size:
 				break
-
 		return self.dend
 
 	def lambdahac_dendrogram(self, dend = None, thr = None):
-		self.thr			= thr if thr is not None else HierarchicalClustering._default_thr
-		self.stop_when		= lambda x: x[0] > self.thr
+		self.thr = thr if thr is not None else HierarchicalClustering._default_thr
+		self.stop_when = lambda x: x[0] > self.thr
 		if dend is not None:
-			self.dend			= dend
-
+			self.dend = dend
 		self.init_clustering()
 
 		for jj in range(len(self.dend)):
-			((c1, c2), dist)		= self.dend[jj]
+			((c1, c2), dist) = self.dend[jj]
 			if self.stop_when((dist,)):
 				break
-			cc		= c2
+			cc = c2
 			if self.val_to_clustid_map[c1[0]] < self.val_to_clustid_map[c2[0]]:
-				for vv in c2: self.val_to_clustid_map[vv]		= self.val_to_clustid_map[c1[0]]
-				else:
-					for vv in c1: self.val_to_clustid_map[vv]		= self.val_to_clustid_map[c2[0]]
+				for vv in c2: self.val_to_clustid_map[vv] = self.val_to_clustid_map[c1[0]]
+			else:
+				for vv in c1: self.val_to_clustid_map[vv] = self.val_to_clustid_map[c2[0]]
 
 		return self.val_to_clustid_map
 
 	def lambdahac(self, sim_measure = None, linkage = None, thr = None, precalc_dists = None, max_clust_size = -1):
-		self.dend		= self.create_dendrogram(sim_measure, linkage, precalc_dists, max_clust_size)
+		self.dend = self.create_dendrogram(sim_measure, linkage, precalc_dists, max_clust_size)
 		return self.lambdahac_dendrogram(self.dend, thr)
-		
+
 	def get_clusters(self):
-		clustid_to_val_map		= {}
+		clustid_to_val_map = {}
 		for kk in self.val_to_clustid_map:
 			if self.val_to_clustid_map[kk] not in clustid_to_val_map:
-				clustid_to_val_map[self.val_to_clustid_map[kk]]	= []
+				clustid_to_val_map[self.val_to_clustid_map[kk]] = []
 			clustid_to_val_map[self.val_to_clustid_map[kk]].append(kk)
-		clstlst					= sorted([sorted(vv) for vv in list(clustid_to_val_map.values())], key=lambda x: x[0].lower())
-		res						= {}
+		clstlst = sorted([sorted(vv) for vv in list(clustid_to_val_map.values())], key=lambda x: x[0].lower())
+		res = {}
 		for clst in clstlst:
-			res[clst[0]]			= clst
+			res[clst[0]] = clst
 		return res
 
 	def cluster(self, sim_measure = None, linkage = None, thr = None, precalc_dists = None):
