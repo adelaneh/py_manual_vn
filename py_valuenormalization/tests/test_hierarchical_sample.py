@@ -6,6 +6,91 @@ from py_valuenormalization import MyPriorityQueue
 from py_valuenormalization import HierarchicalClustering
 from py_valuenormalization import SimMeasureNotSupportedException
 
+""" We have a total of six testcases written as functions of HierarchicalClusteringTests class.
+Each testcase function operates on different set of input values and different linkage, sim measure.
+
+Under every testcase function, these are the tests covered,
+Calculate distances between all value pairs and assert for min distance value pair.
+Create dendrogram for different maxclustsize values and assert the dendrogram value. 
+For each dendrogram created in previous test, we get the valtoclustidmap based on various thresholds and assert on  the value of valtoclustidmap.
+Threshold is typically decided after looking at the dendrogram and deciding upto which distance value , we would like to cluster.
+There is also a direct cluster() test on the values which needs to return expected cluster values.
+
+Overview: 
+    (<Test_function_name> - Operating Dataset, Linkage, Sim_measure )
+    test_sample() - dataset: vals , linkage:single , sim_measure: Jaccard
+    test_brands_single() - dataset: vals2, linkage:single , sim_measure: Jaccard
+    test_firms_complete() - dataset: vals3, linkage:complete , sim_measure: Jaccard 
+    test_names_average() - dataset: vals4, linkage:average , sim_measure: Jaccard 
+    test_venues_average_jarowinkler() - dataset: vals5, linkage:average , sim_measure: jaro-winkler
+    test_big10_average_levenshtein() - dataset: vals6, linkage:average , sim_measure: Levenshtein
+
+Details:
+    test_sample():
+        Calculate distances between each pair of values in dataset and assert for minimum value pair.
+        Create dendrogram with maxclustsize = 3 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.7, 0.6, 1.0 and asserting on the values. 
+        Create dendrogram with maxclustsize = 2 and assert dendrogram value.        
+            Creating valtoclustidmap using dendrogram in above step with thresholds 1.0 and asserting on the value. 
+        Create dendrogram with maxclustsize = 1 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 1.0 and asserting on the value.     
+
+    test_brands_single():
+        Calculate distances between each pair of values in dataset and assert for minimum value pair.
+        Create dendrogram with maxclustsize = 13 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.7,0.6,0.9,1.0 and asserting on the values. 
+        Create dendrogram with maxclustsize = 3 and assert dendrogram value.        
+            Creating valtoclustidmap using dendrogram in above step with thresholds 1.0 and asserting on the value. 
+        Create dendrogram with maxclustsize = 6 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 1.0 and asserting on the value. 
+        Create dendrogram with maxclustsize = 5 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.7,1.0 and asserting on the values.
+        Create dendrogram with maxclustsize = 1 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 1.0 and asserting on the value.
+            
+    test_firms_complete():
+        Calculate distances between each pair of values in dataset and assert for minimum value pair.
+        Create dendrogram with maxclustsize = 11 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.7,0.6,0.9,1.0 and asserting on the values. 
+        Create dendrogram with maxclustsize = 7 and assert dendrogram value.        
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.7,0.4,0.8,1.0 and asserting on the values. 
+        Create dendrogram with maxclustsize = 3 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.7,1.0 and asserting on the values.
+            
+    test_names_average():
+        Calculate distances between each pair of values in dataset and assert for minimum value pair.
+        Create dendrogram with maxclustsize = 6 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.7,0.9,1.0 and asserting on the values. 
+        Create dendrogram with maxclustsize = 4 and assert dendrogram value.        
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.7,0.5,1.0 and asserting on the values. 
+        Create dendrogram with maxclustsize = 3 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.7,1.0,0.4 and asserting on the values. 
+        Create dendrogram with maxclustsize = 1 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.7 and asserting on the value.
+    
+    test_venues_average_jarowinkler():
+        Calculate distances between each pair of values in dataset and assert for minimum value pair.
+        Create dendrogram with maxclustsize = 7 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.7,0.4,0.3 and asserting on the values. 
+        Create dendrogram with maxclustsize = 4 and assert dendrogram value.        
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.3,0.05,1.0 and asserting on the values. 
+        Create dendrogram with maxclustsize = 2 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.3,0.7,1.0 and asserting on the values. 
+        Create dendrogram with maxclustsize = 1 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 1.0 and asserting on the value.
+    
+    test_big10_average_levenshtein():
+        Calculate distances between each pair of values in dataset and assert for minimum value pair.
+        Create dendrogram with maxclustsize = 7 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.7,0.5,0.8 and asserting on the values. 
+        Create dendrogram with maxclustsize = 4 and assert dendrogram value.        
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.7,1.0 and asserting on the values. 
+        Create dendrogram with maxclustsize = 2 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 0.6,0.7 and asserting on the values. 
+        Create dendrogram with maxclustsize = 1 and assert dendrogram value.
+            Creating valtoclustidmap using dendrogram in above step with thresholds 1.0 and asserting on the value.
+    """
+
 class HierarchicalClusteringTests(unittest.TestCase):
     def setUp(self):
         self.vals = ['wisconsin','wisc','university']
@@ -19,7 +104,7 @@ class HierarchicalClusteringTests(unittest.TestCase):
     def test_sample(self):
         self.hac = HierarchicalClustering(self.vals)
         
-        ### testcase to check the distances calculated
+        ### testcase to check the distances between value pairs
         self.dists = self.hac.calc_dists('3gram Jaccard')
         self.assertAlmostEqual(min(self.dists.values()), 0.69230769)
         
@@ -41,6 +126,7 @@ class HierarchicalClusteringTests(unittest.TestCase):
         
         
             
+            
         ### testcase to check create_dendrogram with maxclustsize = 2
         dend = self.hac.create_dendrogram(sim_measure = '3gram Jaccard', linkage = 'single', precalc_dists = self.dists, max_clust_size = 2)
         self.assertEqual(dend, [((['wisconsin'], ['wisc']), 0.6923076923076923)])
@@ -50,7 +136,8 @@ class HierarchicalClusteringTests(unittest.TestCase):
         self.assertEqual(self.val_to_clustid_map, {'university': 3, 'wisc': 1, 'wisconsin': 1})
             
             
-                          
+            
+            
         ### testcase to check create_dendrogram with maxclustsize = 1
         dend = self.hac.create_dendrogram(sim_measure = '3gram Jaccard', linkage = 'single', precalc_dists = self.dists, max_clust_size = 1)
         self.assertEqual(dend, [])
@@ -170,8 +257,7 @@ class HierarchicalClusteringTests(unittest.TestCase):
  'highland': 1,
  'metra': 1,
  'metro': 1})
-        
-        ### testcase to check get_clusters
+ 
         
            
             
@@ -392,6 +478,7 @@ class HierarchicalClusteringTests(unittest.TestCase):
         
         
         
+        
         ### testcase to check create_dendrogram with maxclustsize = 7
         dend = self.hac.create_dendrogram(sim_measure = '3gram Jaccard', linkage = 'complete', precalc_dists = self.dists, max_clust_size = 7)
         self.assertEqual(dend, [((['Apple Incorporated'], ['Apple Inc']), 0.5909090909090908),
@@ -462,6 +549,7 @@ class HierarchicalClusteringTests(unittest.TestCase):
  'Matlab': 1,
  'Zendesk': 1,
  'Zenith': 1})
+        
         
         
         
