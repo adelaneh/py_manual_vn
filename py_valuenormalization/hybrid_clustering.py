@@ -167,7 +167,7 @@ class HybridClustering(HierarchicalClustering):
 		if max_clust_size == 1 or max_clust_size >= clszlim:
 			dend				= self.dend_hist[min(max_clust_size, clszlim)][1]
 		else:
-			mcs					= sorted(filter(lambda x: x >= max_clust_size, dend_hist.keys()))[0]
+			mcs					= sorted(filter(lambda x: x >= max_clust_size, self.dend_hist.keys()))[0]
 			dend				= self.shotgun_complete_dendrogram(max_clust_size, mcs)
 		return self.shotgun_lambdahac_dendrogram(dend)
 		
