@@ -50,9 +50,9 @@ class Window(QMainWindow):
 		self.setCentralWidget(self.centralwidget)
 
 #		self._view.page().settings().setNetworkAccessManager(QNetworkAccessManager())
-		self._view.page().settings().setObjectCacheCapacities(0, 0, 0)
-		self._view.page().settings().setMaximumPagesInCache(0)
-		self._view.page().settings().setAttribute(QWebEngineSettings.DeveloperExtrasEnabled, True)
+#		self._view.page().settings().setObjectCacheCapacities(0, 0, 0)
+#		self._view.page().settings().setMaximumPagesInCache(0)
+#		self._view.page().settings().setAttribute(QWebEngineSettings.DeveloperExtrasEnabled, True)
 
 class ConsolePrinter(QObject):
 	def __init__(self, parent=None):
