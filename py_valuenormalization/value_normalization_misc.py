@@ -42,7 +42,7 @@ class Window(QMainWindow):
 		self._layout = QVBoxLayout(self.centralwidget)
 #		self._layout.setMargin(0)
 
-		self._view = QWebEngineView()
+		self._view = QWebView()
 #		self.resize(1100, 1500)
 		self._view.setAttribute(Qt.WA_DeleteOnClose, True)
 
@@ -52,7 +52,7 @@ class Window(QMainWindow):
 #		self._view.page().settings().setNetworkAccessManager(QNetworkAccessManager())
 		self._view.page().settings().setObjectCacheCapacities(0, 0, 0)
 		self._view.page().settings().setMaximumPagesInCache(0)
-		self._view.page().settings().setAttribute(QWebEngineSettings.DeveloperExtrasEnabled, True)
+		self._view.page().settings().setAttribute(QWebSettings.DeveloperExtrasEnabled, True)
 
 class ConsolePrinter(QObject):
 	def __init__(self, parent=None):
