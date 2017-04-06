@@ -11,12 +11,10 @@ from scipy import optimize
 from scipy import stats
 import numpy
 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtWebKit import *
-from PyQt5.QtWebKitWidgets import *
-from PyQt5.QtNetwork import *
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+from PyQt4.QtWebKit import *
+from PyQt4.QtNetwork import *
 
 class WebPage(QWebPage):
 	"""
@@ -39,7 +37,7 @@ class Window(QMainWindow):
 		self.centralwidget.setAttribute(Qt.WA_DeleteOnClose, True)
 
 		self._layout = QVBoxLayout(self.centralwidget)
-#		self._layout.setMargin(0)
+		self._layout.setMargin(0)
 
 		self._view = QWebView()
 #		self.resize(1100, 1500)
