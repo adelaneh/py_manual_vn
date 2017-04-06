@@ -14,11 +14,11 @@ import numpy
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from PyQt5.QtWebKit import *
-from PyQt5.QtWebKitWidgets import *
+#from PyQt5.QtWebKit import *
+from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtNetwork import *
 
-class WebPage(QWebPage):
+class WebPage(QWebEnginePage):
 	"""
 	Makes it possible to use a Python logger to print javascript console messages
 	"""
