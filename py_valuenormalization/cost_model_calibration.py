@@ -14,8 +14,8 @@ from copy import deepcopy
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from PyQt5.QtWebKitWidgets import *
-#from PyQt5.QtWebEngineWidgets import *
+#from PyQt5.QtWebKitWidgets import *
+from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtWebChannel import *
 from PyQt5.QtNetwork import *
 
