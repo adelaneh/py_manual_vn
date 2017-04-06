@@ -41,7 +41,7 @@ class Window(QMainWindow):
 		self._layout = QVBoxLayout(self.centralwidget)
 		self._layout.setContentsMargins(0, 0, 0, 0)
 
-		self._view = QWebView()
+		self._view = QWebEngineView()
 #		self.resize(1100, 1500)
 		self._view.setAttribute(Qt.WA_DeleteOnClose, True)
 
