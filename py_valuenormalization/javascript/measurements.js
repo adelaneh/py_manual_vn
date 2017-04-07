@@ -178,7 +178,7 @@ var calcPurity = function() {
 //	cluster_purities[lambda].push(domentvalcnt / clstsz);
 	cluster_purities[lambda].push(domentvalcnt);
 	cluster_purities[lambda].push(clstsz);
-	console.log(cluster_purities);
+	//console.log(cluster_purities);
 	if (Object.keys(samples_pe_clusts10).length > 0) {
 		curClusterLabel = Object.keys(samples_pe_clusts10)[0];
 	} else if (Object.keys(samples_pe_clusts20).length > 0) {

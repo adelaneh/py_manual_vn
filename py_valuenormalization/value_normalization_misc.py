@@ -11,12 +11,12 @@ from scipy import optimize
 from scipy import stats
 import numpy
 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-#from PyQt5.QtWebKit import *
-from PyQt5.QtWebEngineWidgets import *
-from PyQt5.QtNetwork import *
+#from PyQt5.QtCore import *
+#from PyQt5.QtGui import *
+#from PyQt5.QtWidgets import *
+#from PyQt5.QtWebEngineWidgets import *
+#from PyQt5.QtNetwork import *
+from PyQt5.Qt import *
 
 class WebPage(QWebEnginePage):
 	"""
@@ -25,7 +25,7 @@ class WebPage(QWebEnginePage):
 	def __init__(self, logger=None, parent=None):
 		super(WebPage, self).__init__(parent)
 
-	def javaScriptConsoleMessage(self, msg, lineNumber, sourceID):
+	def javaScriptConsoleMessage(self, level, msg, lineNumber, sourceID):
 		print("JsConsole(%s:%d): %s" % (sourceID, lineNumber, msg))
 		
 class Window(QMainWindow):

@@ -1,4 +1,5 @@
 from multiprocessing import Queue, Process
+from threading import Thread
 import sys, os
 from pprint import pprint
 from time import sleep
@@ -8,14 +9,7 @@ import random as strandom
 
 from copy import deepcopy
 
-#import signal
-#signal.signal(signal.SIGINT, signal.SIG_DFL)
-
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-#from PyQt5.QtWebKit import *
-from PyQt5.QtWebEngineWidgets import *
+from PyQt5.Qt import *
 
 if (sys.version_info > (3, 0)):
 	from .value_normalization_misc import *
@@ -28,7 +22,6 @@ else:
 
 class CostModelCalibrationApp(QObject, Logger):
 	def __init__(self, vals, meta_file='html/meta.html', parent=None):
-#		super(CostModelCalibrationApp, self).__init__(parent)
 		QObject.__init__(self)
 		Logger.__init__(self, name="CostModelCalibrationApp")
 
@@ -62,18 +55,38 @@ class CostModelCalibrationApp(QObject, Logger):
 		global app
 		app		= QApplication.instance()
 		if app is None:
-			app		= QApplication(sys.argv)
+			app		= QApplication(sys.argv + ['--disable-web-security'])
 		app.setWindowIcon(QIcon(self.curpath + '/icons/uw3.png'))
 		self._window		= Window()
 		self._window.setWindowTitle("Cost Model Calibration")
 		self._window.setWindowState(Qt.WindowMaximized)
 
+		self.load_understand_values()
+
 		self._window.show()
 		self._window.raise_()
 
-		self.load_understand_values()
-
 		app.exec_()
+
+        def client_script(self):
+            qwebchannel_js = QFile(self.curpath + '/javascript/qwebchannel.js')
+            if not qwebchannel_js.open(QIODevice.ReadOnly):
+               raise SystemExit(
+                      'Failed to load qwebchannel.js with error: %s' %
+                  qwebchannel_js.errorString())
+            qwebchannel_js = bytes(qwebchannel_js.readAll()).decode('utf-8')
+
+            script = QWebEngineScript()
+            script.setSourceCode(qwebchannel_js + '''
+                var webchannel = new QWebChannel(qt.webChannelTransport, function(channel) {
+                        channel.objects.printer.text('QWebCannel suxly loaded.');
+                });
+            ''')
+            script.setName('qwc')
+            script.setWorldId(QWebEngineScript.MainWorld)
+            script.setInjectionPoint(QWebEngineScript.DocumentReady)
+            script.setRunsOnSubFrames(True)
+            return script
 
 	#########################################
 	########### Understand values ###########
@@ -83,20 +96,25 @@ class CostModelCalibrationApp(QObject, Logger):
 		self.html		+= open(self.curpath + "/html/understand_values_to_calibrate.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 		self.html		= self.html.replace("@@INPUT_VALUES@@", self.get_html_table())
 
-		self._window._view.setHtml(self.html)
 
 		self.printer	= ConsolePrinter()
-		self.mainframe	= self._window._view.page().mainFrame()
-		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
-		self.mainframe.evaluateJavaScript("var vals = %s;"%(str([str(val) for val in self.vals]), ))
+		self._page	= WebPage()
+		self._window._view.setPage(self._page)
+                self._page.profile().scripts().insert(self.client_script())
+                self._channel   = QWebChannel(self._page)
+                self._page.setWebChannel(self._channel)
+		self._channel.registerObject('printer', self.printer)
+		self._channel.registerObject('calib_app', self)
+		self._page.runJavaScript("var vals = %s;"%(str([str(val) for val in self.vals]), ))
+
+		self._window._view.setHtml(self.html)
 
 		self._window._view.loadFinished.connect(self.understand_values_loaded)
 
 	@pyqtSlot()
 	def understand_values_loaded(self):
-		self.mainframe.addToJavaScriptWindowObject('calib_app', self)
-		btn				= self.mainframe.documentElement().findFirst('button[id="start-calib-btn"]')
-		btn.evaluateJavaScript('this.onclick=calib_app.estimate_purity_function')
+                self._page.runJavaScript("var calib_app = webchannel.objects.calib_app;")
+                self._page.runJavaScript("document.getElementById('start-calib-btn').onclick=calib_app.estimate_purity_function;")
 
 #		self.log((1, ts()))
 
@@ -152,9 +170,6 @@ class CostModelCalibrationApp(QObject, Logger):
 		self._window._view.loadFinished.connect(self.estimate_purity_function_loaded)
 		self._window._view.setHtml(self.html)
 
-		self.mainframe	= self._window._view.page().mainFrame()
-		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
-
 	@pyqtSlot(str, str)
 	def estimate_purity_function_params(self, cps, domvals):
 		self.cluster_purities = ast.literal_eval(cps.__str__())
@@ -188,7 +203,7 @@ class CostModelCalibrationApp(QObject, Logger):
 
 	@pyqtSlot()
 	def estimate_purity_function_loaded(self):
-		self.mainframe.addToJavaScriptWindowObject('calib_app', self)
+                self._page.runJavaScript("var calib_app = webchannel.objects.calib_app;")
 
 		self.log((2, ts()))
 		return
@@ -212,8 +227,8 @@ class CostModelCalibrationApp(QObject, Logger):
 		self._window._view.loadFinished.connect(self.calibrate_ua_match_loaded)
 		self._window._view.setHtml(self.html)
 
-		self.mainframe	= self._window._view.page().mainFrame()
-		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
+#		self.mainframe	= self._window._view.page().mainFrame()
+#		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
 
 	@pyqtSlot(str, str)
 	def estimate_ua_match_params(self, resps, tr_pairs):
@@ -238,7 +253,7 @@ class CostModelCalibrationApp(QObject, Logger):
 
 	@pyqtSlot()
 	def calibrate_ua_match_loaded(self):
-		self.mainframe.addToJavaScriptWindowObject('calib_app', self)
+                self._page.runJavaScript("var calib_app = webchannel.objects.calib_app;")
 
 		self.log((3, ts()))
 		return
@@ -261,9 +276,6 @@ class CostModelCalibrationApp(QObject, Logger):
 		self._window._view.loadFinished.disconnect()
 		self._window._view.loadFinished.connect(self.calibrate_ua_ispure_loaded)
 		self._window._view.setHtml(self.html)
-
-		self.mainframe	= self._window._view.page().mainFrame()
-		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
 
 	@pyqtSlot(str)
 	def estimate_ua_ispure_params(self, resps):
@@ -306,7 +318,7 @@ class CostModelCalibrationApp(QObject, Logger):
 
 	@pyqtSlot()
 	def calibrate_ua_ispure_loaded(self):
-		self.mainframe.addToJavaScriptWindowObject('calib_app', self)
+                self._page.runJavaScript("var calib_app = webchannel.objects.calib_app;")
 
 		self.log((4, ts()))
 		return
@@ -329,9 +341,6 @@ class CostModelCalibrationApp(QObject, Logger):
 		self._window._view.loadFinished.disconnect()
 		self._window._view.loadFinished.connect(self.calibrate_ua_finddoment_loaded)
 		self._window._view.setHtml(self.html)
-
-		self.mainframe	= self._window._view.page().mainFrame()
-		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
 
 	@pyqtSlot(str)
 	def estimate_ua_finddom_params(self, resps):
@@ -357,7 +366,7 @@ class CostModelCalibrationApp(QObject, Logger):
 
 	@pyqtSlot()
 	def calibrate_ua_finddoment_loaded(self):
-		self.mainframe.addToJavaScriptWindowObject('calib_app', self)
+                self._page.runJavaScript("var calib_app = webchannel.objects.calib_app;")
 
 		self.log((5, ts()))
 		return
@@ -372,9 +381,6 @@ class CostModelCalibrationApp(QObject, Logger):
 		self.html		+= open(self.curpath + "/html/done_calibration.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 
 		self._window._view.setHtml(self.html)
-
-		self.mainframe	= self._window._view.page().mainFrame()
-		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
 
 		self.log((6, ts()))
 
@@ -403,7 +409,7 @@ class CostModelCalibrationAppProcess(Process):
 
 def calibrate_normalization_cost_model(vals):
 	calib_app	= CostModelCalibrationAppProcess(vals)
-	calib_app.start()
+	calib_app.run()
 	calib_app.join()
 	return calib_app.queue.get()
 
