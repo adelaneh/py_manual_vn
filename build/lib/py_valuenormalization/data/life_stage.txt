@@ -1,0 +1,199 @@
+Preemie|Newborn|Prenatal|Infant
+Preemie|Newborn|Infant|Prenatal
+Preemie|Prenatal|Newborn|Infant
+Preemie|Prenatal|Infant|Newborn
+Preemie|Infant|Newborn|Prenatal
+Preemie|Infant|Prenatal|Newborn
+Infant|Newborn|Prenatal|Preemie
+Infant|Newborn|Preemie|Prenatal
+Infant|Prenatal|Newborn|Preemie
+Infant|Prenatal|Preemie|Newborn
+Infant|Preemie|Newborn|Prenatal
+Infant|Preemie|Prenatal|Newborn
+Toddler|Baby|Kids|Children|Preschool
+Toddler|Baby|Kids|Preschool|Children
+Toddler|Baby|Children|Kids|Preschool
+Toddler|Baby|Children|Preschool|Kids
+Toddler|Baby|Preschool|Kids|Children
+Toddler|Baby|Preschool|Children|Kids
+Toddler|Kids|Baby|Children|Preschool
+Toddler|Kids|Baby|Preschool|Children
+Toddler|Kids|Children|Baby|Preschool
+Toddler|Kids|Children|Preschool|Baby
+Toddler|Kids|Preschool|Baby|Children
+Toddler|Kids|Preschool|Children|Baby
+Toddler|Children|Baby|Kids|Preschool
+Toddler|Children|Baby|Preschool|Kids
+Toddler|Children|Kids|Baby|Preschool
+Toddler|Children|Kids|Preschool|Baby
+Toddler|Children|Preschool|Baby|Kids
+Toddler|Children|Preschool|Kids|Baby
+Toddler|Preschool|Baby|Kids|Children
+Toddler|Preschool|Baby|Children|Kids
+Teen|Youth|Young Professionals
+Teen|Young Professionals|Youth
+Youth|Teen|Young Professionals
+Youth|Young Professionals|Teen
+Young Professionals|Teen|Youth
+Young Professionals|Youth|Teen
+Teen|Toddler|Baby|Youth|Young Professionals
+Teen|Toddler|Baby|Young Professionals|Youth
+Teen|Toddler|Youth|Baby|Young Professionals
+Teen|Toddler|Youth|Young Professionals|Baby
+Teen|Toddler|Young Professionals|Baby|Youth
+Teen|Toddler|Young Professionals|Youth|Baby
+Teen|Baby|Toddler|Youth|Young Professionals
+Teen|Baby|Toddler|Young Professionals|Youth
+Teen|Baby|Youth|Toddler|Young Professionals
+Youth|Teen|Toddler|Baby|Young Professionals
+Dogs / Newborn|Prenatal|Single-Stage|Stage 1
+Dogs / Newborn|Prenatal|Stage 1|Single-Stage
+Dogs / Newborn|Single-Stage|Prenatal|Stage 1
+Dogs / Newborn|Single-Stage|Stage 1|Prenatal
+Dogs / Newborn|Stage 1|Prenatal|Single-Stage
+Dogs / Newborn|Stage 1|Single-Stage|Prenatal
+Dogs / Prenatal|Newborn|Single-Stage|Stage 1
+Dogs / Prenatal|Newborn|Stage 1|Single-Stage
+Dogs / Prenatal|Single-Stage|Newborn|Stage 1
+Dogs / Prenatal|Single-Stage|Stage 1|Newborn
+Dogs / Prenatal|Stage 1|Newborn|Single-Stage
+Dogs / Prenatal|Stage 1|Single-Stage|Newborn
+Dogs / Teen|Prenatal|Single-Stage|Stage 1
+Dogs / Teen|Prenatal|Stage 1|Single-Stage
+Dogs / Teen|Single-Stage|Prenatal|Stage 1
+Dogs / Teen|Single-Stage|Stage 1|Prenatal
+Dogs / Teen|Stage 1|Prenatal|Single-Stage
+Dogs / Teen|Stage 1|Single-Stage|Prenatal
+Cats / Newborn|Prenatal|Single-Stage|Stage 1
+Cats / Newborn|Prenatal|Stage 1|Single-Stage
+Cats / Newborn|Single-Stage|Prenatal|Stage 1
+Cats / Newborn|Single-Stage|Stage 1|Prenatal
+Cats / Newborn|Stage 1|Prenatal|Single-Stage
+Cats / Newborn|Stage 1|Single-Stage|Prenatal
+Cats / Prenatal|Newborn|Single-Stage|Stage 1
+Cats / Prenatal|Newborn|Stage 1|Single-Stage
+Cats / Prenatal|Single-Stage|Newborn|Stage 1
+Cats / Prenatal|Single-Stage|Stage 1|Newborn
+Cats / Prenatal|Stage 1|Newborn|Single-Stage
+Cats / Prenatal|Stage 1|Single-Stage|Newborn
+Cats / Teen|Prenatal|Single-Stage|Stage 1
+Cats / Teen|Prenatal|Stage 1|Single-Stage
+Cats / Teen|Single-Stage|Prenatal|Stage 1
+Cats / Teen|Single-Stage|Stage 1|Prenatal
+Cats / Teen|Stage 1|Prenatal|Single-Stage
+Cats / Teen|Stage 1|Single-Stage|Prenatal
+Birds / Newborn|Prenatal|Single-Stage|Stage 1
+Birds / Newborn|Prenatal|Stage 1|Single-Stage
+Birds / Newborn|Single-Stage|Prenatal|Stage 1
+Birds / Newborn|Single-Stage|Stage 1|Prenatal
+Birds / Newborn|Stage 1|Prenatal|Single-Stage
+Birds / Newborn|Stage 1|Single-Stage|Prenatal
+Birds / Prenatal|Newborn|Single-Stage|Stage 1
+Birds / Prenatal|Newborn|Stage 1|Single-Stage
+Birds / Prenatal|Single-Stage|Newborn|Stage 1
+Birds / Prenatal|Single-Stage|Stage 1|Newborn
+Birds / Prenatal|Stage 1|Newborn|Single-Stage
+Birds / Prenatal|Stage 1|Single-Stage|Newborn
+Birds / Teen|Prenatal|Single-Stage|Stage 1
+Birds / Teen|Prenatal|Stage 1|Single-Stage
+Birds / Teen|Single-Stage|Prenatal|Stage 1
+Birds / Teen|Single-Stage|Stage 1|Prenatal
+Birds / Teen|Stage 1|Prenatal|Single-Stage
+Birds / Teen|Stage 1|Single-Stage|Prenatal
+Newborn|Prenatal|Single-Stage|Stage 1
+Newborn|Prenatal|Stage 1|Single-Stage
+Newborn|Single-Stage|Prenatal|Stage 1
+Newborn|Single-Stage|Stage 1|Prenatal
+Newborn|Stage 1|Prenatal|Single-Stage
+Newborn|Stage 1|Single-Stage|Prenatal
+Prenatal|Newborn|Single-Stage|Stage 1
+Prenatal|Newborn|Stage 1|Single-Stage
+Prenatal|Single-Stage|Newborn|Stage 1
+Prenatal|Single-Stage|Stage 1|Newborn
+Prenatal|Stage 1|Newborn|Single-Stage
+Prenatal|Stage 1|Single-Stage|Newborn
+Teen|Prenatal|Single-Stage|Stage 1
+Teen|Prenatal|Stage 1|Single-Stage
+Teen|Single-Stage|Prenatal|Stage 1
+Teen|Single-Stage|Stage 1|Prenatal
+Teen|Stage 1|Prenatal|Single-Stage
+Teen|Stage 1|Single-Stage|Prenatal
+Two Stage|Gas Two-Stage|Single-Stage|Stage 1
+Two Stage|Gas Two-Stage|Stage 1|Single-Stage
+Two Stage|Single-Stage|Gas Two-Stage|Stage 1
+Two Stage|Single-Stage|Stage 1|Gas Two-Stage
+Two Stage|Stage 1|Gas Two-Stage|Single-Stage
+Two Stage|Stage 1|Single-Stage|Gas Two-Stage
+Gas Two-Stage|Two Stage|Single-Stage|Stage 1
+Gas Two-Stage|Two Stage|Stage 1|Single-Stage
+Gas Two-Stage|Single-Stage|Two Stage|Stage 1
+Gas Two-Stage|Single-Stage|Stage 1|Two Stage
+Gas Two-Stage|Stage 1|Two Stage|Single-Stage
+Gas Two-Stage|Stage 1|Single-Stage|Two Stage
+Newborn|Prenatal|Preemie|Infant|-12 months
+Newborn|Prenatal|Preemie|-12 months|Infant
+Newborn|Prenatal|Infant|Preemie|-12 months
+Newborn|Prenatal|Infant|-12 months|Preemie
+Newborn|Prenatal|-12 months|Preemie|Infant
+Pets / Newborn|Prenatal|-12 months|Infant|Preemie
+Pets / Newborn|Preemie|Prenatal|Infant|-12 months
+Pets / Newborn|Preemie|Prenatal|-12 months|Infant
+Pets / Newborn|Preemie|Infant|Prenatal|-12 months
+Pets / Newborn|Preemie|Infant|-12 months|Prenatal
+Pets / Newborn|Preemie|-12 months|Prenatal|Infant
+Senior|Teen|Youth|Young Professionals
+Senior|Teen|Young Professionals|Youth
+Senior|Youth|Teen|Young Professionals
+Senior|Youth|Young Professionals|Teen
+Senior|Young Professionals|Teen|Youth
+Senior|Young Professionals|Youth|Teen
+Teen|Senior|Youth|Young Professionals
+Teen|Senior|Young Professionals|Youth
+Teen|Youth|Senior|Young Professionals
+Teen|Youth|Young Professionals|Senior
+Teen|Young Professionals|Senior|Youth
+Teen|Young Professionals|Youth|Senior
+Stage 2|2nd|Dual-Stage
+Stage 2|Dual-Stage|2nd
+2nd|Stage 2|Dual-Stage
+2nd|Dual-Stage|Stage 2
+Pets / Dual-Stage|Stage 2|2nd
+Pets / Dual-Stage|2nd|Stage 2
+Pets / Two Stage|Gas Two-Stage
+Pets / Gas Two-Stage|Two Stage
+Puppy
+Electric
+Urban Living
+Vacation Living
+Supported sitter|Sitter
+Sitter|Supported sitter
+Kitten
+Value Lifestyle
+Any
+Family Lifestyle
+Maternity|Parental
+Parental|Maternity
+Maternity|Parental|Mothers|Motherhood
+Maternity|Parental|Motherhood|Mothers
+Maternity|Mothers|Parental|Motherhood
+Maternity|Mothers|Motherhood|Parental
+Maternity|Motherhood|Parental|Mothers
+Maternity|Motherhood|Mothers|Parental
+Parental|Maternity|Mothers|Motherhood
+Parental|Maternity|Motherhood|Mothers
+Parental|Mothers|Maternity|Motherhood
+Parental|Mothers|Motherhood|Maternity
+Parental|Motherhood|Maternity|Mothers
+Parental|Motherhood|Mothers|Maternity
+Paternity|Paternal|Fathers|Fatherhood
+Paternity|Paternal|Fatherhood|Fathers
+Paternity|Fathers|Paternal|Fatherhood
+Paternity|Fathers|Fatherhood|Paternal
+Paternity|Fatherhood|Paternal|Fathers
+Paternity|Fatherhood|Fathers|Paternal
+Paternal|Paternity|Fathers|Fatherhood
+Pets / Paternal|Paternity|Fatherhood|Fathers
+Pets / Paternal|Fathers|Paternity|Fatherhood
+Pets / Paternal|Fathers|Fatherhood|Paternity
+Pets / Paternal|Fatherhood|Paternity|Fathers
+Pets / Paternal|Fatherhood|Fathers|Paternity

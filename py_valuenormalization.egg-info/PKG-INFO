@@ -1,0 +1,15 @@
+Metadata-Version: 1.1
+Name: py-valuenormalization
+Version: 0.1
+Summary: Attribute value normalization tool
+Home-page: http://github.com/adelaneh/py_valuenormazliation
+Author: Adel Ardalan
+Author-email: adel@cs.wisc.edu
+License: MIT
+Description: This package provides the neccessary workflow and interface to normalize a set of (attribute) values of type character string.
+Keywords: value normalization data cleaning management
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Topic :: Data Cleaning :: Databases :: Data Management

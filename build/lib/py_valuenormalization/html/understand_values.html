@@ -1,0 +1,75 @@
+<div class="modal fade" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1>Clustering values ...</h1>
+			</div>
+			<div class="modal-body">
+				<div class="progress">
+					<div class="progress-bar progress-bar-striped active" style="width: 100%;"></div>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="container" style="width: 90%;">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>Exploring and Understanding Data Values (Optional)</h3>
+		</div>
+		<div class="panel-body">
+			<p></p>
+			<div class="well"><h4>
+					<p>In this optional step, you can browse the table below to explore and understand the data values that you will later normalize. The table shows all data values given as input to the function call.</p>
+					<p>Once done exploring and understanding the data values, you can click the "Start Normalization" button at the bottom right corner to start the normalization process.</p>
+<!--					<p>You can read and understand the data values using the table below. When you think you are familiar with the data values, then click on the "Start Value Normalization" button to start normalizaing the data values.</p></h4><p></p>-->
+			</div>
+
+<!--		<div class="panel-body">
+			<form enctype="multipart/form-data" method="post" id="fileinfo" name="fileinfo" action="{% url 'simple_upload_file' %}">
+				<div class="form-group">
+					<label for="value_file_upload">Browse values' file:</label>
+					<p>
+						<input type="file" id="input-file-path" />
+					</p>
+					<p><a href="http://pages.cs.wisc.edu/~adel/files/sample_data.zip">Sample Value Files (.zip)</a></p>
+					<button class="btn btn-primary" id="testbtn" type="button" onclick="returnInputFilePath()">Upload and Show Values</button>
+				</div>
+			</form>
+			<p></p>
+		</div>-->
+		<!--		{% if request.session.input_values %}-->
+		</div>
+<!--		<div class="panel-body">
+			<div class="col-sm-10">
+				<button class="btn btn-primary pull-right" id="start-local-merge-top" type="button">Start Manual Normalization</button>
+			</div>
+		</div>-->
+		<div class="panel-body">
+			<div class="table-responsive" style="height: 70%; outline: 1px solid navy;">
+				<table id="values_to_norm" class="table table-responsive table-condensed table-bordered" style="height:50%; width:100%;"> 
+					<thead><tr><th class="col-xs-2">ID</th><th class="col-xs-8">Value</th></tr></thead>
+					<tbody id="values_to_norm_body">@@INPUT_VALUES@@
+<!--					{% for val in request.session.input_values %}
+					<tr><th class="col-xs-2">{{ val.0 }}</th><td class="col-xs-8">{{ val.1 }}</td></tr>
+					{% endfor %}-->
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="panel-body">
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 80%;">
+					</td>
+					<td style="width: 20%;" align="right">
+						<div class="col-sm">
+							<button class="btn btn-primary pull-right" id="start-local-merge-bottom" type="button">Start Value Normalization</button>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+

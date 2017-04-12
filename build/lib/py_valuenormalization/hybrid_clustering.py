@@ -65,7 +65,7 @@ class HybridClustering(HierarchicalClustering):
 		while not myq.is_empty():
 			nextclustpair = myq.pop_task()
             
-            # Append the current dend, priorityqueue, clusts if the length of new cluster is greater than the cluster of max size
+            # Append the current dend, priorityqueue, clusts if the length of new cluster is greater than the max cluster
 			cur_vthr = len(self.clusts[nextclustpair[1][0]]) + len(self.clusts[nextclustpair[1][1]]) - 1
 			if cur_vthr not in self.dend_hist and cur_vthr > (max(self.dend_hist.keys()) if len(self.dend_hist) > 0 else 0):
 				dc_clusts = deepcopy(self.clusts)
@@ -179,7 +179,6 @@ class HybridClustering(HierarchicalClustering):
 		return self.shotgun_lambdahac_dendrogram(dend)
 
     
-    # Complete a dendrogram with dend_hist['maxclustsize']
 	def shotgun_complete_dendrogram(self, max_clust_size, mcs):
 		(clusts, dend, myq) = self.dend_hist[mcs]
 		blkdpairs = {}
@@ -251,7 +250,6 @@ class HybridClustering(HierarchicalClustering):
 
 		return dend
 
-    
 	def cluster(self, sim_measure = None, linkage = None, precalc_dists = None, thr = None, max_clust_size = -1):
 		approx_costs = {}
 		min_cost_lambda = None
