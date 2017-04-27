@@ -9,6 +9,38 @@ from py_valuenormalization import SmartClustering
 from py_valuenormalization import SimMeasureNotSupportedException
 from py_valuenormalization.value_normalization_misc import Utils
 
+""" We have one testcas written as function of SmartClusteringTests class.
+The testcase function operates on a set of input values to create dendrogram based on different sim measure, linkage, threshold.
+The testcase function asserts on the value of agreement_score for each combination of sim_measure, linkage, threshold.
+
+Overview:
+Input data: vals
+1)Under SIM_MEASURE: 3gram Jaccard, Calculate distances between all input value pairs and assert for min distance value pair.
+            linkage: single - create dendrogram and assert the value of dendrogram.
+                For different threshold values in range of (0.0 ... 1.0), lambdahac_dendrogram() function is called to return the                 val_to_clustid pairs and assert the value of val_to_clustid {}.
+            linkage: complete - create dendrogram and assert the value of dendrogram.
+                For different threshold values in range of (0.0 ... 1.0), lambdahac_dendrogram() function is called to return the                 val_to_clustid pairs and assert the value of val_to_clustid {}.
+            linkage: average - create dendrogram and assert the value of dendrogram.
+                For different threshold values in range of (0.0 ... 1.0), lambdahac_dendrogram() function is called to return the                 val_to_clustid pairs and assert the value of val_to_clustid {}. 
+                
+2)Under SIM_MEASURE: Levenshtein, Calculate distances between all input value pairs and assert for min distance value pair.
+            linkage: single - create dendrogram and assert the value of dendrogram.
+                For different threshold values in range of (0.0 ... 1.0), lambdahac_dendrogram() function is called to return the                 val_to_clustid pairs and assert the value of val_to_clustid {}.
+            linkage: complete - create dendrogram and assert the value of dendrogram.
+                For different threshold values in range of (0.0 ... 1.0), lambdahac_dendrogram() function is called to return the                 val_to_clustid pairs and assert the value of val_to_clustid {}.
+            linkage: average - create dendrogram and assert the value of dendrogram.
+                For different threshold values in range of (0.0 ... 1.0), lambdahac_dendrogram() function is called to return the                 val_to_clustid pairs and assert the value of val_to_clustid {}.
+                
+3)Under SIM_MEASURE: Jaro-Winkler, Calculate distances between all input value pairs and assert for min distance value pair.
+            linkage: single - create dendrogram and assert the value of dendrogram.
+                For different threshold values in range of (0.0 ... 1.0), lambdahac_dendrogram() function is called to return the                 val_to_clustid pairs and assert the value of val_to_clustid {}.
+            linkage: complete - create dendrogram and assert the value of dendrogram.
+                For different threshold values in range of (0.0 ... 1.0), lambdahac_dendrogram() function is called to return the                 val_to_clustid pairs and assert the value of val_to_clustid {}.
+            linkage: average - create dendrogram and assert the value of dendrogram.
+                For different threshold values in range of (0.0 ... 1.0), lambdahac_dendrogram() function is called to return the                 val_to_clustid pairs and assert the value of val_to_clustid {}.                
+
+"""
+
 class SmartClusteringTests(unittest.TestCase):
     def setUp(self):
         self.vals = [ 'Sony', 'Audeze', 'Beats', '66Audio', 'Soundpeats', 'Soundintone']

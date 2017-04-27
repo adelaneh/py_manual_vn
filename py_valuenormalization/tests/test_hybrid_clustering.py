@@ -8,6 +8,23 @@ from py_valuenormalization import HybridClustering
 from py_valuenormalization import SimMeasureNotSupportedException
 from py_valuenormalization.value_normalization_misc import Utils
 
+""" We have a total of five testcases written as functions of HybridClusteringTests class.
+Each testcase function operates on a different set of input values and different linkage, sim measure, threashold, maxclustsize
+
+Under every testcase, these are the tests covered:
+1)Calculate distances between all input value pairs and assert for min distance value pair.
+2)Shotgun_create_dendrogram function called on the input values and assert on value of dendrogram, clusters for each key on the returned dictionary dend_hist{} 
+3)Shotgun_lambdahac_continue_from_dendrogram function called for maxclustsize from 1.. max(dend_hist.keys()) and assert the val_to_clustid map returned.
+4)Cluster() function on the input values and assert on the value of best clusters returned.
+
+Overview: 
+    (<Test_function_name> - Operating Dataset, Linkage, Sim_measure )
+    test_vals3() - dataset: vals3 , linkage: single , sim_measure: Jaccard, threshold: 0.7, maxclustsize: len(inputs)
+    test_vals() - dataset: vals, linkage: single, sim_measure: Jaro Winkler, threshold: 0.5, maxclustsize: 5
+    test_vals2() - dataset: vals2, linkage: single, sim_measure: Levenshtein, threshold: 0.75, maxclustsize: 7 
+    test_vals4() - dataset: vals4, linkage: complete, sim_measure: Jaccard, threshold: 0.75, maxclustsize: 5
+    test_vals5() - dataset: vals5, linkage: average, sim_measure: Jaro-Winkler, threshold: 0.4, maxclustsize: 4
+ """
 class HybridClusteringTests(unittest.TestCase):
     def setUp(self):
         self.vals = ['Haldis restaurant', 'Haldis cafe', 'Indian cuisine', 'India house', 'Bombay bazaar', 'Tulsi', 'Amber restaurant']
