@@ -304,4 +304,3 @@ class HybridClustering(HierarchicalClustering):
                 best_clusts = self.get_clusters()
 
         return (best_clusts, min_cost_lambda)
-
