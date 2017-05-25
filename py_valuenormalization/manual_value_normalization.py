@@ -176,7 +176,7 @@ class ManualValueNormalizationApp(QObject, Logger):
 		self.mainframe	= self._window._view.page().mainFrame()
 		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
 
-	@pyqtSlot(str)
+	@pyqtSlot()
 	def result_summary_loaded(self):
 		self.mainframe.addToJavaScriptWindowObject('norm_app', self)
 		self.mainframe.evaluateJavaScript("window.scrollTo(0, 0);")
