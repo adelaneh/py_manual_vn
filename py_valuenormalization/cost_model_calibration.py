@@ -410,6 +410,6 @@ class CostModelCalibrationAppProcess(Process):
 def calibrate_normalization_cost_model(vals):
 	calib_app	= CostModelCalibrationAppProcess(vals)
 	calib_app.run()
-	calib_app.join()
+#	calib_app.join()
 	return calib_app.queue.get()
 

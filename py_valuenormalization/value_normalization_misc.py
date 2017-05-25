@@ -11,11 +11,6 @@ from scipy import optimize
 from scipy import stats
 import numpy
 
-#from PyQt5.QtCore import *
-#from PyQt5.QtGui import *
-#from PyQt5.QtWidgets import *
-#from PyQt5.QtWebEngineWidgets import *
-#from PyQt5.QtNetwork import *
 from PyQt5.Qt import *
 
 class WebPage(QWebEnginePage):
@@ -42,16 +37,10 @@ class Window(QMainWindow):
 		self._layout.setContentsMargins(0, 0, 0, 0)
 
 		self._view = QWebEngineView()
-#		self.resize(1100, 1500)
 		self._view.setAttribute(Qt.WA_DeleteOnClose, True)
 
 		self._layout.addWidget(self._view)
 		self.setCentralWidget(self.centralwidget)
-
-#		self._view.page().settings().setNetworkAccessManager(QNetworkAccessManager())
-#		self._view.page().settings().setObjectCacheCapacities(0, 0, 0)
-#		self._view.page().settings().setMaximumPagesInCache(0)
-#		self._view.page().settings().setAttribute(QWebSettings.DeveloperExtrasEnabled, True)
 
 class ConsolePrinter(QObject):
 	def __init__(self, parent=None):
