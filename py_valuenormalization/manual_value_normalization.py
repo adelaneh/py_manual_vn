@@ -10,11 +10,12 @@ from copy import deepcopy
 #import signal
 #signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.Qt import *
+#from PyQt5.QtCore import *
+#from PyQt5.QtGui import *
+#from PyQt5.QtWidgets import *
 #from PyQt5.QtWebKit import *
-from PyQt5.QtWebEngineWidgets import *
+#from PyQt5.QtWebEngineWidgets import *
 
 if (sys.version_info > (3, 0)):
 	from .value_normalization_misc import *
@@ -25,7 +26,6 @@ else:
 
 class ManualValueNormalizationApp(QObject, Logger):
 	def __init__(self, clusters, meta_file='html/meta.html', parent=None):
-#		super(ManualValueNormalizationApp, self).__init__(parent)
 		QObject.__init__(self)
 		Logger.__init__(self, name="ManualValueNormalizationApp")
 
@@ -49,18 +49,38 @@ class ManualValueNormalizationApp(QObject, Logger):
 		global app
 		app		= QApplication.instance()
 		if app is None:
-			app		= QApplication(sys.argv)
+			app		= QApplication(sys.argv + ['--disable-web-security'])
 		app.setWindowIcon(QIcon(self.curpath + '/icons/uw3.png'))
 		self._window		= Window()
 		self._window.setWindowTitle("Manual Value Normalization")
 		self._window.setWindowState(Qt.WindowMaximized)
 
+		self.load_understand_values()
+
 		self._window.show()
 		self._window.raise_()
 
-		self.load_understand_values()
-
 		app.exec_()
+
+        def client_script(self):
+            qwebchannel_js = QFile(self.curpath + '/javascript/qwebchannel.js')
+            if not qwebchannel_js.open(QIODevice.ReadOnly):
+               raise SystemExit(
+                      'Failed to load qwebchannel.js with error: %s' %
+                  qwebchannel_js.errorString())
+            qwebchannel_js = bytes(qwebchannel_js.readAll()).decode('utf-8')
+
+            script = QWebEngineScript()
+            script.setSourceCode(qwebchannel_js + '''
+                var webchannel = new QWebChannel(qt.webChannelTransport, function(channel) {
+                        channel.objects.printer.text('QWebCannel suxly loaded.');
+                });
+            ''')
+            script.setName('qwc')
+            script.setWorldId(QWebEngineScript.MainWorld)
+            script.setInjectionPoint(QWebEngineScript.DocumentReady)
+            script.setRunsOnSubFrames(True)
+            return script
 
 	#########################################
 	########### Understand values ###########
@@ -70,24 +90,25 @@ class ManualValueNormalizationApp(QObject, Logger):
 		self.html		+= open(self.curpath + "/html/understand_values.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
 		self.html		= self.html.replace("@@INPUT_VALUES@@", self.get_html_table())
 
-		self._window._view.setHtml(self.html)
-
 		self.printer	= ConsolePrinter()
-		self.mainframe	= self._window._view.page().mainFrame()
-		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
-		self.mainframe.evaluateJavaScript("var vals=%s;"%(str([str(val) for val in self.vals]), ))
+		self._page	= WebPage()
+		self._window._view.setPage(self._page)
+                self._page.profile().scripts().insert(self.client_script())
+                self._channel   = QWebChannel(self._page)
+                self._page.setWebChannel(self._channel)
+		self._channel.registerObject('printer', self.printer)
+		self._channel.registerObject('norm_app', self)
+		self._page.runJavaScript("var vals = %s;"%(str([str(val) for val in self.vals]), ))
+
+		self._window._view.setHtml(self.html)
 
 		self._window._view.loadFinished.connect(self.understand_values_loaded)
 
 	@pyqtSlot()
 	def understand_values_loaded(self):
-		self.mainframe.addToJavaScriptWindowObject('norm_app', self)
-		btn				= self.mainframe.documentElement().findFirst('button[id="start-local-merge-top"]')
-		btn.evaluateJavaScript('this.onclick=norm_app.start_local_merging')
-		btn				= self.mainframe.documentElement().findFirst('button[id="start-local-merge-bottom"]')
-		btn.evaluateJavaScript('this.onclick=norm_app.start_local_merging')
-
-#		self.log((1, ts()))
+                self._page.runJavaScript("var norm_app = webchannel.objects.norm_app;")
+                self._page.runJavaScript("document.getElementById('start-local-merge-top').onclick=norm_app.start_local_merging;")
+                self._page.runJavaScript("document.getElementById('start-local-merge-bottom').onclick=norm_app.start_local_merging;")
 
 	#########################################
 	############## Local merge ##############
@@ -104,9 +125,6 @@ class ManualValueNormalizationApp(QObject, Logger):
 		self._window._view.loadFinished.connect(self.local_merge_loaded)
 		self._window._view.setHtml(self.html)
 
-		self.mainframe	= self._window._view.page().mainFrame()
-		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
-
 	@pyqtSlot(str, int)
 	def reload_local_merging(self, clusters, pgoffset):
 		self.merged_clusters	= ast.literal_eval(clusters.__str__())
@@ -115,10 +133,8 @@ class ManualValueNormalizationApp(QObject, Logger):
 
 	@pyqtSlot()
 	def local_merge_loaded(self):
-		self.mainframe.addToJavaScriptWindowObject('norm_app', self)
-		self.mainframe.evaluateJavaScript("window.scrollTo(0, %d);"%(self.pgoffset, ))
-
-		self.log((2, ts()))
+                self._page.runJavaScript("var norm_app = webchannel.objects.norm_app;")
+                self._page.runJavaScript("window.scrollTo(0, %d);"%(self.pgoffset, ))
 
 	#########################################
 	############# Global merge ##############
@@ -141,9 +157,6 @@ class ManualValueNormalizationApp(QObject, Logger):
 		self._window._view.loadFinished.connect(self.global_merge_loaded)
 		self._window._view.setHtml(self.html)
 
-		self.mainframe	= self._window._view.page().mainFrame()
-		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
-
 	@pyqtSlot(str, str)
 	def reload_global_merging(self, clusters, results):
 		result_clusters	= ast.literal_eval(results.__str__())
@@ -153,10 +166,8 @@ class ManualValueNormalizationApp(QObject, Logger):
 
 	@pyqtSlot()
 	def global_merge_loaded(self):
-		self.mainframe.addToJavaScriptWindowObject('norm_app', self)
-		self.mainframe.evaluateJavaScript("window.scrollTo(0, 0);")
-
-		self.log((3, ts()))
+                self._page.runJavaScript("var norm_app = webchannel.objects.norm_app;")
+                self._page.runJavaScript("window.scrollTo(0, 0);")
 
 	#########################################
 	############# Finish merge ##############
@@ -174,15 +185,10 @@ class ManualValueNormalizationApp(QObject, Logger):
 		self._window._view.loadFinished.connect(self.result_summary_loaded)
 		self._window._view.setHtml(self.html)
 
-		self.mainframe	= self._window._view.page().mainFrame()
-		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
-
-	@pyqtSlot(str)
+	@pyqtSlot()
 	def result_summary_loaded(self):
-		self.mainframe.addToJavaScriptWindowObject('norm_app', self)
-		self.mainframe.evaluateJavaScript("window.scrollTo(0, 0);")
-
-		self.log((4, ts()))
+                self._page.runJavaScript("var norm_app = webchannel.objects.norm_app;")
+                self._page.runJavaScript("window.scrollTo(0, 0);")
 
 class ManualValueNormalizationAppProcess(Process):
 	def __init__(self, clusters):
@@ -211,8 +217,9 @@ def normalize_values(vals):
 	for val in (vals.values() if isinstance(vals, dict) else vals):
 		clusters[val]	= [val,]
 	norm_app	= ManualValueNormalizationAppProcess(clusters)
-	norm_app.start()
-	norm_app.join()
+	norm_app.run()
+#	norm_app.start()
+#	norm_app.join()
 	return norm_app.queue.get()
 
 
