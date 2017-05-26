@@ -11,9 +11,10 @@ from copy import deepcopy
 #import signal
 #signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyQt4.QtWebKit import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtWebKit import *
 
 if (sys.version_info > (3, 0)):
 	from .value_normalization_misc import *

@@ -10,9 +10,10 @@ from copy import deepcopy
 #import signal
 #signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyQt4.QtWebKit import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtWebKit import *
 
 if (sys.version_info > (3, 0)):
 	from .value_normalization_misc import *
@@ -51,11 +52,7 @@ class ClusteringBasedValueNormalizationApp(QObject, Logger):
 		app.setWindowIcon(QIcon(self.curpath + '/icons/uw3.png'))
 		self._window		= Window()
 		self._window.setWindowTitle("Clustering-based Value Normalization")
-		# this will remove minimized status and restore window with keeping maximized/normal state
-#		self._window.setWindowState(self._window.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
 		self._window.setWindowState(Qt.WindowMaximized)
-		# this will activate the window
-#		self._window.activateWindow()
 
 		self._window.show()
 		self._window.raise_()
@@ -63,32 +60,6 @@ class ClusteringBasedValueNormalizationApp(QObject, Logger):
 		self.load_understand_clusters()
 
 		app.exec_()
-
-		#### Clean up ####
-#		self._window._view.page().settings().clearMemoryCaches()
-#		self._window._view.page().settings().setAttribute(QWebSettings.DeveloperExtrasEnabled, False)
-#
-#		for jj in reversed(range(self._window._layout.count())):
-#			self._window._layout.itemAt(jj).widget().deleteLater()
-#
-#		self._window._view.history().clear()
-##		self._window._view.stop()
-#		self._window._view.page().mainFrame().deleteLater()
-#		self._window._view.page().deleteLater()
-#		self._window._view.deleteLater()
-#		self._window._layout.deleteLater()
-##		self._window.deleteLater()
-#
-##		self._window._view.close()
-##		self._window.close()
-#
-#		self._window._view.destroy()
-#		self._window.destroy()
-#
-#		QApplication.instance().closeAllWindows()
-#		QApplication.instance().quitOnLastWindowClosed()
-#		QApplication.instance().quit()
-#		QApplication.instance().flush()
 
 	#########################################
 	########## Understand clusters ##########
@@ -257,7 +228,7 @@ class ClusteringBasedValueNormalizationApp(QObject, Logger):
 		self.mainframe	= self._window._view.page().mainFrame()
 		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
 
-	@pyqtSlot(str)
+	@pyqtSlot()
 	def result_summary_loaded(self):
 		self.mainframe.addToJavaScriptWindowObject('norm_app', self)
 		self.mainframe.evaluateJavaScript("window.scrollTo(0, 0);")

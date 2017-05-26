@@ -9,10 +9,12 @@ from scipy import optimize
 from scipy import stats
 import numpy
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyQt4.QtWebKit import *
-from PyQt4.QtNetwork import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtWebKit import *
+from PyQt5.QtWebKitWidgets import *
+from PyQt5.QtNetwork import *
 
 class WebPage(QWebPage):
     """
@@ -23,7 +25,7 @@ class WebPage(QWebPage):
 
     def javaScriptConsoleMessage(self, msg, lineNumber, sourceID):
         print("JsConsole(%s:%d): %s" % (sourceID, lineNumber, msg))
-
+        
 class Window(QMainWindow):
     """
     Initializes the widget settings, attributes on window
@@ -36,7 +38,7 @@ class Window(QMainWindow):
         self.centralwidget.setAttribute(Qt.WA_DeleteOnClose, True)
 
         self._layout = QVBoxLayout(self.centralwidget)
-        self._layout.setMargin(0)
+        self._layout.setContentsMargins(0, 0, 0, 0)
 
         self._view = QWebView()
         self._view.setAttribute(Qt.WA_DeleteOnClose, True)
@@ -56,7 +58,6 @@ class ConsolePrinter(QObject):
     def text(self, message):
         print(message)
 
-        
 # Utility functions called in other modules
 class Utils:
     @staticmethod
@@ -174,5 +175,3 @@ class SimMeasureNotSupportedException(Exception):
         self.value = value
     def __str__(self):
         return repr(self.value)
-
-

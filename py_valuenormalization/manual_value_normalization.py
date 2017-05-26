@@ -10,9 +10,10 @@ from copy import deepcopy
 #import signal
 #signal.signal(signal.SIGINT, signal.SIG_DFL)
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-from PyQt4.QtWebKit import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtWebKit import *
 
 if (sys.version_info > (3, 0)):
 	from .value_normalization_misc import *
@@ -175,7 +176,7 @@ class ManualValueNormalizationApp(QObject, Logger):
 		self.mainframe	= self._window._view.page().mainFrame()
 		self.mainframe.addToJavaScriptWindowObject('printer', self.printer)
 
-	@pyqtSlot(str)
+	@pyqtSlot()
 	def result_summary_loaded(self):
 		self.mainframe.addToJavaScriptWindowObject('norm_app', self)
 		self.mainframe.evaluateJavaScript("window.scrollTo(0, 0);")
