@@ -53,7 +53,7 @@ class Window(QMainWindow):
 class ConsolePrinter(QObject):
     def __init__(self, parent=None):
         QObject.__init__(self)
-                    
+
     @pyqtSlot(str)
     def text(self, message):
         print(message)
