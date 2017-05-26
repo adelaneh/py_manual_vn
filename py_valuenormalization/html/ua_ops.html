@@ -17,87 +17,87 @@
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <style>
 .btn_clust.active {
-	background-color: gray;
-	color: white;
+    background-color: gray;
+    color: white;
 }
 .btn-default {
-	font-weight: 900;
-	font-style: bold;
-	margin-right: 10px;
-	margin-left: 10px;
+    font-weight: 900;
+    font-style: bold;
+    margin-right: 10px;
+    margin-left: 10px;
 }.btn-primary {
-	margin-right: 10px;
-	margin-left: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
 }
 </style>
 {% if request.session.log_level|stringformat:"s" == "user_actions" %}
-	<input id="logging_on" hidden="true">
+    <input id="logging_on" hidden="true">
 {% else %}
-	<input id="logging_off" hidden="true">
+    <input id="logging_off" hidden="true">
 {% endif %}
 <!--{% if request.session.flipflop == 0 %}-->
-<!--	<input id="flipflop_true" hidden="true">-->
+<!--    <input id="flipflop_true" hidden="true">-->
 <!--{% else %}-->
-<!--	<input id="flipflop_false" hidden="true">-->
+<!--    <input id="flipflop_false" hidden="true">-->
 <!--{% endif %}-->
 {% autoescape on %}
 <script type="text/javascript" src="{% static 'user_action_measurements/measurements.js' %}"></script>
 <script type="text/javascript" src="{% static 'user_action_measurements/logging.js' %}"></script>
 <div class="modal fade" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h1>Clustering values ...</h1>
-			</div>
-			<div class="modal-body">
-				<div class="progress">
-					<div class="progress-bar progress-bar-striped active" style="width: 100%;"></div>
-				</div>
-			</div><!-- /.modal-content -->
-		</div><!-- /.modal-dialog -->
-	</div><!-- /.modal-dialog -->
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1>Clustering values ...</h1>
+            </div>
+            <div class="modal-body">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped active" style="width: 100%;"></div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <div class="container">
-	<div id="split_panel" class="panel panel-default">
-		<div class="panel-heading"><b>Which user action do you want to experiment with?</b></div>
-		<div class="panel-body">
-			<div id="values-panel" class="panel panel-primary">	
-				<!--				<div class="panel-heading"><h4>Cluster "{{ request.session.cur_cluster_label }}"</h4></div>-->
-				<div class="panel-body" id="values_panel_body">
-					<div class="radio">
-						<label>
-							<input type="radio" name="optionsRadios" id="option_match" value="match">
-							match
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input type="radio" name="optionsRadios" id="option_ispure" value="ispure">
-							isPure
-						</label>
-					</div>
-					<div class="radio">
-						<label>
-							<input type="radio" name="optionsRadios" id="option_finddom" value="finddom">
-							findDomEntityValue
-						</label>
-					</div>
-				</div>
-				<p></p>
-				<button type="button" class="btn btn-primary" onclick="startExperiment();">Start!</button>
-				<p></p>
-			</div>
+    <div id="split_panel" class="panel panel-default">
+        <div class="panel-heading"><b>Which user action do you want to experiment with?</b></div>
+        <div class="panel-body">
+            <div id="values-panel" class="panel panel-primary">    
+                <!--                <div class="panel-heading"><h4>Cluster "{{ request.session.cur_cluster_label }}"</h4></div>-->
+                <div class="panel-body" id="values_panel_body">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="option_match" value="match">
+                            match
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="option_ispure" value="ispure">
+                            isPure
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="option_finddom" value="finddom">
+                            findDomEntityValue
+                        </label>
+                    </div>
+                </div>
+                <p></p>
+                <button type="button" class="btn btn-primary" onclick="startExperiment();">Start!</button>
+                <p></p>
+            </div>
 
-		</div>
-	</div>
-	<!--	<div class="panel panel-warning">-->
-	<!--		<div class="panel-body">-->
-	<!--			{% if request.session.log_level|stringformat:"s" == "user_actions" %}-->
-	<!--				Logging user actions.-->
-	<!--			{% else %}-->
-	<!--				No logging.-->
-	<!--			{% endif %}-->
-	<!--		</div>-->
-	<!--	</div>-->
+        </div>
+    </div>
+    <!--    <div class="panel panel-warning">-->
+    <!--        <div class="panel-body">-->
+    <!--            {% if request.session.log_level|stringformat:"s" == "user_actions" %}-->
+    <!--                Logging user actions.-->
+    <!--            {% else %}-->
+    <!--                No logging.-->
+    <!--            {% endif %}-->
+    <!--        </div>-->
+    <!--    </div>-->
 </div>
 {% endautoescape %}

@@ -1,6 +1,12 @@
-#py_valuenormalization
+# py_valuenormalization
 
-##Installation Guide##
+This package provides some basic necessary tools to do attribute value normalization and string clustering in data cleaning and integration pipelines.
+
+## Important Note ##
+
+At the moment, due to incompatibility of Linux and Mac versions of PyQt5 package, we have two separate branches for Linux and Mac user interfaces. The ```master``` branch contains the version which works on Linux and the ```pyqt5mac-dev``` branch contains the version which works in Mac.
+
+## Installation Guide ##
 
 To install this package:
 
@@ -28,7 +34,7 @@ To install this package:
 
      You can use ```--prefix``` to change the destination folder for installing the package (see the help using ```$ python setup.py --help```).
 
-##Usage Guide##
+## Usage Guide ##
 
 To use this package, import it by running the following python command:
 
@@ -39,7 +45,7 @@ We have developed two main approaches to normalize values, namely:
 1. Manual value normalization
 2. Clustering-based value normalization
 
-###Manual Value Normalization###
+### Manual Value Normalization ###
 
 In manual value normalization, you merge values into clusters to normalize them:
 
@@ -57,9 +63,9 @@ In manual value normalization, you merge values into clusters to normalize them:
 
 3. Finally when you finish the normalization process and close the above application, the normalization results are returned in the variable ```res```: it is a dictionary where each key is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster.
 
-###Clustering-based Value Normalization###
+### Clustering-based Value Normalization ###
 
-####Clustering the Values####
+#### Clustering the Values ####
 
 In clustering-based value normalization, you first cluster the values using one of the following three method:
 
@@ -109,7 +115,7 @@ To cluster the values, follow these steps:
 
         The outpurt consists of a dictionary ```clusts``` and an integer ```mcl```. Each key of the dictionary ```clusts``` is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster. ```mcl``` is the maximum size of the clusters in ```clusts```. 
 
-####Cleaning Up the Clusters####
+#### Cleaning Up the Clusters ####
 
 Now you can clean up the clusters obtained above to arrive at the correct clustering of the input values. This phase consists of two main steps:
 
@@ -118,7 +124,7 @@ Now you can clean up the clusters obtained above to arrive at the correct cluste
 
 To clean up the clustering results run the following command:
 
-```>>> clean_clusts = vn.normalize_clusters(clusts)```
+    ```>>> clean_clusts = vn.normalize_clusters(clusts)```
 
 where ```clusts``` is a dictionary where each key is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster. This will open a graphical user interface to clean up ```clusts``` and the results with be returned in ```clean_clusts``` which is a dictionary where each key is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster.
 
