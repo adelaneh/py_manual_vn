@@ -124,7 +124,7 @@ Now you can clean up the clusters obtained above to arrive at the correct cluste
 
 To clean up the clustering results run the following command:
 
-```>>> clean_clusts = vn.normalize_clusters(clusts)```
+    ```>>> clean_clusts = vn.normalize_clusters(clusts)```
 
 where ```clusts``` is a dictionary where each key is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster. This will open a graphical user interface to clean up ```clusts``` and the results with be returned in ```clean_clusts``` which is a dictionary where each key is the label of a cluster of data values, and the corresponding value is the set of data values in this cluster.
 
