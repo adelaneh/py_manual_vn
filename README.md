@@ -10,13 +10,13 @@ At the moment, due to incompatibility of Linux and Mac versions of PyQt5 package
 
 To install this package:
 
-1. First install PyQt4, e.g. using one of the following methods:
+1. First install PyQt5, e.g. using one of the following methods:
 
   1. If you have Anaconda installed on your machine, then use the following command:
 
      ```$ conda install pyqt```
 
-  2. Otherwise follow the instructions at http://pyqt.sourceforge.net/Docs/PyQt4/installation.html
+  2. Otherwise follow the instructions at http://pyqt.sourceforge.net/Docs/PyQt5/installation.html
 
 2. Then install the package using one of the following methods:
 
