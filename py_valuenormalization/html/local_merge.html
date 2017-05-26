@@ -1,14 +1,14 @@
 <script type="text/javascript">
 var getMergedClusters = function(e) {
-	var mrgClstrs = new Object();
-	for (var kk in merged_clusters) {
-		mrgClstrs[kk] = [];
-		for (var hhx = 0; hhx < merged_clusters[kk].length; hhx++) {
-			hh = merged_clusters[kk][hhx];
-			mrgClstrs[kk].push(hh);
-		}
-	}
-	return mrgClstrs;
+    var mrgClstrs = new Object();
+    for (var kk in merged_clusters) {
+        mrgClstrs[kk] = [];
+        for (var hhx = 0; hhx < merged_clusters[kk].length; hhx++) {
+            hh = merged_clusters[kk][hhx];
+            mrgClstrs[kk].push(hh);
+        }
+    }
+    return mrgClstrs;
 }
 
 var mergedClusters = getMergedClusters();
@@ -16,75 +16,75 @@ var mergedClusters = getMergedClusters();
 
 <style>
 .btn_clust_mrg {
-//	font-style: italic;
-	color: black;
-	border-radius: 1px;
-	border-color: #BEB771;
-	background-color: white;//#F5EC91;
+//    font-style: italic;
+    color: black;
+    border-radius: 1px;
+    border-color: #BEB771;
+    background-color: white;//#F5EC91;
 }
 .btn_clust_mrg.active {
-	background-color: #BEB771;
-	color: black;
+    background-color: #BEB771;
+    color: black;
 }
 .btn_clust_res {
-	font-style: italic;
-	border-radius: 0px;
+    font-style: italic;
+    border-radius: 0px;
 }
 .btn_clust_res.active {
-	background-color: #728C00;
-	color: white;
+    background-color: #728C00;
+    color: white;
 }
 .btn_clust.active {
-	background-color: gray;
-	color: white;
+    background-color: gray;
+    color: white;
 }
 .btn-primary {
-	margin-right: 10px;
-	margin-left: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
 }
 </style>
 <script type="text/javascript">
 $(function () {
-	$('[data-toggle="popover"]').popover()
+    $('[data-toggle="popover"]').popover()
 });
 </script>
 <div class="container" style="width: 90%;">
-	<div class="panel panel-default">
-		<div class="panel-heading">
-			<h3>Local-merging of Data Values</h3>
-		</div>
-		<div class="panel-body">
-			<p></p>
-			<div class="well"><h4>
-					<p>To do local-merging, scan the values in the list below from top to bottom. While scanning, if you see multiple values that match, you can select them and click "Merge Selected Values" to merge them. Then continue scanning. When you have reached the end of the list, click "Done Local-merging".</p>
-					<p>Try your best to merge as many matching values as you can while scanning the list from top to bottom. But if you miss a few matching values, do not worry. They will be taken care of in the global-merging step. The more values you can merge now, the less time the global-merging step will take.</p>
-			</h4><p></p></div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3>Local-merging of Data Values</h3>
+        </div>
+        <div class="panel-body">
+            <p></p>
+            <div class="well"><h4>
+                    <p>To do local-merging, scan the values in the list below from top to bottom. While scanning, if you see multiple values that match, you can select them and click "Merge Selected Values" to merge them. Then continue scanning. When you have reached the end of the list, click "Done Local-merging".</p>
+                    <p>Try your best to merge as many matching values as you can while scanning the list from top to bottom. But if you miss a few matching values, do not worry. They will be taken care of in the global-merging step. The more values you can merge now, the less time the global-merging step will take.</p>
+            </h4><p></p></div>
 
-			<div id="cluster-panel" class="panel panel-primary">
-				<div class="panel-body"id="clusters_labels_panel">
-					<table style="width: 100%;">
-						<thead><tr><td id="clust-cnt-cell" style="width: 90%;"><b>
-								</b><p></p></td>
-								<td style="width: 30%;"><p></p></td>
-								</tr>
-						</thead>
-					<tbody>
-					<tr><td id="pure_cell">
-							<script type="text/javascript">
-								loadPureClustersInColumns();
-							</script>
-						</td>
-						<td id="results_cell">
-						</td>
-					</tr>
-					</tbody>
-					</table>
-				</div>
-			</div>
-			<div id="selectsyn_box"><table style="width: 100%;"><tr><td><h4>When you are done scanning the list and merging values, then click the "Done Local-merging" button to proceed to the global-merging step.</h4></td><td>
-				<button class="btn btn-primary pull-right" id="donebtnbtm" type="button" onclick="norm_app.start_global_merging(JSON.stringify(mergedClusters))">Done Local-merging</button></td></tr></table>
-			</div>
-			<p></p>
-		</div>
-	</div>
+            <div id="cluster-panel" class="panel panel-primary">
+                <div class="panel-body"id="clusters_labels_panel">
+                    <table style="width: 100%;">
+                        <thead><tr><td id="clust-cnt-cell" style="width: 90%;"><b>
+                                </b><p></p></td>
+                                <td style="width: 30%;"><p></p></td>
+                                </tr>
+                        </thead>
+                    <tbody>
+                    <tr><td id="pure_cell">
+                            <script type="text/javascript">
+                                loadPureClustersInColumns();
+                            </script>
+                        </td>
+                        <td id="results_cell">
+                        </td>
+                    </tr>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="selectsyn_box"><table style="width: 100%;"><tr><td><h4>When you are done scanning the list and merging values, then click the "Done Local-merging" button to proceed to the global-merging step.</h4></td><td>
+                <button class="btn btn-primary pull-right" id="donebtnbtm" type="button" onclick="norm_app.start_global_merging(JSON.stringify(mergedClusters))">Done Local-merging</button></td></tr></table>
+            </div>
+            <p></p>
+        </div>
+    </div>
 </div>
