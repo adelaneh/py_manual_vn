@@ -34,7 +34,7 @@ class ManualValueNormalizationApp(QObject, Logger):
         self.gmic                = 0
         self.result_clusters    = {}
 
-        self.meta        = open(self.curpath + "/" + meta_file).read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+        self.meta        = open(self.curpath + "/" + meta_file).read().replace("@@CURRENT_DIR@@", "file:///" + self.curpath)
 
     def get_html_table(self):
         inp_val_table    = ""
@@ -66,7 +66,7 @@ class ManualValueNormalizationApp(QObject, Logger):
     #########################################
     def load_understand_values(self):
         self.html        = self.meta 
-        self.html        += open(self.curpath + "/html/understand_values.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+        self.html        += open(self.curpath + "/html/understand_values.html").read().replace("@@CURRENT_DIR@@", "file:///" + self.curpath)
         self.html        = self.html.replace("@@INPUT_VALUES@@", self.get_html_table())
 
         self._window._view.setHtml(self.html)
@@ -97,7 +97,7 @@ class ManualValueNormalizationApp(QObject, Logger):
 
         self.html        = self.meta 
         self.html        += """<script type="text/javascript">var merged_clusters = %s</script>"""%(str(self.merged_clusters), )
-        self.html        += open(self.curpath + "/html/local_merge.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+        self.html        += open(self.curpath + "/html/local_merge.html").read().replace("@@CURRENT_DIR@@", "file:///" + self.curpath)
 
         self._window._view.loadFinished.disconnect()
         self._window._view.loadFinished.connect(self.local_merge_loaded)
@@ -134,7 +134,7 @@ class ManualValueNormalizationApp(QObject, Logger):
         self.html        = self.meta 
         self.html        += """<script type="text/javascript">var merged_clusters = %s</script>"""%(str(self.merged_clusters), )
         self.html        += """<script type="text/javascript">var gmic = %d</script>"""%(self.gmic, )
-        self.html        += open(self.curpath + "/html/global_merge.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+        self.html        += open(self.curpath + "/html/global_merge.html").read().replace("@@CURRENT_DIR@@", "file:///" + self.curpath)
 
         self._window._view.loadFinished.disconnect()
         self._window._view.loadFinished.connect(self.global_merge_loaded)
@@ -167,7 +167,7 @@ class ManualValueNormalizationApp(QObject, Logger):
 
         self.html        = self.meta 
         self.html        += """<script type="text/javascript">var merged_clusters = %s</script>"""%(str(self.result_clusters), )
-        self.html        += open(self.curpath + "/html/result_summary.html").read().replace("@@CURRENT_DIR@@", "file://" + self.curpath)
+        self.html        += open(self.curpath + "/html/result_summary.html").read().replace("@@CURRENT_DIR@@", "file:///" + self.curpath)
 
         self._window._view.loadFinished.disconnect()
         self._window._view.loadFinished.connect(self.result_summary_loaded)
